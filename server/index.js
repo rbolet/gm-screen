@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-// const http = require('http').createServer(app);
+const http = require('http').createServer(app);
 const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
@@ -13,20 +13,21 @@ app.use(staticMiddleware);
 app.use(bodyParser.json());
 
 // upload images
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, '/public/images'));
   },
   filename: (req, file, cb) => {
-    var parsed = path.parse(file.originalname);
+    const parsed = path.parse(file.originalname);
     cb(null, `${uuid()}.${parsed.ext}`);
   }
 });
-var upload = multer({
-  storage: storage
+// const upload = multer({
+//   storage: storage
+// });
+
+app.post('/upload', /* upload.single('image-upload'), */ (req, res) => {
+  res.status(200).json({ filename: req.body.filename });
 });
 
-app.post('/upload', upload.single('image-upload'), (req, res) => {
-  // console.log(req.file.filename);
-  res.status(200).json({ filename: req.file.filename });
-});
+http.listen(3000, () => { console.log('listening ...'); });
