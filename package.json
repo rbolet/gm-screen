@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "A web application to allow RPG Gamemasters to illustrate the game world for their players",
   "private": true,
-  "main": "webpack.config.js",
+  "main": "server/index.js",
   "scripts": {
+    "start": "node server/index.js",
     "build": "webpack --mode=production",
     "dev": "npm-run-all --silent --parallel dev:*",
     "dev:client": "webpack-dev-server",
-    "dev:server": "nodemon server/index.js",
-    "db:export": "php database/export.php",
-    "db:import": "php database/import.php"
+    "dev:server": "nodemon server/index.js"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",
@@ -33,11 +32,12 @@
     "webpack-dev-server": "3.9.0"
   },
   "dependencies": {
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
     "body-parser": "^1.19.0",
     "express": "^4.15.2",
     "multer": "^1.4.2",
+    "mysql2": "2.0.1",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "uuid": "^3.3.3"
