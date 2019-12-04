@@ -12,7 +12,12 @@ body * {
   background-color: #4D4847;
 }
 
-.app-body{
+.view-body{
   height: 93vh;
   width: 100%;
+}
+
+.selected{
+  background-color: #932b2b;
+  opacity: .5;
 }
