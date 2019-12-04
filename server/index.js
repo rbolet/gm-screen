@@ -46,6 +46,7 @@ app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
     .then(result => {
       responseObject = {
         imageId: result[0].insertId,
+        filename: req.file.filename,
         userGivenName: req.body['given-name']
       };
 

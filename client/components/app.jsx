@@ -12,7 +12,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="app-container container-fluid vh-100 px-0">
-        <header className="app-header"></header>
+        <header className="app-header color-quartz"></header>
         <SessionView/>
       </div>
     );
