@@ -13,6 +13,14 @@ const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
 
+// images GET
+app.get('/imagelist', (req, res) => {
+  db.promise().query('SELECT * FROM images')
+    .then(([rows]) => {
+      res.status(200).json(rows);
+    });
+});
+
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -26,15 +34,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Upload POST
-// app.post('/upload', upload.single('image-upload'), (req, res) => {
-//   res.status(200).json({ filename: req.body.filename });
-// });
-
-// images GET
-app.get('/imagelist', (req, res) => {
-  db.promise().query('SELECT * FROM images')
-    .then(([rows]) => {
-      res.status(200).json(rows);
-    });
+app.post('/upload', upload.single('image-upload'), (req, res) => {
+  res.status(200).json({ filename: req.body.filename });
 });
-http.listen(3000, () => { console.log('listening ...'); });
+
+http.listen(3001, () => { console.log('listening ...'); });
