@@ -5,8 +5,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      imagesArray: []
     };
+  }
+
+  componentDidMount() {
+    fetch('/api/imagelist', { method: 'GET' })
+      .then(res => res.json())
+      .then(imagesArray => {
+        this.setState({ imagesArray });
+      });
   }
 
   render() {
