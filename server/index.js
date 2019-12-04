@@ -14,11 +14,12 @@ app.use(staticMiddleware);
 app.use(bodyParser.json());
 
 // images GET
-app.get('/imagelist', (req, res) => {
-  db.promise().query('SELECT * FROM images')
+app.get('/api/imagelist', (req, res, next) => {
+  db.query('SELECT * FROM images')
     .then(([rows]) => {
       res.status(200).json(rows);
-    });
+    })
+    .catch(err => next(err));
 });
 
 // upload middleware config
@@ -38,4 +39,12 @@ app.post('/upload', upload.single('image-upload'), (req, res) => {
   res.status(200).json({ filename: req.body.filename });
 });
 
-http.listen(3001, () => { console.log('listening ...'); });
+// Error Handler
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500).json({ error: 'An unexpected error occurred' });
+});
+
+http.listen(3001, () => {
+  // eslint-disable-next-line
+  console.log('listening ...'); });

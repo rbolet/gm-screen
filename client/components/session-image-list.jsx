@@ -7,10 +7,12 @@ function SessionImageList(props) {
       <div className="all-images-header text-white text-center">My Session</div>
       <div className="all-images-body bg-light h-75">
         <table className="table">
-          <tr>
-            <th>File Name</th>
-          </tr>
-          <SessionImage/>
+          <thead>
+            <tr>
+              <th>File Name</th>
+            </tr>
+          </thead>
+          <SessionImage images={props.images}/>
         </table>
       </div>
     </div>

@@ -14,6 +14,9 @@ class App extends React.Component {
       .then(res => res.json())
       .then(imagesArray => {
         this.setState({ imagesArray });
+      })
+      .catch(error => {
+        alert(`Error in GET return: ${error}`);
       });
   }
 
@@ -23,7 +26,7 @@ class App extends React.Component {
       <div className="app-container container-fluid vh-100 px-0">
         <header className="app-header"></header>
         <div className="app-body">
-          <SessionImageList/>
+          <SessionImageList images={this.state.imagesArray}/>
         </div>
       </div>
     );
