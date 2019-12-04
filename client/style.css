@@ -17,6 +17,10 @@ body * {
   width: 100%;
 }
 
+.all-images-body{
+  overflow-y: scroll;
+}
+
 .selected{
   background-color: #932b2b;
   opacity: .5;

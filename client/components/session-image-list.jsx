@@ -48,7 +48,7 @@ function SessionImage(props) {
         key={image.imageId}
         className={props.selectedRow === image.imageId ? 'selected text-white' : ''}
         onClick={props.onClick.bind(this, image)}>
-        <td>{image.filename}</td>
+        <td>{image.userGivenName}</td>
       </tr>
     );
   });
