@@ -10,13 +10,14 @@ class SessionImageList extends React.Component {
     this.onRowClick = this.onRowClick.bind(this);
   }
 
-  onRowClick(row) {
-    this.setState({ selectedRowKey: row });
+  onRowClick(image) {
+    this.setState({ selectedRowKey: image.imageId });
+    this.props.changeThumbnail(image);
   }
 
   render() {
     return (
-      <div className="col-4 h-100">
+      <div className="col h-100 d-inline-block">
         <div className="all-images-header text-white text-center">My Session</div>
         <div className="all-images-body bg-light h-75">
           <table className="table">
@@ -46,7 +47,7 @@ function SessionImage(props) {
       <tr
         key={image.imageId}
         className={props.selectedRow === image.imageId ? 'selected text-white' : ''}
-        onClick={props.onClick.bind(this, image.imageId)}>
+        onClick={props.onClick.bind(this, image)}>
         <td>{image.filename}</td>
       </tr>
     );
