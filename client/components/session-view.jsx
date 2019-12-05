@@ -10,11 +10,25 @@ class SessionView extends React.Component {
       thumbnailImage: null
     };
 
+    this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.changeThumbnail = this.changeThumbnail.bind(this);
   }
 
   changeThumbnail(image) {
     this.setState({ thumbnailImage: image });
+  }
+
+  onUploadSubmit(event) {
+    event.preventDefault();
+    var formData = new FormData(event.target);
+
+    fetch('/api/upload', { method: 'POST', 'content-type': 'multipart/form-data', body: formData })
+      .then(res => res.json())
+      .then(result => {
+        this.setState((state, props) => {
+          return { imagesArray: state.imagesArray.push(result) };
+        });
+      });
   }
 
   componentDidMount() {
@@ -32,7 +46,10 @@ class SessionView extends React.Component {
 
     return (
       <div className="view-body row px-3">
-        <SessionImageList images={this.state.imagesArray} changeThumbnail={this.changeThumbnail} />
+        <SessionImageList
+          images={this.state.imagesArray}
+          changeThumbnail={this.changeThumbnail}
+          onUploadSubmit={this.onUploadSubmit}/>
         <Thumbnail thumbnailImage={this.state.thumbnailImage} />
       </div>
     );
