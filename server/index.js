@@ -35,8 +35,33 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Upload POST
-app.post('/upload', upload.single('image-upload'), (req, res) => {
-  res.status(200).json({ filename: req.body.filename });
+app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
+  let responseObject = {};
+  const insertImageSQL = `INSERT INTO
+                            images (filename, userGivenName)
+                          VALUES ('${req.file.filename}',
+                            '${req.body['given-name']}'
+                            )`;
+  db.query(insertImageSQL)
+    .then(result => {
+      responseObject = {
+        imageId: result[0].insertId,
+        filename: req.file.filename,
+        userGivenName: req.body['given-name']
+      };
+
+      const insertSessionImageSQL = `INSERT INTO
+                                      sessionImages (sessionId, imageId)
+                                    VALUES ('1', '${result[0].insertId}')`;
+      db.query(insertSessionImageSQL)
+        .then(() => {
+        })
+        .catch(error => { next(error); });
+    })
+    .then(result => {
+      res.status(200).json(responseObject);
+    })
+    .catch(error => { next(error); });
 });
 
 // Error Handler
