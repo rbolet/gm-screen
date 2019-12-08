@@ -6,10 +6,11 @@ body * {
   background-image: linear-gradient(to bottom right, #000807, #4D4847);
 
 }
-
+.color-quartz{
+    background-color: #4D4847;
+}
 .app-header{
   height: 6vh;
-  background-color: #4D4847;
 }
 
 .view-body{
@@ -17,7 +18,7 @@ body * {
   width: 100%;
 }
 
-.all-images-body{
+.images-table{
   overflow-y: scroll;
 }
 

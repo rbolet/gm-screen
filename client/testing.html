@@ -17,40 +17,10 @@
   <div id="root" class="bg-gradient">
     <div class="app-container container-fluid vh-100 px-0">
       <header class="app-header"></header>
-      <div class="view-body">
-
-        <div class="session-images d-flex container-fluid h-100 px-0 pt-3">
-          <div class="col-4 h-100">
-            <div class="all-images-header text-white text-center">My Session</div>
-            <div class="all-images-body bg-light h-75">
-              </div>
-              <div id="upload-form" class="collapse">
-                <div class="card card-body">
-                  <form>
-                    <input type="file" id="files" name="testFile" />
-                    <input type="submit" value="upload" />
-                  </form>
-                </div>
-              </div>
-              <table class="table">
-                  <thead>
-                    <th>File Name</th>
-                  </thead>
-                  <tbody>
-                    <tr class="selected text-white">
-                      <td>darkvillage.jpg</td>
-                    </tr>
-                  </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="col-4 h-100">
-              <div class="thumbnail-header text-center text-white">Preview</div>
-              <div class="thumbnail-body bg-light h-50 p-3 d-flex justify-content-center">
-                <img class="img-thumbnail h-100 preview-image" src="../server/public/images/darkvillage.jpg" alt="thumbnail">
-              </div>
-            <div class="scene-list"></div>
-          </div>
+      <div class="view-body d-flex justify-content-center align-items-center">
+        <div class="menu-container h-75 w-25 bg-dark rounded d-flex flex-column justify-content-center p-4">
+          <button class="btn btn-secondary mb-4">Game Master</button>
+          <button class="btn btn-secondary mb-4">Player</button>
         </div>
       </div>
     </div>
