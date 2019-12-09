@@ -15,7 +15,7 @@ class GMView extends React.Component {
         <div className="row h-100 w-100">
           <div className="col-6 h-100 border border-warning">
             <div className="h-75 border border-success">
-              <div className="environment-image h-100 w-100" style={`"background-image: url(../server/public/images/${this.state.environmentImage});"`}></div>
+              <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}></div>
             </div>
             <div className="h-25 border border-success"></div>
           </div>

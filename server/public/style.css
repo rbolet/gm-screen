@@ -27,6 +27,8 @@ body * {
   opacity: .5;
 }
 
-.hero-image{
-  background-size: auto ;
+.environment-image{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }

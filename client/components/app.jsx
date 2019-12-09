@@ -1,12 +1,13 @@
 const React = require('react');
 const SessionView = require('./session-view');
 const MenuView = require('./menu-view');
+const GMView = require('./gm-view');
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'menu'
+      view: 'gm'
     };
 
     this.goToSessionView = this.goToSessionView.bind(this);
@@ -24,6 +25,9 @@ class App extends React.Component {
         break;
       case 'session':
         currentView = <SessionView/>;
+        break;
+      case 'gm':
+        currentView = <GMView/>;
         break;
     }
     return (
