@@ -7,14 +7,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'gm'
+      view: 'menu'
     };
 
     this.goToSessionView = this.goToSessionView.bind(this);
+    this.launchSession = this.launchSession.bind(this);
   }
 
   goToSessionView() {
     this.setState({ view: 'session' });
+  }
+
+  launchSession() {
+    this.setState({ view: 'gm' });
   }
 
   render() {
@@ -24,7 +29,7 @@ class App extends React.Component {
         currentView = <MenuView goToSessionView={this.goToSessionView}/>;
         break;
       case 'session':
-        currentView = <SessionView/>;
+        currentView = <SessionView launchSession={this.launchSession}/>;
         break;
       case 'gm':
         currentView = <GMView/>;
