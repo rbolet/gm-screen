@@ -26,3 +26,7 @@ body * {
   background-color: #932b2b;
   opacity: .5;
 }
+
+.hero-image{
+  background-size: auto ;
+}

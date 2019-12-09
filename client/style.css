@@ -26,3 +26,9 @@ body * {
   background-color: #932b2b;
   opacity: .5;
 }
+
+.environment-image{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
