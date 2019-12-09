@@ -9,6 +9,11 @@ body * {
 .color-quartz{
     background-color: #4D4847;
 }
+
+.blur{
+  filter: blur(8px);
+}
+
 .app-header{
   height: 6vh;
 }
@@ -31,4 +36,16 @@ body * {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.custom-modal{
+  z-index: 2000;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 7rem;
+  background-color: rgba(10, 10, 10, .89);
 }
