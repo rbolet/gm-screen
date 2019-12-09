@@ -64,6 +64,15 @@ app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
     .catch(error => { next(error); });
 });
 
+// GET list of all sessions (temp)
+app.get('api/allsessions', (req, res, next) => {
+  db.query('SELECT * FROM sessions')
+    .then(([rows]) => {
+      res.status(200).json(rows)
+        .catch(error => { next(error); });
+    });
+});
+
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);
