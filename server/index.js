@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.get('/api/imagelist', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN sessionImages ON images.imageID = sessionImages.imageID
-               WHERE sessionImages.sessionID = ${req.body.sessionId}`)
+              WHERE sessionImages.sessionID = ${req.body.sessionId}`)
     .then(([rows]) => {
       res.status(200).json(rows);
     })
