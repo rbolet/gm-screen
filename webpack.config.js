@@ -34,6 +34,9 @@ module.exports = {
     contentBase: publicPath,
     historyApiFallback: true,
     watchContentBase: true,
+    watchOptions: {
+      ignored: path.resolve(publicPath, 'images')
+    },
     stats: 'minimal',
     proxy: {
       '/api': {
