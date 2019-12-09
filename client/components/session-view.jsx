@@ -26,7 +26,7 @@ class SessionView extends React.Component {
       .then(res => res.json())
       .then(result => {
         this.setState((state, props) => {
-          return { imagesArray: state.imagesArray.push(result) };
+          return { imagesArray: state.imagesArray.concat(result) };
         });
       });
   }
@@ -50,7 +50,7 @@ class SessionView extends React.Component {
           images={this.state.imagesArray}
           changeThumbnail={this.changeThumbnail}
           onUploadSubmit={this.onUploadSubmit}/>
-        <Thumbnail thumbnailImage={this.state.thumbnailImage} />
+        <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.props.launchSession}/>
       </div>
     );
   }
