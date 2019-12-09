@@ -32,7 +32,10 @@ class SessionView extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/api/imagelist', { method: 'GET' })
+    fetch('/api/imagelist', {
+      method: 'GET',
+      body: { sessionId: 1 }
+    })
       .then(res => res.json())
       .then(imagesArray => {
         this.setState({ imagesArray });
