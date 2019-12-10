@@ -7,11 +7,13 @@ class SessionView extends React.Component {
     super(props);
     this.state = {
       imagesArray: [],
-      thumbnailImage: null
+      thumbnailImage: null,
+      sessionId: 1
     };
 
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.changeThumbnail = this.changeThumbnail.bind(this);
+    this.launchWithImages = this.launchWithImages.bind(this);
   }
 
   changeThumbnail(image) {
@@ -29,6 +31,14 @@ class SessionView extends React.Component {
           return { imagesArray: state.imagesArray.concat(result) };
         });
       });
+  }
+
+  launchWithImages() {
+    const sessionConfig = {
+      sessionId: 1,
+      imagesArray: this.state.imagesArray
+    };
+    this.props.launchSession(sessionConfig);
   }
 
   componentDidMount() {
@@ -57,7 +67,7 @@ class SessionView extends React.Component {
           images={this.state.imagesArray}
           changeThumbnail={this.changeThumbnail}
           onUploadSubmit={this.onUploadSubmit}/>
-        <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.props.launchSession}/>
+        <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.launchWithImages}/>
       </div>
     );
   }
