@@ -6,6 +6,7 @@ const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
 const db = require('./_config');
+const io = require('socket.io')(http);
 
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
@@ -83,6 +84,41 @@ app.get('/api/allsessions', (req, res, next) => {
     })
     .catch(error => { next(error); });
 });
+
+// POST to update environment image
+app.post('/api/updateImage/environment', (req, res, next) => {
+  pushEnvironmentImageToAll(req.body.fileName);
+  res.json('Emitting filepath ...');
+});
+
+// Socket io set up and incoming event handling
+const socketArray = [];
+io.on('connection', socket => {
+  // eslint-disable-next-line
+  console.log(`${socket.id} connected`);
+  socketArray.push(socket);
+  socket.emit('newSocketID', socket.id);
+  // eslint-disable-next-line
+  console.log(`There are ${socketArray.length} users connected`);
+  socket.on('disconnect', reason => {
+    // eslint-disable-next-line
+    console.log(`${socket.id} disconnected`);
+
+    // const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
+    // const socketSliced = socketArray.slice(indexToRemove, 1);
+    // console.log(`removed ${socketSliced[0].id} from array, ${socketArray.length} users connected.`);
+    // console.log(socketArray);
+  });
+});
+
+function pushEnvironmentImageToAll(fileName) {
+  for (const socket of socketArray) {
+    // eslint-disable-next-line
+    console.log(`sending ${fileName} to ${socket.id}`);
+    socket.emit('updateEnvironmentImage', fileName);
+  }
+  return fileName;
+}
 
 // Error Handler
 app.use((error, req, res, next) => {

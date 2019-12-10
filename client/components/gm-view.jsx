@@ -1,4 +1,5 @@
 const React = require('react');
+const io = require('socket.io-client');
 const ImageGrid = require('./image-grid');
 
 class GMView extends React.Component {
@@ -12,7 +13,37 @@ class GMView extends React.Component {
   }
 
   onGridClick(image) {
-    this.setState({ environmentImage: image.fileName });
+    const imageFileName = JSON.stringify({ fileName: image.fileName });
+    fetch('/api/updateImage/environment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: imageFileName
+    })
+      .then(res => res.json())
+      .then(confirmation => {
+        // console.log(confirmation);
+        this.setState({ environmentImage: image.fileName });
+      })
+      .catch(error => {
+        alert(`Error in GET return: ${error}`);
+      });
+
+  }
+
+  componentDidMount() {
+    this.socket = io('http://localhost:3001');
+    this.socket.on('newSocketID', socketID => {
+      // console.log(socketID);
+    });
+    this.socket.on('updateEnvironmentImage', fileName => {
+      this.setState({ environmentImage: fileName });
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
   }
 
   render() {
