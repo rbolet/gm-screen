@@ -1,18 +1,18 @@
 const React = require('react');
+const ImageGrid = require('./image-grid');
 
 class GMView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      environmentImage: '3d0e382a-7376-4802-9984-f936f4d04fbf..jpg',
+      environmentImage: null,
       sessionConfig: this.props.sessionConfig
     };
-
-    this.changeThumbnail = this.changeThumbnail.bind(this);
+    this.onGridClick = this.onGridClick.bind(this);
   }
 
-  changeThumbnail(image) {
-    this.setState({ thumbnailImage: image });
+  onGridClick(image) {
+    this.setState({ environmentImage: image.fileName });
   }
 
   render() {
@@ -26,7 +26,10 @@ class GMView extends React.Component {
             </div>
             <div className="h-25 border border-success"></div>
           </div>
-          <div className="col-6 h-100 border border-warning">
+          <div className="col-6 h-100 border border-warning p-2">
+            <ImageGrid
+              sessionConfig={this.state.sessionConfig}
+              onGridClick={this.onGridClick}/>
           </div>
         </div>
       </div>
