@@ -31,22 +31,14 @@ class SessionImageList extends React.Component {
           </div>
         </div>
         <div className="all-images-footer rounded d-flex w-100 color-quartz p-2">
-          <form onSubmit={this.props.onUploadSubmit}>
-            <div className="custom-file form-group">
-              <label className="custom-file-label p-1" htmlFor="image-upload">Choose file</label>
-              <input type="file" className="custom-file-input mb-1" id="image-upload" name="image-upload"/>
-              <label className="text-white mb-0" htmlFor="given-name">Image Name</label>
-              <input className="form-control mb-1" id="given-name" name="given-name" placeholder=""/>
-              <input type="submit" value="Upload File"/>
-            </div>
-          </form>
+          <SessionImageFooter
+            showForm={this.props.showForm}
+            onUploadSubmit={this.props.onUploadSubmit}/>
         </div>
       </div>
     );
   }
 }
-
-module.exports = SessionImageList;
 
 function SessionImage(props) {
 
@@ -62,3 +54,29 @@ function SessionImage(props) {
   });
   return (<tbody>{elementRows}</tbody>);
 }
+
+function SessionImageFooter(props) {
+  if (props.showForm) {
+    return (
+      <UploadForm onUploadSubmit={props.onUploadSubmit}/>
+    );
+  }
+  return null;
+}
+
+function UploadForm(props) {
+
+  return (
+    <form onSubmit={props.onUploadSubmit}>
+      <div className="custom-file form-group">
+        <label className="custom-file-label p-1" htmlFor="image-upload">Choose file</label>
+        <input type="file" className="custom-file-input mb-1" id="image-upload" name="image-upload" />
+        <label className="text-white mb-0" htmlFor="given-name">Image Name</label>
+        <input className="form-control mb-1" id="given-name" name="given-name" placeholder="" />
+        <input type="submit" value="Upload File" />
+      </div>
+    </form>
+  );
+}
+
+module.exports = SessionImageList;

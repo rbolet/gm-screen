@@ -9,6 +9,12 @@ body * {
 .color-quartz{
     background-color: #4D4847;
 }
+
+.color-light-grey{
+  background-color: #e6e6e6;
+  filter: blur(8px);
+}
+
 .app-header{
   height: 6vh;
 }

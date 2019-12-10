@@ -7,11 +7,13 @@ class SessionView extends React.Component {
     super(props);
     this.state = {
       imagesArray: [],
-      thumbnailImage: null
+      thumbnailImage: null,
+      sessionId: 1
     };
 
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.changeThumbnail = this.changeThumbnail.bind(this);
+    this.launchWithImages = this.launchWithImages.bind(this);
   }
 
   changeThumbnail(image) {
@@ -31,8 +33,23 @@ class SessionView extends React.Component {
       });
   }
 
+  launchWithImages() {
+    const sessionConfig = {
+      sessionId: 1,
+      imagesArray: this.state.imagesArray
+    };
+    this.props.launchSession(sessionConfig);
+  }
+
   componentDidMount() {
-    fetch('/api/imagelist', { method: 'GET' })
+    const currentSession = JSON.stringify({ sessionId: 1 });
+    fetch('/api/imagelist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: currentSession
+    })
       .then(res => res.json())
       .then(imagesArray => {
         this.setState({ imagesArray });
@@ -49,8 +66,9 @@ class SessionView extends React.Component {
         <SessionImageList
           images={this.state.imagesArray}
           changeThumbnail={this.changeThumbnail}
-          onUploadSubmit={this.onUploadSubmit}/>
-        <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.props.launchSession}/>
+          onUploadSubmit={this.onUploadSubmit}
+          showForm={true}/>
+        <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.launchWithImages}/>
       </div>
     );
   }

@@ -13,8 +13,19 @@ const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
 
-// images GET
-app.get('/api/imagelist', (req, res, next) => {
+// images from given session
+app.post('/api/imagelist', (req, res, next) => {
+  db.query(`SELECT * FROM images
+              JOIN sessionImages ON images.imageID = sessionImages.imageID
+              WHERE sessionImages.sessionID = ${req.body.sessionId}`)
+    .then(([rows]) => {
+      res.status(200).json(rows);
+    })
+    .catch(err => next(err));
+});
+
+// GET all from any session
+app.get('/api/allimages', (req, res, next) => {
   db.query('SELECT * FROM images')
     .then(([rows]) => {
       res.status(200).json(rows);
