@@ -1,5 +1,6 @@
 const React = require('react');
 const SessionImageList = require('./session-image-list');
+const Thumbnail = require('./thumbnail');
 
 class GMView extends React.Component {
   constructor(props) {
@@ -8,6 +9,8 @@ class GMView extends React.Component {
       environmentImage: '3d0e382a-7376-4802-9984-f936f4d04fbf..jpg',
       sessionConfig: this.props.sessionConfig
     };
+
+    this.changeThumbnail = this.changeThumbnail.bind(this);
   }
 
   changeThumbnail(image) {
@@ -26,9 +29,15 @@ class GMView extends React.Component {
             <div className="h-25 border border-success"></div>
           </div>
           <div className="col-6 h-100 border border-warning">
-            <SessionImageList
-              images={this.state.sessionConfig.imagesArray}
-              changeThumbnail={this.changeThumbnail}/>
+            <div className="row">
+              <Thumbnail/>
+            </div>
+            <div className="row">
+              <SessionImageList
+                images={this.state.sessionConfig.imagesArray}
+                changeThumbnail={this.changeThumbnail}
+                showForm={false}/>
+            </div>
           </div>
         </div>
       </div>

@@ -66,8 +66,12 @@ class SessionView extends React.Component {
         <SessionImageList
           images={this.state.imagesArray}
           changeThumbnail={this.changeThumbnail}
-          onUploadSubmit={this.onUploadSubmit}/>
+          onUploadSubmit={this.onUploadSubmit}
+          showForm={true}/>
         <Thumbnail thumbnailImage={this.state.thumbnailImage} launchSession={this.launchWithImages}/>
+        <div className="all-images-footer rounded d-flex justify-content-center w-100 color-quartz p-2">
+          <button className="btn btn-secondary" onClick={this.props.launchSession}>Launch Session</button>
+        </div>
       </div>
     );
   }
