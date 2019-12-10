@@ -10,6 +10,11 @@ body * {
     background-color: #4D4847;
 }
 
+.color-light-grey{
+  background-color: #e6e6e6;
+  filter: blur(8px);
+}
+
 .blur{
   filter: blur(8px);
 }
@@ -36,6 +41,12 @@ body * {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.grid-image{
+  height: 30%;
+  width: 30%;
+  object-fit: contain;
 }
 
 .custom-modal{
