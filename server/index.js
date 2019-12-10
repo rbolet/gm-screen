@@ -13,8 +13,8 @@ const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
 
-// GET images from given session
-app.get('/api/imagelist', (req, res, next) => {
+// images from given session
+app.post('/api/imagelist', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN sessionImages ON images.imageID = sessionImages.imageID
               WHERE sessionImages.sessionID = ${req.body.sessionId}`)
@@ -25,13 +25,13 @@ app.get('/api/imagelist', (req, res, next) => {
 });
 
 // GET all from any session
-// app.get('/api/imagelist', (req, res, next) => {
-//   db.query('SELECT * FROM images')
-//     .then(([rows]) => {
-//       res.status(200).json(rows);
-//     })
-//     .catch(err => next(err));
-// });
+app.get('/api/allimages', (req, res, next) => {
+  db.query('SELECT * FROM images')
+    .then(([rows]) => {
+      res.status(200).json(rows);
+    })
+    .catch(err => next(err));
+});
 
 // upload middleware config
 const storage = multer.diskStorage({

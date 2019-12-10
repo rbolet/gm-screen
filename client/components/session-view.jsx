@@ -32,9 +32,13 @@ class SessionView extends React.Component {
   }
 
   componentDidMount() {
+    const currentSession = JSON.stringify({ sessionId: 1 });
     fetch('/api/imagelist', {
-      method: 'GET',
-      body: { sessionId: 1 }
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: currentSession
     })
       .then(res => res.json())
       .then(imagesArray => {
