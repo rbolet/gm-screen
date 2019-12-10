@@ -85,11 +85,17 @@ app.get('/api/allsessions', (req, res, next) => {
     .catch(error => { next(error); });
 });
 
+// POST to update environment image
+app.post('/api/updateImage/environment', (req, res, next) => {
+  const confirmation = pushEnvironmentImageToAll(req.body.filename);
+  res.send(confirmation);
+});
+
 // Socket io set up and incoming event handling
 const socketArray = [];
 io.on('connection', socket => {
   // eslint-disable-next-line
-  console.log('user connected');
+  console.log(`${socket.id} connected`);
   socketArray.push(socket);
   socket.emit('newSocketID', socket.id);
   // eslint-disable-next-line
@@ -104,6 +110,15 @@ io.on('connection', socket => {
     // console.log(socketArray);
   });
 });
+
+function pushEnvironmentImageToAll(filename) {
+  for (const socket of socketArray) {
+    // eslint-disable-next-line
+    console.log(`sending ${filename} to ${socket.id}`);
+    socket.emit('updateEnvironmentImage', filename);
+  }
+  return filename;
+}
 
 // Error Handler
 app.use((error, req, res, next) => {
