@@ -87,8 +87,8 @@ app.get('/api/allsessions', (req, res, next) => {
 
 // POST to update environment image
 app.post('/api/updateImage/environment', (req, res, next) => {
-  const confirmation = pushEnvironmentImageToAll(req.body.filename);
-  res.send(confirmation);
+  pushEnvironmentImageToAll(req.body.fileName);
+  res.json('Emitting filepath ...');
 });
 
 // Socket io set up and incoming event handling
@@ -111,13 +111,13 @@ io.on('connection', socket => {
   });
 });
 
-function pushEnvironmentImageToAll(filename) {
+function pushEnvironmentImageToAll(fileName) {
   for (const socket of socketArray) {
     // eslint-disable-next-line
-    console.log(`sending ${filename} to ${socket.id}`);
-    socket.emit('updateEnvironmentImage', filename);
+    console.log(`sending ${fileName} to ${socket.id}`);
+    socket.emit('updateEnvironmentImage', fileName);
   }
-  return filename;
+  return fileName;
 }
 
 // Error Handler

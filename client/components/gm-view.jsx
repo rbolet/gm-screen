@@ -21,8 +21,9 @@ class GMView extends React.Component {
       },
       body: imageFileName
     })
+      .then(res => res.json())
       .then(confirmation => {
-        console.log(confirmation);
+        // console.log(confirmation);
         this.setState({ environmentImage: image.fileName });
       })
       .catch(error => {
@@ -35,6 +36,9 @@ class GMView extends React.Component {
     this.socket = io('http://localhost:3001');
     this.socket.on('newSocketID', socketID => {
       // console.log(socketID);
+    });
+    this.socket.on('updateEnvironmentImage', fileName => {
+      this.setState({ environmentImage: fileName });
     });
   }
 
