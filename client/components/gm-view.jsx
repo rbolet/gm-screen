@@ -17,7 +17,14 @@ class GMView extends React.Component {
   }
 
   componentDidMount() {
-    this.socket = io();
+    this.socket = io('http://localhost:3001');
+    this.socket.on('newSocketID', socketID => {
+      // console.log(socketID);
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
   }
 
   render() {

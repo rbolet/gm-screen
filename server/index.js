@@ -95,10 +95,19 @@ const socketArray = [];
 io.on('connection', socket => {
   // eslint-disable-next-line
   console.log('user connected');
-  socketArray.push({ socket: socket });
+  socketArray.push(socket);
   socket.emit('newSocketID', socket.id);
   // eslint-disable-next-line
   console.log(`There are ${socketArray.length} users connected`);
+  socket.on('disconnect', reason => {
+    // eslint-disable-next-line
+    console.log(`${socket.id} disconnected`);
+
+    // const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
+    // const socketSliced = socketArray.slice(indexToRemove, 1);
+    // console.log(`removed ${socketSliced[0].id} from array, ${socketArray.length} users connected.`);
+    // console.log(socketArray);
+  });
 });
 
 http.listen(3001, () => {
