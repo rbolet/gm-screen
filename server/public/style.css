@@ -43,6 +43,12 @@ body * {
   background-position: center;
 }
 
+.clear-environment{
+  font-size: .75rem;
+  position: relative;
+  top: 90%;
+}
+
 .grid-image{
   height: 30%;
   width: 30%;

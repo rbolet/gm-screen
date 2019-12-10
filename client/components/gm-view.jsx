@@ -10,6 +10,7 @@ class GMView extends React.Component {
       sessionConfig: this.props.sessionConfig
     };
     this.onGridClick = this.onGridClick.bind(this);
+    this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
   }
 
   onGridClick(image) {
@@ -32,6 +33,16 @@ class GMView extends React.Component {
 
   }
 
+  clearEnvironmentImage() {
+    fetch('/api/updateImage/environment', { method: 'DELETE' })
+      .then(confirmation => {
+        // console.log(confirmation);
+      })
+      .catch(error => {
+        alert(`Error in DELETE: ${error}`);
+      });
+  }
+
   componentDidMount() {
     this.socket = io('http://localhost:3001');
     this.socket.on('newSocketID', socketID => {
@@ -50,19 +61,23 @@ class GMView extends React.Component {
 
     let EnvironmentImageElement = null;
     if (this.state.environmentImage) {
-      EnvironmentImageElement = <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}/>;
+      EnvironmentImageElement = (
+        <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
+          <button className="clear-environment btn btn-secondary" onClick={this.clearEnvironmentImage}>Clear Environment</button>
+        </div>
+      );
     }
 
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
         <div className="row h-100 w-100">
-          <div className="col-6 h-100 border border-warning">
-            <div className="h-75 border border-success">
+          <div className="col-6 h-100">
+            <div className="h-75">
               {EnvironmentImageElement}
             </div>
-            <div className="h-25 border border-success"></div>
+            <div className="h-25"></div>
           </div>
-          <div className="col-6 h-100 border border-warning p-2">
+          <div className="col-6 h-100 p-2">
             <ImageGrid
               sessionConfig={this.state.sessionConfig}
               onGridClick={this.onGridClick}/>
