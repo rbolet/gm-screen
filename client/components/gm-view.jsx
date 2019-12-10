@@ -1,6 +1,6 @@
 const React = require('react');
-const ImageGrid = require('./image-grid');
 const io = require('socket.io-client');
+const ImageGrid = require('./image-grid');
 
 class GMView extends React.Component {
   constructor(props) {

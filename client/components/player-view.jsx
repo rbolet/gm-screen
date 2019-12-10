@@ -1,11 +1,26 @@
 const React = require('react');
+const io = require('socket.io-client');
 
 class PlayerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      environmentImage: '3d0e382a-7376-4802-9984-f936f4d04fbf..jpg'
+      environmentImage: null
     };
+  }
+
+  componentDidMount() {
+    this.socket = io('http://localhost:3001');
+    this.socket.on('newSocketID', socketID => {
+      // console.log(socketID);
+    });
+    this.socket.on('updateEnvironmentImage', fileName => {
+      this.setState({ environmentImage: fileName });
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.close();
   }
 
   render() {
