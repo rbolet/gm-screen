@@ -91,6 +91,11 @@ app.post('/api/updateImage/environment', (req, res, next) => {
   res.json('Emitting filepath ...');
 });
 
+// DELETE to clear environment image
+app.delete('/api/updateImage/environment', (req, res, next) => {
+  clearEnvironmentImage();
+  res.json('Cleared all environment images');
+});
 // Socket io set up and incoming event handling
 const socketArray = [];
 io.on('connection', socket => {
@@ -120,6 +125,11 @@ function pushEnvironmentImageToAll(fileName) {
   return fileName;
 }
 
+function clearEnvironmentImage() {
+  for (const socket of socketArray) {
+    socket.emit('updateEnvironmentImage', null);
+  }
+}
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);

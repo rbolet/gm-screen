@@ -24,13 +24,16 @@ class PlayerView extends React.Component {
   }
 
   render() {
-
+    let EnvironmentImageElement = null;
+    if (this.state.environmentImage) {
+      EnvironmentImageElement = <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }} />;
+    }
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
         <div className="row h-100 w-100">
           <div className="col-12 h-100 border border-warning">
             <div className="h-100 p-2 border border-success">
-              <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}></div>
+              {EnvironmentImageElement}
             </div>
           </div>
         </div>
