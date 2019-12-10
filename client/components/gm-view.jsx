@@ -1,5 +1,6 @@
 const React = require('react');
 const ImageGrid = require('./image-grid');
+const io = require('socket.io-client');
 
 class GMView extends React.Component {
   constructor(props) {
@@ -13,6 +14,10 @@ class GMView extends React.Component {
 
   onGridClick(image) {
     this.setState({ environmentImage: image.fileName });
+  }
+
+  componentDidMount() {
+    this.socket = io();
   }
 
   render() {

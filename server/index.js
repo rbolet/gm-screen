@@ -6,6 +6,7 @@ const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
 const db = require('./_config');
+const io = require('socket.io')(http);
 
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
@@ -88,6 +89,16 @@ app.get('/api/allsessions', (req, res, next) => {
 app.use((error, req, res, next) => {
   console.error(error);
   res.status(500).json({ error: 'An unexpected error occurred' });
+});
+
+const socketArray = [];
+io.on('connection', socket => {
+  // eslint-disable-next-line
+  console.log('user connected');
+  socketArray.push({ socket: socket });
+  socket.emit('newSocketID', socket.id);
+  // eslint-disable-next-line
+  console.log(`There are ${socketArray.length} users connected`);
 });
 
 http.listen(3001, () => {
