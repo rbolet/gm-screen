@@ -85,12 +85,7 @@ app.get('/api/allsessions', (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-// Error Handler
-app.use((error, req, res, next) => {
-  console.error(error);
-  res.status(500).json({ error: 'An unexpected error occurred' });
-});
-
+// Socket io set up and incoming event handling
 const socketArray = [];
 io.on('connection', socket => {
   // eslint-disable-next-line
@@ -108,6 +103,12 @@ io.on('connection', socket => {
     // console.log(`removed ${socketSliced[0].id} from array, ${socketArray.length} users connected.`);
     // console.log(socketArray);
   });
+});
+
+// Error Handler
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500).json({ error: 'An unexpected error occurred' });
 });
 
 http.listen(3001, () => {

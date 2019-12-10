@@ -13,7 +13,22 @@ class GMView extends React.Component {
   }
 
   onGridClick(image) {
-    this.setState({ environmentImage: image.fileName });
+    const imageFileName = JSON.stringify({ fileName: image.fileName });
+    fetch('/api/updateImage/environment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: imageFileName
+    })
+      .then(confirmation => {
+        console.log(confirmation);
+        this.setState({ environmentImage: image.fileName });
+      })
+      .catch(error => {
+        alert(`Error in GET return: ${error}`);
+      });
+
   }
 
   componentDidMount() {
