@@ -1,19 +1,16 @@
 const React = require('react');
 
 class ImageGrid extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sessionConfig: this.props.sessionConfig
-    };
-  }
 
   render() {
 
     return (
       <div className="image-grid h-100 w-100 color-light-grey">
+        <div className="grid-header">
+          <GridHeaderButtons/>
+        </div>
         <GridImages
-          images={this.state.sessionConfig.imagesArray}
+          images={this.props.sessionConfig.imagesArray}
           onClick={this.props.onGridClick}/>
       </div>
 
@@ -40,3 +37,15 @@ function GridImages(props) {
 }
 
 module.exports = ImageGrid;
+
+function GridHeaderButtons(props) {
+  const distinctCategories = [...new Set(props.sessionConfig.imagesArray.map(image => image.category))];
+  const ButtonElements = distinctCategories.map(category => {
+    return (<button key={category} className="btn">{category}</button>);
+  });
+  return (
+    <div className="btn-group row d-flex justify-start">
+      {ButtonElements}
+    </div>
+  );
+}
