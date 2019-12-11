@@ -1,6 +1,7 @@
 const React = require('react');
 const io = require('socket.io-client');
 const ImageGrid = require('./image-grid');
+const SecondaryImages = require('./secondary-images');
 
 class GMView extends React.Component {
   constructor(props) {
@@ -66,6 +67,7 @@ class GMView extends React.Component {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={this.clearEnvironmentImage}></i>
           </div>
+          <SecondaryImages />
         </div>
       );
     }
