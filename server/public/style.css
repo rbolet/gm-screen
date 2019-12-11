@@ -46,7 +46,8 @@ body * {
 .clear-environment{
   font-size: .75rem;
   position: relative;
-  top: 90%;
+  top: 5%;
+  right: 90%;
 }
 
 .grid-image{

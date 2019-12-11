@@ -50,9 +50,10 @@ const upload = multer({ storage: storage });
 app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
   let responseObject = {};
   const insertImageSQL = `INSERT INTO
-                            images (filename, userGivenName)
+                            images (filename, userGivenName, category)
                           VALUES ('${req.file.filename}',
-                            '${req.body['given-name']}'
+                            '${req.body['given-name']}',
+                            '${req.body.category}'
                             )`;
   db.query(insertImageSQL)
     .then(result => {
@@ -105,14 +106,15 @@ io.on('connection', socket => {
   socket.emit('newSocketID', socket.id);
   // eslint-disable-next-line
   console.log(`There are ${socketArray.length} users connected`);
+
   socket.on('disconnect', reason => {
     // eslint-disable-next-line
     console.log(`${socket.id} disconnected`);
 
-    // const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
-    // const socketSliced = socketArray.slice(indexToRemove, 1);
-    // console.log(`removed ${socketSliced[0].id} from array, ${socketArray.length} users connected.`);
-    // console.log(socketArray);
+    const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
+    const socketSpliced = socketArray.splice(indexToRemove, 1);
+    // eslint-disable-next-line
+    console.log(`removed ${socketSpliced[0].id} from array, ${socketArray.length} users connected.`);
   });
 });
 
