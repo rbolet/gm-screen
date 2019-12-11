@@ -1,13 +1,11 @@
 const React = require('react');
 
-class SecondaryImages extends React.Component {
-  render() {
-    return (
-      <div className="secondary-images-container d-flex justify-content-center">
-        <SecondaryImage secondaryImagesArray={this.props.secondaryImagesArray}/>
-      </div>
-    );
-  }
+function SecondaryImages(props) {
+  return (
+    <div className="secondary-images-container d-flex justify-content-center" id={props.id ? props.id : ''}>
+      <SecondaryImage secondaryImagesArray={props.secondaryImagesArray}/>
+    </div>
+  );
 }
 
 function SecondaryImage(props) {

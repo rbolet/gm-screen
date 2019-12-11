@@ -35,7 +35,9 @@ class PlayerView extends React.Component {
     if (this.state.environmentImage) {
       EnvironmentImageElement = (
         <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
-          <SecondaryImages secondaryImagesArray={this.state.secondaryImagesArray}/>
+          <SecondaryImages
+            secondaryImagesArray={this.state.secondaryImagesArray}
+            id="secondary-player-view"/>
         </div>
       );
     }

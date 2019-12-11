@@ -78,6 +78,10 @@ img {
   z-index: 1;
 }
 
+#secondary-player-view{
+  height: 40%
+}
+
 .custom-modal{
   z-index: 2000;
   position: absolute;
