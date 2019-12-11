@@ -28,7 +28,7 @@ body * {
   width: 100%;
 }
 
-.images-table{
+.all-images-body{
   overflow-y: scroll;
 }
 
@@ -46,13 +46,19 @@ body * {
 .clear-environment{
   font-size: .75rem;
   position: relative;
-  top: 90%;
+  top: 5%;
+  right: 90%;
 }
 
 .grid-image{
   height: 30%;
   width: 30%;
   object-fit: contain;
+}
+
+.selected-tab{
+  color: white;
+  background-color: #932b2b;
 }
 
 .custom-modal{

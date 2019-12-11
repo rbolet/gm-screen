@@ -63,7 +63,9 @@ class GMView extends React.Component {
     if (this.state.environmentImage) {
       EnvironmentImageElement = (
         <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
-          <button className="clear-environment btn btn-secondary" onClick={this.clearEnvironmentImage}>Clear Environment</button>
+          <div className="close m-1">
+            <i className="fa fa-times-circle" onClick={this.clearEnvironmentImage}></i>
+          </div>
         </div>
       );
     }
