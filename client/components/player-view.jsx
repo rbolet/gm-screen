@@ -1,11 +1,13 @@
 const React = require('react');
 const io = require('socket.io-client');
+const SecondaryImages = require('./secondary-images');
 
 class PlayerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      environmentImage: null
+      environmentImage: null,
+      secondaryImagesArray: []
     };
   }
 
@@ -17,6 +19,11 @@ class PlayerView extends React.Component {
     this.socket.on('updateEnvironmentImage', fileName => {
       this.setState({ environmentImage: fileName });
     });
+    this.socket.on('updateSecondaryImage', fileName => {
+      const copy = this.state.secondaryImagesArray;
+      copy.push(fileName);
+      this.setState({ secondaryImagesArray: copy });
+    });
   }
 
   componentWillUnmount() {
@@ -26,7 +33,11 @@ class PlayerView extends React.Component {
   render() {
     let EnvironmentImageElement = null;
     if (this.state.environmentImage) {
-      EnvironmentImageElement = <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }} />;
+      EnvironmentImageElement = (
+        <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
+          <SecondaryImages secondaryImagesArray={this.state.secondaryImagesArray}/>
+        </div>
+      );
     }
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
