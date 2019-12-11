@@ -28,11 +28,6 @@ class GMView extends React.Component {
           },
           body: imageFileName
         })
-          .then(res => res.json())
-          .then(confirmation => {
-            // console.log(confirmation);
-            this.setState({ environmentImage: image.fileName });
-          })
           .catch(error => {
             alert(`Error in GET return: ${error}`);
           });
@@ -61,6 +56,11 @@ class GMView extends React.Component {
     this.socket.on('updateEnvironmentImage', fileName => {
       this.setState({ environmentImage: fileName });
     });
+    this.socket.on('updateSecondaryImage', fileName => {
+      const copy = this.state.secondaryImagesArray;
+      copy.push(fileName);
+      this.setState({ secondaryImagesArray: copy });
+    });
   }
 
   componentWillUnmount() {
@@ -76,7 +76,7 @@ class GMView extends React.Component {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={this.clearEnvironmentImage}></i>
           </div>
-          <SecondaryImages />
+          <SecondaryImages secondaryImagesArray={this.state.secondaryImagesArray}/>
         </div>
       );
     }
