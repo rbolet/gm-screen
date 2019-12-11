@@ -44,7 +44,9 @@ app.patch('/api/image', (req, res, next) => {
                         SET ${patchGivenName} ${patchCategory}
                         WHERE imageId = ${req.body.imageId};`;
   db.query(updateQuery)
-    .then(rows => { console.log(rows) ;})
+    .then(rows => {
+      res.status(200).json(rows);
+    })
     .catch(error => { next(error); });
 });
 
