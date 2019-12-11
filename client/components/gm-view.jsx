@@ -14,6 +14,7 @@ class GMView extends React.Component {
     this.onGridClick = this.onGridClick.bind(this);
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
+    this.removeOneImage = this.removeOneImage.bind(this);
   }
 
   onGridClick(image) {
@@ -59,6 +60,10 @@ class GMView extends React.Component {
       });
   }
 
+  removeOneImage() {
+
+  }
+
   componentDidMount() {
     this.socket = io('http://localhost:3001');
     this.socket.on('newSocketID', socketID => {
@@ -93,7 +98,8 @@ class GMView extends React.Component {
           </div>
           <SecondaryImages
             secondaryImagesArray={this.state.secondaryImagesArray}
-            gmClick={this.clearAllSecondaryImages}/>
+            gmClick={this.clearAllSecondaryImages}
+            removeOneImage={this.removeOneImage}/>
         </div>
       );
     }
