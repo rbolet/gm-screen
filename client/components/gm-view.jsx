@@ -8,6 +8,7 @@ class GMView extends React.Component {
     super(props);
     this.state = {
       environmentImage: null,
+      secondaryImagesArray: [],
       sessionConfig: this.props.sessionConfig
     };
     this.onGridClick = this.onGridClick.bind(this);
@@ -16,26 +17,34 @@ class GMView extends React.Component {
 
   onGridClick(image) {
     const imageFileName = JSON.stringify({ fileName: image.fileName });
-    fetch('/api/updateImage/environment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: imageFileName
-    })
-      .then(res => res.json())
-      .then(confirmation => {
-        // console.log(confirmation);
-        this.setState({ environmentImage: image.fileName });
-      })
-      .catch(error => {
-        alert(`Error in GET return: ${error}`);
-      });
 
+    switch (image.category) {
+      case 'Environment':
+      case 'Secondary' :
+        fetch(`/api/updateImage/${image.category}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: imageFileName
+        })
+          .then(res => res.json())
+          .then(confirmation => {
+            // console.log(confirmation);
+            this.setState({ environmentImage: image.fileName });
+          })
+          .catch(error => {
+            alert(`Error in GET return: ${error}`);
+          });
+        break;
+      default:
+        alert(`Unknown category: ${image.category}`);
+        break;
+    }
   }
 
   clearEnvironmentImage() {
-    fetch('/api/updateImage/environment', { method: 'DELETE' })
+    fetch('/api/updateImage/Environment', { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })

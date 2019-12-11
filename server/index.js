@@ -60,13 +60,13 @@ app.get('/api/allsessions', (req, res, next) => {
 });
 
 // POST to update environment image
-app.post('/api/updateImage/environment', (req, res, next) => {
+app.post('/api/updateImage/Environment', (req, res, next) => {
   pushEnvironmentImageToAll(req.body.fileName);
   res.json('Emitting filepath ...');
 });
 
 // DELETE to clear environment image
-app.delete('/api/updateImage/environment', (req, res, next) => {
+app.delete('/api/updateImage/Environment', (req, res, next) => {
   clearEnvironmentImage();
   res.json('Cleared all environment images');
 });
