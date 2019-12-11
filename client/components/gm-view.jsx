@@ -41,7 +41,7 @@ class GMView extends React.Component {
   }
 
   clearEnvironmentImage() {
-    fetch('/api/updateImage/Environment', { method: 'DELETE' })
+    fetch('/api/updateImage/Environment/all', { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })
@@ -51,7 +51,7 @@ class GMView extends React.Component {
   }
 
   clearAllSecondaryImages() {
-    fetch('/api/updateImage/Secondary', { method: 'DELETE' })
+    fetch('/api/updateImage/Secondary/all', { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })
@@ -60,8 +60,14 @@ class GMView extends React.Component {
       });
   }
 
-  removeOneImage() {
-
+  removeOneImage(fileName) {
+    fetch(`/api/updateImage/Secondary/${fileName}`, { method: 'DELETE' })
+      .then(confirmation => {
+        // console.log(confirmation);
+      })
+      .catch(error => {
+        alert(`Error in DELETE: ${error}`);
+      });
   }
 
   componentDidMount() {

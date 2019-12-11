@@ -26,7 +26,7 @@ function SecondaryImage(props) {
   if (props.removeOneImage) {
     closeButton = (
       <div className="close m-1 d-inline">
-        <i className="fa fa-times-circle" onClick={props.removeOneImage}></i>
+        <i className="fa fa-times" onClick={props.removeOneImage.bind(this, props.fileName)}></i>
       </div>
     );
   }
