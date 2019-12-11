@@ -13,6 +13,7 @@ class GMView extends React.Component {
     };
     this.onGridClick = this.onGridClick.bind(this);
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
+    this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
   }
 
   onGridClick(image) {
@@ -48,6 +49,16 @@ class GMView extends React.Component {
       });
   }
 
+  clearAllSecondaryImages() {
+    fetch('/api/updateImage/Secondary', { method: 'DELETE' })
+      .then(confirmation => {
+        // console.log(confirmation);
+      })
+      .catch(error => {
+        alert(`Error in DELETE: ${error}`);
+      });
+  }
+
   componentDidMount() {
     this.socket = io('http://localhost:3001');
     this.socket.on('newSocketID', socketID => {
@@ -57,9 +68,13 @@ class GMView extends React.Component {
       this.setState({ environmentImage: fileName });
     });
     this.socket.on('updateSecondaryImage', fileName => {
-      const copy = this.state.secondaryImagesArray;
-      copy.push(fileName);
-      this.setState({ secondaryImagesArray: copy });
+      if (fileName === null) {
+        this.setState({ secondaryImagesArray: [] });
+      } else {
+        const copy = this.state.secondaryImagesArray;
+        copy.push(fileName);
+        this.setState({ secondaryImagesArray: copy });
+      }
     });
   }
 
@@ -76,7 +91,9 @@ class GMView extends React.Component {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={this.clearEnvironmentImage}></i>
           </div>
-          <SecondaryImages secondaryImagesArray={this.state.secondaryImagesArray}/>
+          <SecondaryImages
+            secondaryImagesArray={this.state.secondaryImagesArray}
+            gmClick={this.clearAllSecondaryImages}/>
         </div>
       );
     }

@@ -59,17 +59,17 @@ app.get('/api/allsessions', (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-// POST to update environment image
+// POST to update image to all
 app.post('/api/updateImage/:category', (req, res, next) => {
 
   pushImageToAll(req.body.fileName, req.params.category);
-  res.json('Emitting filepath ...');
+  res.json({ message: 'Updating image ...' });
 });
 
-// DELETE to clear environment image
-app.delete('/api/updateImage/Environment', (req, res, next) => {
-  clearEnvironmentImage();
-  res.json('Cleared all environment images');
+// DELETE to clear all images (within category) from all
+app.delete('/api/updateImage/:category', (req, res, next) => {
+  clearAllImages(req.params.category);
+  res.json({ message: 'Clearing image(s) ...' });
 });
 
 // upload middleware config
@@ -145,9 +145,9 @@ function pushImageToAll(fileName, category) {
   return fileName;
 }
 
-function clearEnvironmentImage() {
+function clearAllImages(category) {
   for (const socket of socketArray) {
-    socket.emit('updateEnvironmentImage', null);
+    socket.emit(`update${category}Image`, null);
   }
 }
 // Error Handler
