@@ -1,16 +1,23 @@
 const React = require('react');
 
 class ImageGrid extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedTab: 'environment'
+    };
+  }
 
   render() {
 
     return (
       <div className="image-grid h-100 w-100 color-light-grey">
         <div className="grid-header">
-          <GridHeaderButtons/>
+          <GridHeaderButtons sessionConfig={this.props.sessionConfig}/>
         </div>
         <GridImages
           images={this.props.sessionConfig.imagesArray}
+          selectedTab={this.state.selectedTab}
           onClick={this.props.onGridClick}/>
       </div>
 
@@ -21,13 +28,15 @@ class ImageGrid extends React.Component {
 function GridImages(props) {
 
   const imageElements = props.images.map(image => {
-    return (
-      <img
-        key={image.imageId}
-        src={`./images/${image.fileName}`}
-        className="grid-image border border-success"
-        onClick={props.onClick.bind(this, image)}/>
-    );
+    if (image.category === props.selectedTab) {
+      return (
+        <img
+          key={image.imageId}
+          src={`./images/${image.fileName}`}
+          className="grid-image border border-success"
+          onClick={props.onClick.bind(this, image)}/>
+      );
+    }
   });
 
   return (
