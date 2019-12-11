@@ -56,6 +56,11 @@ body * {
   object-fit: contain;
 }
 
+.selected-tab{
+  color: white;
+  background-color: #932b2b;
+}
+
 .custom-modal{
   z-index: 2000;
   position: absolute;
