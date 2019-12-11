@@ -14,7 +14,7 @@ const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
 
-// images from given session
+// GET images from given session
 app.post('/api/imagelist', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN sessionImages ON images.imageID = sessionImages.imageID
@@ -32,6 +32,41 @@ app.get('/api/allimages', (req, res, next) => {
       res.status(200).json(rows);
     })
     .catch(err => next(err));
+});
+
+// PATCH to update image properties
+app.patch('/api/image', (req, res, next) => {
+  if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
+  const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
+  const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
+
+  const updateQuery = `UPDATE images
+                        SET ${patchGivenName} ${patchCategory}
+                        WHERE imageId = ${req.body.imageId};`;
+  db.query(updateQuery)
+    .then(rows => { console.log(rows) ;})
+    .catch(error => { next(error); });
+});
+
+// GET list of all sessions (temp)
+app.get('/api/allsessions', (req, res, next) => {
+  db.query('SELECT * FROM sessions')
+    .then(([rows]) => {
+      res.status(200).json(rows);
+    })
+    .catch(error => { next(error); });
+});
+
+// POST to update environment image
+app.post('/api/updateImage/environment', (req, res, next) => {
+  pushEnvironmentImageToAll(req.body.fileName);
+  res.json('Emitting filepath ...');
+});
+
+// DELETE to clear environment image
+app.delete('/api/updateImage/environment', (req, res, next) => {
+  clearEnvironmentImage();
+  res.json('Cleared all environment images');
 });
 
 // upload middleware config
@@ -77,26 +112,6 @@ app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-// GET list of all sessions (temp)
-app.get('/api/allsessions', (req, res, next) => {
-  db.query('SELECT * FROM sessions')
-    .then(([rows]) => {
-      res.status(200).json(rows);
-    })
-    .catch(error => { next(error); });
-});
-
-// POST to update environment image
-app.post('/api/updateImage/environment', (req, res, next) => {
-  pushEnvironmentImageToAll(req.body.fileName);
-  res.json('Emitting filepath ...');
-});
-
-// DELETE to clear environment image
-app.delete('/api/updateImage/environment', (req, res, next) => {
-  clearEnvironmentImage();
-  res.json('Cleared all environment images');
-});
 // Socket io set up and incoming event handling
 const socketArray = [];
 io.on('connection', socket => {
