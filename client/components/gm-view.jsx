@@ -1,12 +1,14 @@
 const React = require('react');
 const io = require('socket.io-client');
 const ImageGrid = require('./image-grid');
+const SecondaryImages = require('./secondary-images');
 
 class GMView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       environmentImage: null,
+      secondaryImagesArray: [],
       sessionConfig: this.props.sessionConfig
     };
     this.onGridClick = this.onGridClick.bind(this);
@@ -15,26 +17,29 @@ class GMView extends React.Component {
 
   onGridClick(image) {
     const imageFileName = JSON.stringify({ fileName: image.fileName });
-    fetch('/api/updateImage/environment', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: imageFileName
-    })
-      .then(res => res.json())
-      .then(confirmation => {
-        // console.log(confirmation);
-        this.setState({ environmentImage: image.fileName });
-      })
-      .catch(error => {
-        alert(`Error in GET return: ${error}`);
-      });
 
+    switch (image.category) {
+      case 'Environment':
+      case 'Secondary' :
+        fetch(`/api/updateImage/${image.category}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: imageFileName
+        })
+          .catch(error => {
+            alert(`Error in GET return: ${error}`);
+          });
+        break;
+      default:
+        alert(`Unknown category: ${image.category}`);
+        break;
+    }
   }
 
   clearEnvironmentImage() {
-    fetch('/api/updateImage/environment', { method: 'DELETE' })
+    fetch('/api/updateImage/Environment', { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })
@@ -51,6 +56,11 @@ class GMView extends React.Component {
     this.socket.on('updateEnvironmentImage', fileName => {
       this.setState({ environmentImage: fileName });
     });
+    this.socket.on('updateSecondaryImage', fileName => {
+      const copy = this.state.secondaryImagesArray;
+      copy.push(fileName);
+      this.setState({ secondaryImagesArray: copy });
+    });
   }
 
   componentWillUnmount() {
@@ -66,6 +76,7 @@ class GMView extends React.Component {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={this.clearEnvironmentImage}></i>
           </div>
+          <SecondaryImages secondaryImagesArray={this.state.secondaryImagesArray}/>
         </div>
       );
     }

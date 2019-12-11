@@ -60,13 +60,14 @@ app.get('/api/allsessions', (req, res, next) => {
 });
 
 // POST to update environment image
-app.post('/api/updateImage/environment', (req, res, next) => {
-  pushEnvironmentImageToAll(req.body.fileName);
+app.post('/api/updateImage/:category', (req, res, next) => {
+
+  pushImageToAll(req.body.fileName, req.params.category);
   res.json('Emitting filepath ...');
 });
 
 // DELETE to clear environment image
-app.delete('/api/updateImage/environment', (req, res, next) => {
+app.delete('/api/updateImage/Environment', (req, res, next) => {
   clearEnvironmentImage();
   res.json('Cleared all environment images');
 });
@@ -135,11 +136,11 @@ io.on('connection', socket => {
   });
 });
 
-function pushEnvironmentImageToAll(fileName) {
+function pushImageToAll(fileName, category) {
   for (const socket of socketArray) {
     // eslint-disable-next-line
     console.log(`sending ${fileName} to ${socket.id}`);
-    socket.emit('updateEnvironmentImage', fileName);
+    socket.emit(`update${category}Image`, fileName);
   }
   return fileName;
 }
