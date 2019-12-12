@@ -40,7 +40,12 @@ img {
   width: 100%;
 }
 
+.list-display{
+  cursor: pointer;
+}
+
 .selected{
+  color: white;
   background-color: #932b2b;
   opacity: .5;
 }

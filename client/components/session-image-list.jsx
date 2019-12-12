@@ -47,7 +47,7 @@ function SessionImage(props) {
     return (
       <tr
         key={image.imageId}
-        className={props.selectedRow === image.imageId ? 'selected text-white' : ''}
+        className={`list-display ${props.selectedRow === image.imageId ? 'selected' : ''}`}
         onClick={props.onClick.bind(this, image)}>
         <td>{image.userGivenName}</td>
         <td>{image.category}</td>
