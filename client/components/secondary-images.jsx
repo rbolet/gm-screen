@@ -23,14 +23,14 @@ function SecondaryImages(props) {
 
 function SecondaryImage(props) {
   let closeButton = null;
-  if (props.removeOneImage) {
-    closeButton = (
-      <div className="close m-1 d-inline">
-        <i className="fa fa-times" onClick={props.removeOneImage.bind(this, props.fileName)}></i>
-      </div>
-    );
-  }
   const imageElements = props.secondaryImagesArray.map(fileName => {
+    if (props.removeOneImage) {
+      closeButton = (
+        <div className="close m-1 d-inline">
+          <i className="fa fa-times" onClick={props.removeOneImage.bind(this, fileName)}></i>
+        </div>
+      );
+    }
     return (
       <div
         key={fileName}

@@ -66,9 +66,9 @@ app.post('/api/updateImage/:category', (req, res, next) => {
   res.json({ message: 'Updating image ...' });
 });
 
-// DELETE to clear all images (within category) from all
+// DELETE to clear images (within category) from all
 app.delete('/api/updateImage/:category/:fileName', (req, res, next) => {
-  if (req.params.filename === 'all') {
+  if (req.params.fileName === 'all') {
     clearAllImages(req.params.category);
     res.json({ message: 'Clearing image(s) ...' });
   } else {
