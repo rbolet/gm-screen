@@ -10,8 +10,8 @@ function SecondaryImages(props) {
     );
   }
   return (
-    <div className="secondary-images-container">
-      <div className="secondary-images h-100 d-inline-flex justify-content-center" id={props.id ? props.id : ''}>
+    <div className="secondary-images-container" id={props.id ? props.id : ''}>
+      <div className="secondary-images h-100 d-inline-flex justify-content-center" >
         <SecondaryImage
           secondaryImagesArray={props.secondaryImagesArray}
           removeOneImage={props.removeOneImage}/>
