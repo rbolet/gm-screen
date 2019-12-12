@@ -97,7 +97,12 @@ class UploadForm extends React.Component {
             </div>
             <div className="col">
               <label htmlFor="category" className="text-white mb-0">Category</label>
-              <input required type="text" className="form-control mb-1" id="category" name="category"/>
+              {/* <input required type="text" className="form-control mb-1" id="category" name="category"/> */}
+              <select required name="category" id="category" className="form-control mb-1">
+                <option></option>
+                <option>Environment</option>
+                <option>Secondary</option>
+              </select>
             </div>
           </div>
           <input type="submit" value="Upload File" />
