@@ -4,26 +4,40 @@ function SecondaryImages(props) {
   let closeButton = null;
   if (props.gmClick) {
     closeButton = (
-      <div className="close m-1">
+      <div className="close m-1 d-inline">
         <i className="fa fa-times-circle" onClick={props.gmClick}></i>
       </div>
     );
   }
   return (
-    <div className="secondary-images-container d-flex justify-content-center" id={props.id ? props.id : ''}>
-      <SecondaryImage secondaryImagesArray={props.secondaryImagesArray}/>
+    <div className="secondary-images-container">
+      <div className="secondary-images h-100 d-inline-flex justify-content-center" id={props.id ? props.id : ''}>
+        <SecondaryImage
+          secondaryImagesArray={props.secondaryImagesArray}
+          removeOneImage={props.removeOneImage}/>
+      </div>
       {closeButton}
     </div>
   );
 }
 
 function SecondaryImage(props) {
+  let closeButton = null;
   const imageElements = props.secondaryImagesArray.map(fileName => {
+    if (props.removeOneImage) {
+      closeButton = (
+        <div className="close m-1 d-inline">
+          <i className="fa fa-times" onClick={props.removeOneImage.bind(this, fileName)}></i>
+        </div>
+      );
+    }
     return (
-      <img
+      <div
         key={fileName}
-        src={`./images/${fileName}`}
-        className="secondary-image mx-2"/>
+        style={{ backgroundImage: `url(./images/${fileName})` }}
+        className="secondary-image mx-2">
+        {closeButton}
+      </div>
     );
   });
   return imageElements;

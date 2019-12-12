@@ -66,10 +66,15 @@ app.post('/api/updateImage/:category', (req, res, next) => {
   res.json({ message: 'Updating image ...' });
 });
 
-// DELETE to clear all images (within category) from all
-app.delete('/api/updateImage/:category', (req, res, next) => {
-  clearAllImages(req.params.category);
-  res.json({ message: 'Clearing image(s) ...' });
+// DELETE to clear images (within category) from all
+app.delete('/api/updateImage/:category/:fileName', (req, res, next) => {
+  if (req.params.fileName === 'all') {
+    clearAllImages(req.params.category);
+    res.json({ message: 'Clearing image(s) ...' });
+  } else {
+    clearSecondaryImage(req.params);
+    res.json({ message: 'Clearing one secondary image ...' });
+  }
 });
 
 // upload middleware config
@@ -148,6 +153,14 @@ function pushImageToAll(fileName, category) {
 function clearAllImages(category) {
   for (const socket of socketArray) {
     socket.emit(`update${category}Image`, null);
+  }
+}
+
+function clearSecondaryImage(paramObject) {
+  // eslint-disable-next-line
+  console.log(`sending ${paramObject.fileName} to be cleared ...`);
+  for (const socket of socketArray) {
+    socket.emit('clearOneImage', paramObject.fileName);
   }
 }
 // Error Handler

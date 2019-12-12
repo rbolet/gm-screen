@@ -64,18 +64,27 @@ img {
   background-color: #932b2b;
 }
 
-.secondary-image{
-  height: 100%;
-
-}
-
 .secondary-images-container{
   width: 100%;
   height: 25%;
   position: relative;
   top: 60%;
-  padding: .75rem;
+  padding: .25rem;
   z-index: 1;
+}
+
+.secondary-images{
+  width: 85%;
+}
+
+.secondary-image{
+  height: 100%;
+  width: 15%;
+  font-size: .75rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
 }
 
 #secondary-player-view{

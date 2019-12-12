@@ -14,6 +14,7 @@ class GMView extends React.Component {
     this.onGridClick = this.onGridClick.bind(this);
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
+    this.removeOneImage = this.removeOneImage.bind(this);
   }
 
   onGridClick(image) {
@@ -40,7 +41,7 @@ class GMView extends React.Component {
   }
 
   clearEnvironmentImage() {
-    fetch('/api/updateImage/Environment', { method: 'DELETE' })
+    fetch('/api/updateImage/Environment/all', { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })
@@ -50,7 +51,17 @@ class GMView extends React.Component {
   }
 
   clearAllSecondaryImages() {
-    fetch('/api/updateImage/Secondary', { method: 'DELETE' })
+    fetch('/api/updateImage/Secondary/all', { method: 'DELETE' })
+      .then(confirmation => {
+        // console.log(confirmation);
+      })
+      .catch(error => {
+        alert(`Error in DELETE: ${error}`);
+      });
+  }
+
+  removeOneImage(fileName) {
+    fetch(`/api/updateImage/Secondary/${fileName}`, { method: 'DELETE' })
       .then(confirmation => {
         // console.log(confirmation);
       })
@@ -64,9 +75,11 @@ class GMView extends React.Component {
     this.socket.on('newSocketID', socketID => {
       // console.log(socketID);
     });
+
     this.socket.on('updateEnvironmentImage', fileName => {
       this.setState({ environmentImage: fileName });
     });
+
     this.socket.on('updateSecondaryImage', fileName => {
       if (fileName === null) {
         this.setState({ secondaryImagesArray: [] });
@@ -75,6 +88,14 @@ class GMView extends React.Component {
         copy.push(fileName);
         this.setState({ secondaryImagesArray: copy });
       }
+    });
+
+    this.socket.on('clearOneImage', fileName => {
+      const copy = this.state.secondaryImagesArray;
+      const indexToRemove = copy.findIndex(fileNameInArray => fileName === fileNameInArray);
+      copy.splice(indexToRemove, 1);
+
+      this.setState({ secondaryImagesArray: copy });
     });
   }
 
@@ -93,7 +114,8 @@ class GMView extends React.Component {
           </div>
           <SecondaryImages
             secondaryImagesArray={this.state.secondaryImagesArray}
-            gmClick={this.clearAllSecondaryImages}/>
+            gmClick={this.clearAllSecondaryImages}
+            removeOneImage={this.removeOneImage}/>
         </div>
       );
     }
