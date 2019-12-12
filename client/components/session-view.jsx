@@ -64,7 +64,7 @@ class SessionView extends React.Component {
   render() {
 
     return (
-      <div className="view-body row px-3">
+      <div className="view-body row p-3">
         <SessionImageList
           images={this.state.imagesArray}
           changeThumbnail={this.changeThumbnail}
