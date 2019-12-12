@@ -65,29 +65,46 @@ function SessionImageFooter(props) {
   return null;
 }
 
-function UploadForm(props) {
+class UploadForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filePathDisplay: ''
+    };
 
-  return (
-    <form onSubmit={props.onUploadSubmit} id="upload-file">
-      <div className="custom-file form-group">
-        <div className="row">
-          <label className="custom-file-label p-1" htmlFor="image-upload">Choose file</label>
-          <input type="file" className="custom-file-input mb-1" id="image-upload" name="image-upload" />
-        </div>
-        <div className="row">
-          <div className="col">
-            <label className="text-white mb-0" htmlFor="given-name">Image Name</label>
-            <input className="form-control mb-1" id="given-name" name="given-name" placeholder="Your name for this image"/>
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(event) {
+    this.setState({ filePathDisplay: event.target.value });
+  }
+
+  render() {
+
+    const filePathLabel = this.state.filePathDisplay ? this.state.filePathDisplay : 'Choose a file';
+
+    return (
+      <form onSubmit={this.props.onUploadSubmit} id="upload-file">
+        <div className="custom-file form-group">
+          <div className="row">
+            <label className="custom-file-label p-1" htmlFor="image-upload">{filePathLabel}</label>
+            <input required type="file" className="custom-file-input mb-1" id="image-upload" name="image-upload" onChange={this.onChange}/>
           </div>
-          <div className="col">
-            <label htmlFor="category" className="text-white mb-0">Category</label>
-            <input type="text" className="form-control mb-1" id="category" name="category"/>
+          <div className="row">
+            <div className="col">
+              <label className="text-white mb-0" htmlFor="given-name">Image Name</label>
+              <input required className="form-control mb-1" id="given-name" name="given-name" placeholder="Your name for this image"/>
+            </div>
+            <div className="col">
+              <label htmlFor="category" className="text-white mb-0">Category</label>
+              <input required type="text" className="form-control mb-1" id="category" name="category"/>
+            </div>
           </div>
+          <input type="submit" value="Upload File" />
         </div>
-        <input type="submit" value="Upload File" />
-      </div>
-    </form>
-  );
+      </form>
+    );
+  }
 }
 
 module.exports = SessionImageList;
