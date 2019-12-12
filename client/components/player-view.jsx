@@ -54,8 +54,8 @@ class PlayerView extends React.Component {
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
         <div className="row h-100 w-100">
-          <div className="col-12 h-100 border border-warning">
-            <div className="h-100 p-2 border border-success">
+          <div className="col-12 h-100">
+            <div className="h-100 p-2">
               {EnvironmentImageElement}
             </div>
           </div>
