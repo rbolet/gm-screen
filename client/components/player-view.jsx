@@ -16,12 +16,22 @@ class PlayerView extends React.Component {
     this.socket.on('newSocketID', socketID => {
       // console.log(socketID);
     });
+
     this.socket.on('updateEnvironmentImage', fileName => {
       this.setState({ environmentImage: fileName });
     });
+
     this.socket.on('updateSecondaryImage', fileName => {
       const copy = this.state.secondaryImagesArray;
       copy.push(fileName);
+      this.setState({ secondaryImagesArray: copy });
+    });
+
+    this.socket.on('clearOneImage', fileName => {
+      const copy = this.state.secondaryImagesArray;
+      const indexToRemove = copy.findIndex(fileNameInArray => fileName === fileNameInArray);
+      copy.splice(indexToRemove, 1);
+
       this.setState({ secondaryImagesArray: copy });
     });
   }
