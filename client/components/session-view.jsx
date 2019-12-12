@@ -31,6 +31,8 @@ class SessionView extends React.Component {
           return { imagesArray: state.imagesArray.concat(result) };
         });
       });
+
+    document.querySelector('#upload-file').reset();
   }
 
   launchWithImages() {

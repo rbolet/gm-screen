@@ -68,7 +68,7 @@ function SessionImageFooter(props) {
 function UploadForm(props) {
 
   return (
-    <form onSubmit={props.onUploadSubmit}>
+    <form onSubmit={props.onUploadSubmit} id="upload-file">
       <div className="custom-file form-group">
         <div className="row">
           <label className="custom-file-label p-1" htmlFor="image-upload">Choose file</label>
