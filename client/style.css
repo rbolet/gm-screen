@@ -5,6 +5,25 @@ body * {
 img{
     object-fit: contain;
 }
+.test{
+  font-family: 'Rakkas';
+  color: black;
+  font-size: 10rem;
+}
+
+.blur{
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  height: 50%;
+  width: 50%;
+  margin: 0;
+  background-color: white;
+  opacity: .9;
+  filter: blur(8px);
+}
+
 .bg-gradient{
   background-image: linear-gradient(to bottom right, #000807, #4D4847);
 
