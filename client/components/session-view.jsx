@@ -33,6 +33,7 @@ class SessionView extends React.Component {
       });
 
     document.querySelector('#upload-file').reset();
+    document.querySelector('#filepath-label').innerText = '';
   }
 
   launchWithImages() {

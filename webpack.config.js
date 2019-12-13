@@ -39,7 +39,7 @@ module.exports = {
     },
     stats: 'minimal',
     proxy: {
-      '/api': {
+      '/': {
         target: 'http://localhost:3001'
       }
     }

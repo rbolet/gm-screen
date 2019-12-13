@@ -89,7 +89,7 @@ class UploadForm extends React.Component {
         <form onSubmit={this.props.onUploadSubmit} id="upload-file">
           <div className="custom-file form-group">
             <div className="row">
-              <label className="custom-file-label text-truncate p-1" htmlFor="image-upload">{filePathLabel}</label>
+              <label id="filepath-label" className="custom-file-label text-truncate p-1" htmlFor="image-upload">{filePathLabel}</label>
               <input required type="file" className="custom-file-input mb-1" id="image-upload" name="image-upload" onChange={this.onChange}/>
             </div>
             <div className="row">
