@@ -1,0 +1,83 @@
+body * {
+  font-family: 'Arima Madurai';
+}
+
+img{
+    object-fit: contain;
+}
+.test{
+  font-family: 'Rakkas';
+  color: black;
+  font-size: 10rem;
+}
+
+.blur{
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  height: 50%;
+  width: 50%;
+  margin: 0;
+  background-color: white;
+  opacity: .9;
+  filter: blur(8px);
+}
+
+.bg-gradient{
+  background-image: linear-gradient(to bottom right, #000807, #4D4847);
+
+}
+.color-quartz{
+    background-color: #4D4847;
+}
+
+.color-light-grey{
+  background-color: #e6e6e6;
+  filter: blur(8px);
+}
+
+.close{
+  color: red;
+  z-index: 5000;
+  width: 2rem;
+}
+
+.app-header{
+  height: 6vh;
+}
+
+.view-body{
+  height: 93vh;
+  width: 100%;
+}
+
+.grid-image{
+  height: 30%;
+  width: 30%;
+
+}
+
+.secondary-image{
+  height: 100%;
+
+}
+
+.secondary-images-container{
+  width: 100%;
+  height: 25%;
+  position: relative;
+  top: 60%;
+  padding: .75rem;
+}
+
+.selected{
+  background-color: #932b2b;
+  opacity: .5;
+}
+
+.environment-image{
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
