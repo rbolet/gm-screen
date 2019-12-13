@@ -106,6 +106,7 @@ class GMView extends React.Component {
   render() {
 
     let EnvironmentImageElement = null;
+
     if (this.state.environmentImage) {
       EnvironmentImageElement = (
         <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
@@ -118,6 +119,12 @@ class GMView extends React.Component {
             removeOneImage={this.removeOneImage}/>
         </div>
       );
+    } else {
+      EnvironmentImageElement = (
+        <div className="placeholder d-flex justify-content-center align-items-center">
+          <div className="fade-loop" id="GM-alt-text">GM-Screen</div>
+        </div>
+      );
     }
 
     return (
@@ -125,6 +132,7 @@ class GMView extends React.Component {
         <div className="row h-100 w-100">
           <div className="col-6 h-100">
             <div className="h-75">
+
               {EnvironmentImageElement}
             </div>
             <div className="h-25"></div>

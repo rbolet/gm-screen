@@ -50,20 +50,25 @@ function UserChooseRole(props) {
   );
 }
 
-function PlayerChooseSession(props) {
+class PlayerChooseSession extends React.Component {
 
-  return (
-    <div className="menu-container h-75 w-25 bg-dark rounded d-flex flex-column justify-content-center p-4">
-      <h5 className="text-light text-center">Join Session</h5>
-      <div className="bg-light text-dark h-75 p-2">
-        <p onClick={props.playerJoinSession}>Landing on Nar Shadda</p>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary">Join Session</button>
-      </div>
-    </div>
+  highlightRow(event) {
+    event.target.classList.toggle('selected');
+  }
 
-  );
+  render() {
+    return (
+      <div className="menu-container h-75 w-25 bg-dark rounded d-flex flex-column justify-content-center p-4">
+        <h5 className="text-light text-center">Join Session</h5>
+        <div className="bg-light text-dark h-75">
+          <div onClick={this.highlightRow} className="px-2 pt-2 list-display">Infiltrating the Outpost</div>
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={this.props.playerJoinSession}>Join Session</button>
+        </div>
+      </div>
+    );
+  }
 }
 
 module.exports = MenuView;

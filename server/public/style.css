@@ -19,10 +19,6 @@ img {
 
 }
 
-.blur{
-  filter: blur(8px);
-}
-
 .app-header{
   height: 6vh;
 }
@@ -36,9 +32,55 @@ img {
   overflow-y: scroll;
 }
 
+.thumbnail-footer{
+  padding: 0, 40%;
+}
+
+#upload-file{
+  width: 100%;
+}
+
+.list-display{
+  cursor: pointer;
+}
+
 .selected{
+  color: white;
   background-color: #932b2b;
   opacity: .5;
+}
+
+.placeholder {
+  opacity: .8;
+  background-image: url('images/0a4b011b-ae30-4245-a43f-1f75bf1cccae..jpg');
+  background-size: cover;
+  height: 100%;
+  filter: blur(6px);
+  display: flex;
+  align-items: center;
+}
+
+.placeholder *{
+
+  font-family: 'Rakkas';
+  font-size: 10rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#GM-alt-text{
+  font-size: 6rem;
+}
+
+@keyframes flickerAnimation { /* flame pulses */
+  0%   { opacity:1; }
+  50%  { opacity:.6; }
+  100% { opacity:1; }
+}
+.fade-loop {
+  opacity: 1;
+  color: white;
+  animation: flickerAnimation 5s infinite;
 }
 
 .environment-image{

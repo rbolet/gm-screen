@@ -42,6 +42,7 @@ class PlayerView extends React.Component {
 
   render() {
     let EnvironmentImageElement = null;
+
     if (this.state.environmentImage) {
       EnvironmentImageElement = (
         <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${this.state.environmentImage})` }}>
@@ -50,7 +51,14 @@ class PlayerView extends React.Component {
             id="secondary-player-view"/>
         </div>
       );
+    } else {
+      EnvironmentImageElement = (
+        <div className="placeholder d-flex justify-content-center align-items-center">
+          <div className="fade-loop h-100 w-100">GM-Screen</div>
+        </div>
+      );
     }
+
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
         <div className="row h-100 w-100">
