@@ -42,10 +42,13 @@ class MenuView extends React.Component {
 function UserChooseRole(props) {
 
   return (
-    <div className="menu-container h-75 w-25 bg-dark rounded d-flex flex-column justify-content-center p-4">
-      <h5 className="text-light text-center">Choose Your Role</h5>
-      <button onClick={props.goToSessionView} className="btn btn-secondary mb-4">Game Master</button>
-      <button onClick={props.goToPlayerSessionView} className="btn btn-secondary mb-4">Player</button>
+    <div className="h-100 w-100 d-flex flex-column justify-content-center align-items-center p-2">
+      <div className="title fade-loop text-center">GM Screen</div>
+      <div className="menu-container h-75 w-25 bg-dark rounded d-flex flex-column justify-content-center p-4">
+        <h5 className="text-light text-center">Choose Your Role</h5>
+        <button onClick={props.goToSessionView} className="btn btn-secondary mb-4">Game Master</button>
+        <button onClick={props.goToPlayerSessionView} className="btn btn-secondary mb-4">Player</button>
+      </div>
     </div>
   );
 }

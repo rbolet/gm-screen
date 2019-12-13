@@ -11,7 +11,7 @@ class Thumbnail extends React.Component {
   render() {
 
     return (
-      <div className="col h-100 d-inline-block color-quartz rounded mx-1">
+      <div className="col h-100 d-inline-block bg-dark rounded mx-1">
         <div className="thumbnail-header text-center text-white pt-2">Preview</div>
         <div className="thumbnail-body rounded bg-light h-75 p-3 d-flex justify-content-center">
           {this.props.thumbnailImage &&

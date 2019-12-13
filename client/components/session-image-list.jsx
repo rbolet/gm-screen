@@ -17,7 +17,7 @@ class SessionImageList extends React.Component {
 
   render() {
     return (
-      <div className="col h-100 d-inline-block color-quartz rounded mx-1">
+      <div className="col h-100 d-inline-block bg-dark rounded mx-1">
         <div className="all-images-header text-white text-center mt-2">My Session</div>
         <div className="all-images-body rounded bg-light h-50 mx-1">
           <div className="d-flex justify-content-center">

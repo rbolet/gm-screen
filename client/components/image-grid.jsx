@@ -45,7 +45,7 @@ function GridHeaderButtons(props) {
     return (<button
       key={category}
       onClick={props.onClick.bind(this, category)}
-      className={`btn ${showSelected}`}>{category}</button>);
+      className={`btn btn-outline-secondary ${showSelected}`}>{category}</button>);
   });
   return (
     <div className="btn-group row d-flex justify-start">
@@ -62,7 +62,7 @@ function GridImages(props) {
         <img
           key={image.imageId}
           src={`./images/${image.fileName}`}
-          className="grid-image border border-success"
+          className="grid-image"
           onClick={props.onClick.bind(this, image)}/>
       );
     }

@@ -7,9 +7,19 @@ img {
 }
 
 .bg-gradient{
-  background-image: linear-gradient(to bottom right, #000807, #4D4847);
+  background-image: linear-gradient(to bottom, #000807, rgb(214, 214, 214));
+  background-size: 200% 200%;
+  animation: gradientShift 20s ease infinite;
 
 }
+
+@keyframes gradientShift{
+    0% {background-position: 40% 0%}
+    50% {background-position: 40% 25%}
+    100% {background-position: 40% 0%}
+
+}
+
 .color-quartz{
     background-color: #4D4847;
 }
@@ -20,7 +30,14 @@ img {
 }
 
 .app-header{
-  height: 6vh;
+  height: 6.5vh;
+  padding-left: .25rem;
+}
+
+.title{
+  font-size: 6rem;
+  color: white;
+  font-family: 'Rakkas';
 }
 
 .view-body{
@@ -72,7 +89,7 @@ img {
   font-size: 6rem;
 }
 
-@keyframes flickerAnimation { /* flame pulses */
+@keyframes flickerAnimation {
   0%   { opacity:1; }
   50%  { opacity:.6; }
   100% { opacity:1; }
@@ -103,7 +120,7 @@ img {
 
 .selected-tab{
   color: white;
-  background-color: #932b2b;
+  background-color: #343a40;
 }
 
 .secondary-images-container{
