@@ -17,7 +17,7 @@ class ImageGrid extends React.Component {
   render() {
 
     return (
-      <div className="image-grid h-100 w-100 color-light-grey">
+      <div className="image-grid w-100 color-light-grey">
         <div className="grid-header px-3">
           <GridHeaderButtons
             sessionConfig={this.props.sessionConfig}
@@ -62,14 +62,14 @@ function GridImages(props) {
         <img
           key={image.imageId}
           src={`./images/${image.fileName}`}
-          className="grid-image"
+          className="grid-image m-1"
           onClick={props.onClick.bind(this, image)}/>
       );
     }
   });
 
   return (
-    <div className="h-100 w-100 d-flex flex-wrap justify-content-around p-3">
+    <div className="w-100 image-grid-body d-flex flex-wrap justify-content-around p-3">
       {imageElements}
     </div>);
 }

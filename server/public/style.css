@@ -45,8 +45,12 @@ img {
   width: 100%;
 }
 
-.all-images-body{
+.all-images-body, .image-grid-body{
   overflow-y: scroll;
+}
+
+.image-grid-body{
+  height: 92%
 }
 
 .thumbnail-footer{
@@ -116,6 +120,10 @@ img {
 .grid-image{
   height: 30%;
   width: 30%;
+}
+
+.image-grid{
+  height: 100%;
 }
 
 .selected-tab{
