@@ -124,28 +124,19 @@ app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
 // Socket io set up and incoming event handling
 const socketArray = [];
 io.on('connection', socket => {
-  // eslint-disable-next-line
-  console.log(`${socket.id} connected`);
+
   socketArray.push(socket);
   socket.emit('newSocketID', socket.id);
-  // eslint-disable-next-line
-  console.log(`There are ${socketArray.length} users connected`);
 
   socket.on('disconnect', reason => {
-    // eslint-disable-next-line
-    console.log(`${socket.id} disconnected`);
 
     const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
-    const socketSpliced = socketArray.splice(indexToRemove, 1);
-    // eslint-disable-next-line
-    console.log(`removed ${socketSpliced[0].id} from array, ${socketArray.length} users connected.`);
+    socketArray.splice(indexToRemove, 1);
   });
 });
 
 function pushImageToAll(fileName, category) {
   for (const socket of socketArray) {
-    // eslint-disable-next-line
-    console.log(`sending ${fileName} to ${socket.id}`);
     socket.emit(`update${category}Image`, fileName);
   }
   return fileName;
@@ -158,8 +149,7 @@ function clearAllImages(category) {
 }
 
 function clearSecondaryImage(paramObject) {
-  // eslint-disable-next-line
-  console.log(`sending ${paramObject.fileName} to be cleared ...`);
+
   for (const socket of socketArray) {
     socket.emit('clearOneImage', paramObject.fileName);
   }
