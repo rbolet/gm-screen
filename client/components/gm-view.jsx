@@ -11,6 +11,9 @@ class GMView extends React.Component {
       secondaryImagesArray: [],
       sessionConfig: this.props.sessionConfig
     };
+
+    this.socket = {};
+
     this.onGridClick = this.onGridClick.bind(this);
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
@@ -43,7 +46,7 @@ class GMView extends React.Component {
   clearEnvironmentImage() {
     fetch('/api/updateImage/Environment/all', { method: 'DELETE' })
       .then(confirmation => {
-        // console.log(confirmation);
+
       })
       .catch(error => {
         alert(`Error in DELETE: ${error}`);
@@ -53,7 +56,7 @@ class GMView extends React.Component {
   clearAllSecondaryImages() {
     fetch('/api/updateImage/Secondary/all', { method: 'DELETE' })
       .then(confirmation => {
-        // console.log(confirmation);
+
       })
       .catch(error => {
         alert(`Error in DELETE: ${error}`);
@@ -63,7 +66,7 @@ class GMView extends React.Component {
   removeOneImage(fileName) {
     fetch(`/api/updateImage/Secondary/${fileName}`, { method: 'DELETE' })
       .then(confirmation => {
-        // console.log(confirmation);
+
       })
       .catch(error => {
         alert(`Error in DELETE: ${error}`);
