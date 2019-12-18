@@ -11,6 +11,9 @@ class GMView extends React.Component {
       secondaryImagesArray: [],
       sessionConfig: this.props.sessionConfig
     };
+
+    this.socket = {};
+
     this.onGridClick = this.onGridClick.bind(this);
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
