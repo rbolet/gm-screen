@@ -24,7 +24,7 @@ class SessionView extends React.Component {
     event.preventDefault();
     var formData = new FormData(event.target);
 
-    fetch('/api/upload', { method: 'POST', 'content-type': 'multipart/form-data', body: formData })
+    fetch('/upload', { method: 'POST', 'content-type': 'multipart/form-data', body: formData })
       .then(res => res.json())
       .then(result => {
         this.setState((state, props) => {
