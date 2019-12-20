@@ -26,7 +26,7 @@ class GMView extends React.Component {
     switch (image.category) {
       case 'Environment':
       case 'Secondary' :
-        fetch(`/api/updateImage/${image.category}`, {
+        fetch(`/updateImage/${image.category}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ class GMView extends React.Component {
   }
 
   clearEnvironmentImage() {
-    fetch('/api/updateImage/Environment/all', { method: 'DELETE' })
+    fetch('/updateImage/Environment/all', { method: 'DELETE' })
       .then(confirmation => {
 
       })
@@ -54,7 +54,7 @@ class GMView extends React.Component {
   }
 
   clearAllSecondaryImages() {
-    fetch('/api/updateImage/Secondary/all', { method: 'DELETE' })
+    fetch('/updateImage/Secondary/all', { method: 'DELETE' })
       .then(confirmation => {
 
       })
@@ -64,7 +64,7 @@ class GMView extends React.Component {
   }
 
   removeOneImage(fileName) {
-    fetch(`/api/updateImage/Secondary/${fileName}`, { method: 'DELETE' })
+    fetch(`/updateImage/Secondary/${fileName}`, { method: 'DELETE' })
       .then(confirmation => {
 
       })
