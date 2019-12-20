@@ -15,7 +15,7 @@ app.use(staticMiddleware);
 app.use(bodyParser.json());
 
 // GET images from given session
-app.post('/api/imagelist', (req, res, next) => {
+app.post('/imagelist', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN sessionImages ON images.imageID = sessionImages.imageID
               WHERE sessionImages.sessionID = ${req.body.sessionId}`)
@@ -26,7 +26,7 @@ app.post('/api/imagelist', (req, res, next) => {
 });
 
 // GET all from any session
-app.get('/api/allimages', (req, res, next) => {
+app.get('/allimages', (req, res, next) => {
   db.query('SELECT * FROM images')
     .then(([rows]) => {
       res.status(200).json(rows);
@@ -35,7 +35,7 @@ app.get('/api/allimages', (req, res, next) => {
 });
 
 // PATCH to update image properties
-app.patch('/api/image', (req, res, next) => {
+app.patch('/image', (req, res, next) => {
   if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
   const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
   const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
@@ -51,7 +51,7 @@ app.patch('/api/image', (req, res, next) => {
 });
 
 // GET list of all sessions (temp)
-app.get('/api/allsessions', (req, res, next) => {
+app.get('/allsessions', (req, res, next) => {
   db.query('SELECT * FROM sessions')
     .then(([rows]) => {
       res.status(200).json(rows);
@@ -60,14 +60,14 @@ app.get('/api/allsessions', (req, res, next) => {
 });
 
 // POST to update image to all
-app.post('/api/updateImage/:category', (req, res, next) => {
+app.post('/updateImage/:category', (req, res, next) => {
 
   pushImageToAll(req.body.fileName, req.params.category);
   res.json({ message: 'Updating image ...' });
 });
 
 // DELETE to clear images (within category) from all
-app.delete('/api/updateImage/:category/:fileName', (req, res, next) => {
+app.delete('/updateImage/:category/:fileName', (req, res, next) => {
   if (req.params.fileName === 'all') {
     clearAllImages(req.params.category);
     res.json({ message: 'Clearing image(s) ...' });
@@ -90,7 +90,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Upload POST
-app.post('/api/upload', upload.single('image-upload'), (req, res, next) => {
+app.post('/upload', upload.single('image-upload'), (req, res, next) => {
   let responseObject = {};
   const insertImageSQL = `INSERT INTO
                             images (filename, userGivenName, category)
