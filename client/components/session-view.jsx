@@ -46,7 +46,7 @@ class SessionView extends React.Component {
 
   componentDidMount() {
     const currentSession = JSON.stringify({ sessionId: 1 });
-    fetch('/api/imagelist', {
+    fetch('/imagelist', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
