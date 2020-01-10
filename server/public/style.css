@@ -45,6 +45,10 @@ img {
   width: 100%;
 }
 
+#menu-session-list{
+  overflow-y: scroll;
+}
+
 .all-images-body, .image-grid-body{
   overflow-y: scroll;
 }
