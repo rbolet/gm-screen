@@ -19,6 +19,9 @@ class App extends React.Component {
   }
 
   playerJoinSession(session) {
+    if (!session) {
+      return;
+    }
     this.setState({ view: 'player', session });
   }
 
