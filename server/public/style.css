@@ -77,7 +77,6 @@ img {
 
 .placeholder {
   opacity: .8;
-  background-image: url('images/0a4b011b-ae30-4245-a43f-1f75bf1cccae..jpg');
   background-size: cover;
   height: 100%;
   filter: blur(6px);

@@ -9,7 +9,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       view: 'menu',
-      sessionConfig: {}
+      session: {}
     };
 
     this.goToSessionView = this.goToSessionView.bind(this);
@@ -18,17 +18,17 @@ class App extends React.Component {
     this.returnToMenu = this.returnToMenu.bind(this);
   }
 
-  playerJoinSession() {
-    this.setState({ view: 'player' });
+  playerJoinSession(session) {
+    this.setState({ view: 'player', session });
   }
 
   goToSessionView() {
     this.setState({ view: 'session' });
   }
 
-  launchSession(sessionConfig) {
+  launchSession(session) {
 
-    this.setState({ view: 'gm', sessionConfig });
+    this.setState({ view: 'gm', session });
   }
 
   returnToMenu() {
@@ -47,10 +47,10 @@ class App extends React.Component {
         currentView = <SessionView launchSession={this.launchSession}/>;
         break;
       case 'gm':
-        currentView = <GMView sessionConfig={this.state.sessionConfig}/>;
+        currentView = <GMView session={this.state.session}/>;
         break;
       case 'player':
-        currentView = <PlayerView sessionId={1}/>;
+        currentView = <PlayerView session={this.state.session}/>;
     }
     return (
       <div className="app-container container-fluid vh-100 px-0">
