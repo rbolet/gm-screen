@@ -8,7 +8,7 @@ class PlayerView extends React.Component {
     this.state = {
       environmentImage: null,
       secondaryImagesArray: [],
-      sessionId: this.props.session.sessionId
+      sessionId: this.props.sessionId
     };
   }
 

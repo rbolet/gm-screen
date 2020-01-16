@@ -76,7 +76,7 @@ class GMView extends React.Component {
   componentDidMount() {
     this.socket = io('/');
     this.socket.on('newSocketID', socketID => {
-      // console.log(socketID);
+
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
