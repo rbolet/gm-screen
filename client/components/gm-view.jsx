@@ -76,7 +76,24 @@ class GMView extends React.Component {
   componentDidMount() {
     this.socket = io('/');
     this.socket.on('newSocketID', socketID => {
-      // console.log(socketID);
+      const jsonBody = JSON.stringify({
+        sessionId: this.state.sessionConfig.sessionId,
+        socketId: this.socket.id
+      });
+      fetch('/joinSessionRoom', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonBody
+      })
+        .then(res => res.json())
+        .then(jsonRes => {
+          console.log(jsonRes.message);
+        })
+        .catch(error => {
+          alert(`Error in GET return: ${error}`);
+        });
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
