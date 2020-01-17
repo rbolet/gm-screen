@@ -1,10 +1,11 @@
 const React = require('react');
+const UserLogin = require('./user-login');
 
 class MenuView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenu: 'chooseRole'
+      currentMenu: 'userLogin'
     };
 
     this.goToPlayerSessionView = this.goToPlayerSessionView.bind(this);
@@ -26,6 +27,9 @@ class MenuView extends React.Component {
         break;
       case 'playerChooseSession':
         currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
+        break;
+      case 'userLogin':
+        currentMenu = <UserLogin userLogin={this.props.userLogin}/>;
         break;
     }
 
