@@ -22,7 +22,7 @@ class SessionView extends React.Component {
 
   onUploadSubmit(event) {
     event.preventDefault();
-    var formData = new FormData(event.target);
+    const formData = new FormData(event.target);
 
     fetch('/upload', { method: 'POST', 'content-type': 'multipart/form-data', body: formData })
       .then(res => res.json())

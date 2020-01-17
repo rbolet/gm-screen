@@ -9,13 +9,42 @@ class App extends React.Component {
     super(props);
     this.state = {
       view: 'menu',
-      sessionConfig: {}
+      sessionConfig: {},
+      playerConfig: {}
     };
 
     this.goToSessionView = this.goToSessionView.bind(this);
     this.playerJoinSession = this.playerJoinSession.bind(this);
     this.launchSession = this.launchSession.bind(this);
     this.returnToMenu = this.returnToMenu.bind(this);
+    this.userLogin = this.userLogin.bind(this);
+  }
+
+  userLogin(login) {
+    const loginJSON = JSON.stringify(login);
+    console.log(loginJSON);
+    fetch('/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: loginJSON
+    })
+      .then(res => {
+        console.log(res);
+        if (!res.body) {
+          alert('nope!');
+        } else {
+          return res.json();
+        }
+      })
+      .then(playerConfig => {
+        console.log(playerConfig);
+        this.setState({ playerConfig });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }
 
   playerJoinSession(sessionConfig) {
@@ -44,7 +73,8 @@ class App extends React.Component {
       case 'menu':
         currentView = <MenuView
           goToSessionView={this.goToSessionView}
-          playerJoinSession={this.playerJoinSession}/>;
+          playerJoinSession={this.playerJoinSession}
+          userLogin={this.userLogin}/>;
         break;
       case 'session':
         currentView = <SessionView launchSession={this.launchSession}/>;

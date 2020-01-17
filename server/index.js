@@ -28,9 +28,10 @@ app.post('/auth', function (req, res, next) {
   db.execute(query, [userName, password])
     .then(([rows]) => {
       if (!rows.length) {
-        res.status(401).send('Please enter a valid user name and password');
+        res.status(204).end();
+      } else {
+        res.status(200).json(rows);
       }
-      res.status(200).json(rows);
     })
     .catch(err => next(err));
 });
