@@ -77,6 +77,14 @@ app.delete('/updateImage/:category/:fileName', (req, res, next) => {
   }
 });
 
+// POST to move socket to room by session
+app.post('/joinSessionRoom', (req, res, next) => {
+  console.log(req.body);
+  res.status(200).json({ message: `moving to player to session${req.body.sessionId}` });
+  movePlayertoRoom(req.body.sessionId, req.body.socketId);
+
+});
+
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -133,6 +141,10 @@ io.on('connection', socket => {
     const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
     socketArray.splice(indexToRemove, 1);
   });
+
+  socket.on('error', error => {
+    console.log(error);
+  });
 });
 
 function pushImageToAll(fileName, category) {
@@ -154,6 +166,14 @@ function clearSecondaryImage(paramObject) {
     socket.emit('clearOneImage', paramObject.fileName);
   }
 }
+
+function movePlayertoRoom(sessionId, socketId) {
+  const socket = socketArray.find(socket => socket.id === socketId);
+  console.log(socket.id);
+  socket.join(sessionId, () => {
+    console.log(Object.keys(socket.rooms));
+  });
+}
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);
@@ -162,4 +182,4 @@ app.use((error, req, res, next) => {
 
 http.listen(3001, () => {
   // eslint-disable-next-line
-  console.log('listening ...'); });
+  console.log('listening on 3001 ...'); });
