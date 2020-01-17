@@ -89,7 +89,7 @@ class GMView extends React.Component {
       })
         .then(res => res.json())
         .then(jsonRes => {
-          console.log(jsonRes.message);
+          alert(jsonRes.message);
         })
         .catch(error => {
           alert(`Error in GET return: ${error}`);

@@ -5,6 +5,7 @@ const http = require('http').createServer(app);
 const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
 
@@ -13,6 +14,26 @@ const staticPath = path.join(__dirname, 'public');
 const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
+app.use(session({
+  secret: 'itsasecrettoeveryone',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// POST login
+app.post('/auth', function (req, res, next) {
+  const userName = req.body.userName;
+  const password = req.body.password;
+  const query = 'SELECT userId, userName FROM users WHERE userName = ? AND password = ?;';
+  db.execute(query, [userName, password])
+    .then(([rows]) => {
+      if (!rows.length) {
+        res.status(401).send('Please enter a valid user name and password');
+      }
+      res.status(200).json(rows);
+    })
+    .catch(err => next(err));
+});
 
 // GET images from given session
 app.post('/imagelist', (req, res, next) => {
@@ -79,7 +100,7 @@ app.delete('/updateImage/:category/:fileName', (req, res, next) => {
 
 // POST to move socket to room by session
 app.post('/joinSessionRoom', (req, res, next) => {
-  console.log(req.body);
+
   res.status(200).json({ message: `moving to player to session${req.body.sessionId}` });
   movePlayertoRoom(req.body.sessionId, req.body.socketId);
 
@@ -143,7 +164,7 @@ io.on('connection', socket => {
   });
 
   socket.on('error', error => {
-    console.log(error);
+    console.error('Sockect.io error:', error);
   });
 });
 
@@ -169,9 +190,10 @@ function clearSecondaryImage(paramObject) {
 
 function movePlayertoRoom(sessionId, socketId) {
   const socket = socketArray.find(socket => socket.id === socketId);
-  console.log(socket.id);
-  socket.join(sessionId, () => {
-    console.log(Object.keys(socket.rooms));
+  const sessionRoom = `session${sessionId}`;
+
+  socket.join(sessionRoom, () => {
+    socket.to(sessionRoom);
   });
 }
 // Error Handler
