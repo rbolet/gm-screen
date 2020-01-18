@@ -26,7 +26,7 @@ app.post('/auth', function (req, res, next) {
   const password = req.body.password;
   const query = 'SELECT userId, userName FROM users WHERE userName = ? AND password = ?;';
   db.query(query, [userName, password])
-    .then(([rows]) => {
+    .then(rows => {
       console.log(rows, rows.length);
       if (!rows.length) {
         res.status(401).json({ message: 'Please provide a valid username and password' });

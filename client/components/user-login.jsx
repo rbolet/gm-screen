@@ -23,7 +23,7 @@ class UserLogin extends React.Component {
     event.preventDefault();
     const login = this.state;
     this.props.userLogin(login);
-    this.clearForm;
+    this.clearForm();
   }
 
   clearForm() {
