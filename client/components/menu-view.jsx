@@ -29,7 +29,7 @@ class MenuView extends React.Component {
         currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
         break;
       case 'userLogin':
-        currentMenu = <UserLogin userLogin={this.props.userLogin}/>;
+        currentMenu = <UserLogin userLogin={this.props.userLogin} playerConfig={this.props.playerConfig}/>;
         break;
     }
 
