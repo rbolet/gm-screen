@@ -30,14 +30,23 @@ class App extends React.Component {
       body: loginJSON
     })
       .then(res => {
-        if (res.ok) {
-          this.setState({ playerConfig: res });
+        if (!res.ok) {
+          this.loginFailed();
         } else {
-          const playerConfig = { auth: 'failed' };
-          this.setState({ playerConfig });
+          return res.json();
         }
       })
-      .catch(err => { alert(err.message); });
+      .then(jsonRes => {
+        if (!jsonRes) return;
+        const playerConfig = jsonRes[0];
+        this.setState({ playerConfig });
+      })
+      .catch(err => { console.error(err); });
+  }
+
+  loginFailed() {
+    const playerConfig = { auth: 'failed' };
+    this.setState({ playerConfig });
   }
 
   playerJoinSession(sessionConfig) {
