@@ -21,21 +21,33 @@ class UserLogin extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    document.querySelector('#user-login-form').reset();
-
-    const tellUser = document.querySelector('#login-response');
     const login = this.state;
-    console.log(login);
     this.props.userLogin(login);
+    this.clearForm();
+  }
+
+  clearForm() {
+    document.querySelector('#user-login-form').reset();
+    this.setState({
+      userName: '',
+      password: ''
+    });
   }
 
   render() {
-
+    let loginMessage = '';
+    switch (this.props.playerConfig.auth) {
+      case 'failed' :
+        loginMessage = 'Invalid username and/or password';
+        break;
+      default :
+        loginMessage = 'Please enter your username and password';
+    }
     return (
       <div className="user-login d-flex flex-column">
         <h4 className="text-light"></h4>
         <div className="w-100 h-25 text-light">
-          <p id="login-response" className="pt-1">Please enter your user name and password</p>
+          <p id="login-response" className="pt-1">{loginMessage}</p>
         </div>
         <form id="user-login-form" onSubmit={this.handleSubmit}>
           <div className="form-group pt-4">

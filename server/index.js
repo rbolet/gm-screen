@@ -24,11 +24,11 @@ app.use(session({
 app.post('/auth', function (req, res, next) {
   const userName = req.body.userName;
   const password = req.body.password;
-  const query = 'SELECT userId, userName FROM users WHERE userName = ? AND password = ?;';
-  db.execute(query, [userName, password])
+  const query = `SELECT userId, userName FROM users WHERE userName = "${userName}" AND password = "${password}";`;
+  db.query(query)
     .then(([rows]) => {
       if (!rows.length) {
-        res.status(204).end();
+        res.status(401).json({ message: 'Please provide a valid username and password' });
       } else {
         res.status(200).json(rows);
       }

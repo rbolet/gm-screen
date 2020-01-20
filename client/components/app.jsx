@@ -22,7 +22,6 @@ class App extends React.Component {
 
   userLogin(login) {
     const loginJSON = JSON.stringify(login);
-    console.log(loginJSON);
     fetch('/auth', {
       method: 'POST',
       headers: {
@@ -31,20 +30,23 @@ class App extends React.Component {
       body: loginJSON
     })
       .then(res => {
-        console.log(res);
-        if (!res.body) {
-          alert('nope!');
+        if (!res.ok) {
+          this.loginFailed();
         } else {
           return res.json();
         }
       })
-      .then(playerConfig => {
-        console.log(playerConfig);
+      .then(jsonRes => {
+        if (!jsonRes) return;
+        const playerConfig = jsonRes[0];
         this.setState({ playerConfig });
       })
-      .catch(err => {
-        console.error(err);
-      });
+      .catch(err => { console.error(err); });
+  }
+
+  loginFailed() {
+    const playerConfig = { auth: 'failed' };
+    this.setState({ playerConfig });
   }
 
   playerJoinSession(sessionConfig) {
@@ -72,6 +74,7 @@ class App extends React.Component {
     switch (this.state.view) {
       case 'menu':
         currentView = <MenuView
+          playerConfig={this.state.playerConfig}
           goToSessionView={this.goToSessionView}
           playerJoinSession={this.playerJoinSession}
           userLogin={this.userLogin}/>;
