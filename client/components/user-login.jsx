@@ -22,7 +22,7 @@ class UserLogin extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const login = this.state;
-    this.props.userLogin(login);
+    this.props.loginUser(login);
     this.clearForm();
   }
 
