@@ -5,7 +5,7 @@ class MenuView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentMenu: 'userLogin'
+      currentMenu: 'chooseRole'
     };
 
     this.goToPlayerSessionView = this.goToPlayerSessionView.bind(this);
@@ -18,19 +18,19 @@ class MenuView extends React.Component {
 
   render() {
     let currentMenu;
-
-    switch (this.state.currentMenu) {
-      case 'chooseRole':
-        currentMenu = <UserChooseRole
-          goToPlayerSessionView={this.goToPlayerSessionView}
-          goToSessionView={this.props.goToSessionView}/>;
-        break;
-      case 'playerChooseSession':
-        currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
-        break;
-      case 'userLogin':
-        currentMenu = <UserLogin userLogin={this.props.userLogin} playerConfig={this.props.playerConfig}/>;
-        break;
+    if (!this.props.playerConfig.userId) {
+      currentMenu = <UserLogin loginUser={this.props.loginUser} playerConfig={this.props.playerConfig} />;
+    } else {
+      switch (this.state.currentMenu) {
+        case 'chooseRole':
+          currentMenu = <UserChooseRole
+            goToPlayerSessionView={this.goToPlayerSessionView}
+            goToSessionView={this.props.goToSessionView}/>;
+          break;
+        case 'playerChooseSession':
+          currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
+          break;
+      }
     }
 
     return (
