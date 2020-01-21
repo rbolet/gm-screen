@@ -36,8 +36,8 @@ app.post('/auth', function (req, res, next) {
     .catch(err => next(err));
 });
 
-// GET sessions per GM
-app.get('/gmSessions', (req, res, next) => {
+// POST sessions per GM
+app.post('/gmSessions', (req, res, next) => {
   const query = `SELECT * FROM sessions WHERE sessionGM = "${req.body.userId}";`;
   db.query(query)
     .then(([rows]) => {
