@@ -3,12 +3,12 @@ const React = require('react');
 class Header extends React.Component {
   render() {
     return (
-      <div>
-        <header className="app-header bg-dark">
-          <div onClick={this.props.returnToMenu} className="btn btn-secondary">Main Menu</div>
-          <div>{this.props.user}</div>
-          <div>{this.props.session && `Session: ${this.props.session}`}</div>
-        </header>
+      <div className="col-12 p-0 m-0 row">
+        <div className="app-header bg-dark col-12 row no-gutters justify-content-end">
+          <div onClick={this.props.returnToMenu} className="btn btn-secondary align-self-start">Main Menu</div>
+          <div className="col text-light d-flex align-items-center justify-content-center"><div>{this.props.user}</div></div>
+          <div className="col text-light d-flex align-items-center justify-content-center">{this.props.session && `Session: ${this.props.session}`}</div>
+        </div>
       </div>
     );
   }
