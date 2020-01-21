@@ -3,6 +3,7 @@ const SessionView = require('./session-view');
 const MenuView = require('./menu-view');
 const GMView = require('./gm-view');
 const PlayerView = require('./player-view');
+const Header = require('./header');
 
 class App extends React.Component {
   constructor(props) {
@@ -95,9 +96,10 @@ class App extends React.Component {
     }
     return (
       <div className="app-container container-fluid vh-100 px-0">
-        <header className="app-header bg-dark">
-          <div onClick={this.returnToMenu} className="btn btn-secondary">Main Menu</div>
-        </header>
+        <Header
+          returnToMenu={this.returnToMenu}
+          user={this.state.playerConfig.userName}
+          session={this.state.sessionConfig.sessionName}/>
         {currentView}
       </div>
     );
