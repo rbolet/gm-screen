@@ -8,12 +8,19 @@ class MenuView extends React.Component {
       currentMenu: 'chooseRole'
     };
 
-    this.goToPlayerSessionView = this.goToPlayerSessionView.bind(this);
+    this.chooseSession = this.chooseSession.bind(this);
   }
 
-  goToPlayerSessionView() {
+  chooseSession(role) {
+    switch (role) {
+      case 'gm' :
+        this.setState({ currentMenu: 'gmChooseSession' });
+        break;
+      case 'player':
+        this.setState({ currentMenu: 'playerChooseSession' });
+        break;
+    }
 
-    this.setState({ currentMenu: 'playerChooseSession' });
   }
 
   render() {
@@ -24,11 +31,16 @@ class MenuView extends React.Component {
       switch (this.state.currentMenu) {
         case 'chooseRole':
           currentMenu = <UserChooseRole
-            goToPlayerSessionView={this.goToPlayerSessionView}
+            chooseSession={this.chooseSession}
             goToSessionView={this.props.goToSessionView}/>;
           break;
         case 'playerChooseSession':
           currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
+          break;
+        case 'gmChooseSession':
+          currentMenu = <GMChooseSession
+            goToSessionView={this.props.goToSessionView}
+            playerConfig={this.props.playerConfig}/>;
           break;
       }
     }
@@ -51,8 +63,8 @@ function UserChooseRole(props) {
   return (
     <div className="container d-flex flex-column justify-content-center pt-5 mt-5">
       <h5 className="text-light text-center">Choose Your Role</h5>
-      <button onClick={props.goToSessionView} className="btn btn-secondary mb-4">Game Master</button>
-      <button onClick={props.goToPlayerSessionView} className="btn btn-secondary mb-4">Player</button>
+      <button onClick={() => props.chooseSession('gm')} className="btn btn-secondary mb-4">Game Master</button>
+      <button onClick={() => props.chooseSession('player')} className="btn btn-secondary mb-4">Player</button>
     </div>
   );
 }
@@ -93,6 +105,56 @@ class PlayerChooseSession extends React.Component {
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-secondary" onClick={this.props.playerJoinSession.bind(this, this.state.selectedSession)}>Join Session</button>
+        </div>
+      </div>
+    );
+  }
+}
+
+class GMChooseSession extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      sessionList: [],
+      selectedSession: null
+    };
+
+    this.highlightRow = this.highlightRow.bind(this);
+  }
+
+  highlightRow(session) {
+    event.target.classList.toggle('selected');
+    this.setState({ selectedSession: session });
+  }
+
+  componentDidMount() {
+    const gmSessionsBody = JSON.stringify({ userId: this.props.playerConfig.userId });
+
+    fetch('/gmSessions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: gmSessionsBody
+    })
+      .then(res => res.json())
+      .then(sessionList => {
+        this.setState({ sessionList });
+      });
+  }
+
+  render() {
+    return (
+      <div className="container h-100">
+        <h5 className="text-light text-center">Join Session</h5>
+        <div className="bg-light text-dark h-75 " id="menu-session-list">
+          <table className="m-0 w-100">
+            <SessionList sessionList={this.state.sessionList} onClick={this.highlightRow} className="px-2 pt-2 list-display" />
+          </table>
+        </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={this.props.goToSessionView.bind(this, this.state.selectedSession)}>Choose Session</button>
         </div>
       </div>
     );

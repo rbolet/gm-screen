@@ -56,8 +56,11 @@ class App extends React.Component {
     this.setState({ view: 'player', sessionConfig });
   }
 
-  goToSessionView() {
-    this.setState({ view: 'session' });
+  goToSessionView(sessionConfig) {
+    this.setState({
+      view: 'session',
+      sessionConfig
+    });
   }
 
   launchSession(sessionConfig) {
@@ -80,7 +83,9 @@ class App extends React.Component {
           loginUser={this.loginUser}/>;
         break;
       case 'session':
-        currentView = <SessionView launchSession={this.launchSession}/>;
+        currentView = <SessionView
+          launchSession={this.launchSession}
+          sessionConfig={this.state.sessionConfig}/>;
         break;
       case 'gm':
         currentView = <GMView sessionConfig={this.state.sessionConfig}/>;

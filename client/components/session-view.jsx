@@ -8,7 +8,7 @@ class SessionView extends React.Component {
     this.state = {
       imagesArray: [],
       thumbnailImage: null,
-      sessionId: 1
+      sessionId: this.props.sessionConfig.sessionId
     };
 
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
@@ -38,14 +38,14 @@ class SessionView extends React.Component {
 
   launchWithImages() {
     const sessionConfig = {
-      sessionId: 1,
+      sessionId: this.state.sessionId,
       imagesArray: this.state.imagesArray
     };
     this.props.launchSession(sessionConfig);
   }
 
   componentDidMount() {
-    const currentSession = JSON.stringify({ sessionId: 1 });
+    const currentSession = JSON.stringify({ sessionId: this.state.sessionId });
     fetch('/imagelist', {
       method: 'POST',
       headers: {
