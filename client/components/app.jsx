@@ -11,7 +11,8 @@ class App extends React.Component {
     this.state = {
       view: 'menu',
       sessionConfig: {},
-      playerConfig: {}
+      playerConfig: {},
+      message: ''
     };
 
     this.goToSessionView = this.goToSessionView.bind(this);
@@ -99,7 +100,8 @@ class App extends React.Component {
         <Header
           returnToMenu={this.returnToMenu}
           user={this.state.playerConfig.userName}
-          session={this.state.sessionConfig.sessionName}/>
+          session={this.state.sessionConfig.sessionName}
+          message={this.state.message}/>
         {currentView}
       </div>
     );
