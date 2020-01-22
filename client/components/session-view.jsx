@@ -37,11 +37,9 @@ class SessionView extends React.Component {
   }
 
   launchWithImages() {
-    const sessionConfig = {
-      sessionId: this.state.sessionId,
-      imagesArray: this.state.imagesArray
-    };
-    this.props.launchSession(sessionConfig);
+    const sessionWithImages = this.props.sessionConfig;
+    sessionWithImages.imagesArray = this.state.imagesArray;
+    this.props.launchSession(sessionWithImages);
   }
 
   componentDidMount() {
