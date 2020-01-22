@@ -72,7 +72,7 @@ class App extends React.Component {
   }
 
   returnToMenu() {
-    this.setState({ view: 'menu' });
+    this.setState({ view: 'menu', sessionConfig: {} });
   }
 
   updateHeaderMessage(message) {
@@ -97,6 +97,7 @@ class App extends React.Component {
       case 'gm':
         currentView = <GMView
           sessionConfig={this.state.sessionConfig}
+          playerConfig={this.state.playerConfig}
           updateHeaderMessage={this.updateHeaderMessage}/>;
         break;
       case 'player':

@@ -109,14 +109,6 @@ app.delete('/updateImage/:category/:fileName', (req, res, next) => {
   }
 });
 
-// POST to move socket to room by session
-app.post('/joinSessionRoom', (req, res, next) => {
-
-  res.status(200).json({ message: `moving to player to session${req.body.sessionId}` });
-  movePlayertoRoom(req.body.sessionId, req.body.socketId);
-
-});
-
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -161,17 +153,29 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
     .catch(error => { next(error); });
 });
 
+// POST to add user to user sockets object
+const userSockets = {};
+app.post('/userJoined', (req, res, next) => {
+  userSockets[req.body.socketId] = req.body.playerConfig.userName;
+  console.log(userSockets);
+  res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
+});
+
+// POST to add session to launched sessions
+const launchedSessions = [];
+app.post('/launchSession', (req, res, next) => {
+  launchedSessions.push(req.body.sessionConfig);
+  console.log(launchedSessions);
+  res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
+});
+
 // Socket io set up and incoming event handling
-const socketArray = [];
 io.on('connection', socket => {
 
-  socketArray.push(socket);
-  socket.emit('newSocketID', socket.id);
-
+  socket.emit('connected', socket.id);
   socket.on('disconnect', reason => {
-
-    const indexToRemove = socketArray.findIndex(socketInArray => socket.id === socketInArray.id);
-    socketArray.splice(indexToRemove, 1);
+    delete userSockets[socket.id];
+    console.log(userSockets);
   });
 
   socket.on('error', error => {
@@ -204,7 +208,7 @@ function movePlayertoRoom(sessionId, socketId) {
   const sessionRoom = `session${sessionId}`;
 
   socket.join(sessionRoom, () => {
-    socket.to(sessionRoom);
+    socket.to(sessionRoom).emit('userJoined');
   });
 }
 // Error Handler
