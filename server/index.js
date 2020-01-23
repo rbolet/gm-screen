@@ -9,6 +9,8 @@ const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
 
+const userSockets = {};
+
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
 const staticMiddleware = express.static(staticPath);
@@ -154,7 +156,6 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 });
 
 // POST to add user to user sockets object
-const userSockets = {};
 app.post('/userJoined', (req, res, next) => {
   userSockets[req.body.socketId] = req.body.playerConfig.userName;
   console.log(userSockets);
@@ -165,14 +166,16 @@ app.post('/userJoined', (req, res, next) => {
 const launchedSessions = [];
 app.post('/launchSession', (req, res, next) => {
   launchedSessions.push(req.body.sessionConfig);
-  console.log(launchedSessions);
+  // console.log(launchedSessions, req.body);
+  // moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
   res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
 });
 
 // Socket io set up and incoming event handling
 io.on('connection', socket => {
+  userSockets[socket.id] = { socket };
+  console.log(userSockets);
 
-  socket.emit('connected', socket.id);
   socket.on('disconnect', reason => {
     delete userSockets[socket.id];
     console.log(userSockets);
@@ -203,9 +206,10 @@ function clearSecondaryImage(paramObject) {
   }
 }
 
-function movePlayertoRoom(sessionId, socketId) {
-  const socket = socketArray.find(socket => socket.id === socketId);
-  const sessionRoom = `session${sessionId}`;
+function moveUsertoRoom(sessionConfig, socketId) {
+  const socket = userSockets[socketId];
+  console.log(socket);
+  const sessionRoom = `session${sessionConfig.sessionId}`;
 
   socket.join(sessionRoom, () => {
     socket.to(sessionRoom).emit('userJoined');

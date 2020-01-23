@@ -83,25 +83,37 @@ class GMView extends React.Component {
         },
         body: jsonPlayerConfig
       })
-        .then(res => res.json)
-        .then(jsonRes => {
-          this.props.updateHeaderMessage(jsonRes.message);
-        })
-        .catch(err => { console.error(err); });
-
-      const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig });
-      fetch('/launchSession', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: jsonSessionConfig
-      })
         .then(res => res.json())
         .then(jsonRes => {
           this.props.updateHeaderMessage(jsonRes.message);
+          const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
+          fetch('/launchSession', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: jsonSessionConfig
+          })
+            .then(res => res.json())
+            .then(jsonRes => {
+              this.props.updateHeaderMessage(jsonRes.message);
+            });
         })
-        .catch(error => { console.error(error); });
+        .catch(err => { console.error(err); });
+
+      // const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
+      // fetch('/launchSession', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: jsonSessionConfig
+      // })
+      //   .then(res => res.json())
+      //   .then(jsonRes => {
+      //     this.props.updateHeaderMessage(jsonRes.message);
+      //   })
+      //   .catch(error => { console.error(error); });
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
