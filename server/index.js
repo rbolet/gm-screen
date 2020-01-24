@@ -155,8 +155,8 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 
 // POST to add user to user sockets object
 app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].username = req.body.playerConfig.userName;
-  res.status(200).json({ message: `${userSockets[req.body.socketId].username} connected` });
+  userSockets[req.body.socketId].userName = req.body.playerConfig.userName;
+  res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
 });
 
 // POST to add session to launched sessions
@@ -172,9 +172,8 @@ const userSockets = {};
 const socketArray = [];
 io.on('connection', socket => {
   socketArray.push(socket);
-  userSockets[socket.id].socket = socket;
+  userSockets[socket.id] = { socket };
   socket.emit('connected', socket.id);
-
   socket.on('disconnect', reason => {
     delete userSockets[socket.id];
 
@@ -206,12 +205,13 @@ function clearSecondaryImage(paramObject) {
 }
 
 function moveUsertoRoom(sessionConfig, socketId) {
-  const socket = userSockets[socketId].socket;
-  const sessionRoom = `${sessionConfig.sessionName}${sessionConfig.sessionId}`;
 
+  const socket = userSockets[socketId].socket;
+  const sessionRoom = `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
   socket.join(sessionRoom, () => {
-    socket.to(sessionRoom).emit('updateHeader', `${userSockets[socketId].username} joined room ${sessionRoom}.`);
+    io.to(sessionRoom).emit('updateHeader', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
   });
+
 }
 // Error Handler
 app.use((error, req, res, next) => {
