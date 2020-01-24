@@ -209,7 +209,7 @@ function moveUsertoRoom(sessionConfig, socketId) {
   const socket = userSockets[socketId].socket;
   const sessionRoom = `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
   socket.join(sessionRoom, () => {
-    io.to(sessionRoom).emit('updateHeader', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
+    io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
   });
 
 }

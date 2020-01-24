@@ -97,7 +97,6 @@ class GMView extends React.Component {
             .then(res => res.json())
             .then(jsonRes => {
               this.props.updateHeaderMessage(jsonRes.message);
-              console.log(jsonRes.launchedSessions);
             });
         })
         .catch(err => { console.error(err); });
