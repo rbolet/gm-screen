@@ -172,8 +172,11 @@ app.post('/launchSession', (req, res, next) => {
 });
 
 // Socket io set up and incoming event handling
+const socketArray = [];
 io.on('connection', socket => {
+  socketArray.push(socket);
   userSockets[socket.id] = { socket };
+
   console.log(userSockets);
 
   socket.on('disconnect', reason => {
