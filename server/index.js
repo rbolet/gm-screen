@@ -174,7 +174,13 @@ io.on('connection', socket => {
   socketArray.push(socket);
   userSockets[socket.id] = { socket };
   socket.emit('connected', socket.id);
+
   socket.on('disconnect', reason => {
+    for (const sessionIndex in launchedSessions) {
+      if (socket.id === launchedSessions[sessionIndex].sessionGM) {
+        launchedSessions.splice(sessionIndex, 1);
+      }
+    }
     delete userSockets[socket.id];
 
   });
