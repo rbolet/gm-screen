@@ -100,20 +100,6 @@ class GMView extends React.Component {
             });
         })
         .catch(err => { console.error(err); });
-
-      // const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
-      // fetch('/launchSession', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: jsonSessionConfig
-      // })
-      //   .then(res => res.json())
-      //   .then(jsonRes => {
-      //     this.props.updateHeaderMessage(jsonRes.message);
-      //   })
-      //   .catch(error => { console.error(error); });
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
@@ -136,6 +122,10 @@ class GMView extends React.Component {
       copy.splice(indexToRemove, 1);
 
       this.setState({ secondaryImagesArray: copy });
+    });
+
+    this.socket.on('update', message => {
+      this.props.updateHeaderMessage(message);
     });
   }
 
