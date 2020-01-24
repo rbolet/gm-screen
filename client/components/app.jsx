@@ -20,6 +20,7 @@ class App extends React.Component {
     this.launchSession = this.launchSession.bind(this);
     this.returnToMenu = this.returnToMenu.bind(this);
     this.loginUser = this.loginUser.bind(this);
+    this.updateHeaderMessage = this.updateHeaderMessage.bind(this);
   }
 
   loginUser(login) {
@@ -71,7 +72,11 @@ class App extends React.Component {
   }
 
   returnToMenu() {
-    this.setState({ view: 'menu' });
+    this.setState({ view: 'menu', sessionConfig: {} });
+  }
+
+  updateHeaderMessage(message) {
+    this.setState({ message });
   }
 
   render() {
@@ -90,7 +95,10 @@ class App extends React.Component {
           sessionConfig={this.state.sessionConfig}/>;
         break;
       case 'gm':
-        currentView = <GMView sessionConfig={this.state.sessionConfig}/>;
+        currentView = <GMView
+          sessionConfig={this.state.sessionConfig}
+          playerConfig={this.state.playerConfig}
+          updateHeaderMessage={this.updateHeaderMessage}/>;
         break;
       case 'player':
         currentView = <PlayerView sessionId={this.state.sessionConfig.sessionId}/>;

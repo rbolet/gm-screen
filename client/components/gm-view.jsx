@@ -8,8 +8,7 @@ class GMView extends React.Component {
     super(props);
     this.state = {
       environmentImage: null,
-      secondaryImagesArray: [],
-      sessionConfig: this.props.sessionConfig
+      secondaryImagesArray: []
     };
 
     this.socket = {};
@@ -75,25 +74,46 @@ class GMView extends React.Component {
 
   componentDidMount() {
     this.socket = io('/');
-    this.socket.on('newSocketID', socketID => {
-      const jsonBody = JSON.stringify({
-        sessionId: this.state.sessionConfig.sessionId,
-        socketId: this.socket.id
-      });
-      fetch('/joinSessionRoom', {
+    this.socket.on('connected', socketID => {
+      const jsonPlayerConfig = JSON.stringify({ playerConfig: this.props.playerConfig, socketId: this.socket.id });
+      fetch('/userJoined', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: jsonBody
+        body: jsonPlayerConfig
       })
         .then(res => res.json())
         .then(jsonRes => {
-          alert(jsonRes.message);
+          this.props.updateHeaderMessage(jsonRes.message);
+          const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
+          fetch('/launchSession', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: jsonSessionConfig
+          })
+            .then(res => res.json())
+            .then(jsonRes => {
+              this.props.updateHeaderMessage(jsonRes.message);
+            });
         })
-        .catch(error => {
-          alert(`Error in GET return: ${error}`);
-        });
+        .catch(err => { console.error(err); });
+
+      // const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
+      // fetch('/launchSession', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: jsonSessionConfig
+      // })
+      //   .then(res => res.json())
+      //   .then(jsonRes => {
+      //     this.props.updateHeaderMessage(jsonRes.message);
+      //   })
+      //   .catch(error => { console.error(error); });
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
@@ -159,7 +179,7 @@ class GMView extends React.Component {
           </div>
           <div className="col-6 h-100 p-2">
             <ImageGrid
-              sessionConfig={this.state.sessionConfig}
+              sessionConfig={this.props.sessionConfig}
               onGridClick={this.onGridClick}/>
           </div>
         </div>
