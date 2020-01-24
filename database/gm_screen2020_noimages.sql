@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 24, 2020 at 10:41 AM
+-- Generation Time: Jan 24, 2020 at 12:16 PM
 -- Server version: 5.7.27-0ubuntu0.18.04.1
 -- PHP Version: 7.2.19-0ubuntu0.18.04.2
 
@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `images`
 --
 
+DROP TABLE IF EXISTS `images`;
 CREATE TABLE `images` (
   `imageId` int(11) NOT NULL,
   `fileName` varchar(200) CHARACTER SET latin1 NOT NULL,
@@ -39,41 +40,12 @@ CREATE TABLE `images` (
 -- Table structure for table `sessionImages`
 --
 
+DROP TABLE IF EXISTS `sessionImages`;
 CREATE TABLE `sessionImages` (
   `sessionImageId` int(11) NOT NULL,
   `sessionId` int(11) NOT NULL,
   `imageId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `sessionImages`
---
-
-INSERT INTO `sessionImages` (`sessionImageId`, `sessionId`, `imageId`) VALUES
-(5, 1, 25),
-(6, 1, 26),
-(7, 1, 27),
-(8, 1, 28),
-(9, 1, 29),
-(10, 1, 30),
-(12, 1, 32),
-(13, 1, 33),
-(14, 1, 34),
-(15, 1, 35),
-(16, 1, 36),
-(17, 1, 37),
-(18, 1, 38),
-(19, 1, 39),
-(20, 1, 40),
-(21, 1, 41),
-(22, 1, 42),
-(23, 1, 43),
-(24, 1, 44),
-(25, 1, 45),
-(26, 1, 46),
-(27, 1, 47),
-(28, 1, 48),
-(29, 1, 49);
 
 -- --------------------------------------------------------
 
@@ -81,6 +53,7 @@ INSERT INTO `sessionImages` (`sessionImageId`, `sessionId`, `imageId`) VALUES
 -- Table structure for table `sessions`
 --
 
+DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE `sessions` (
   `sessionId` int(11) NOT NULL,
   `sessionName` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -100,6 +73,7 @@ INSERT INTO `sessions` (`sessionId`, `sessionName`, `sessionGM`) VALUES
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `userId` int(11) NOT NULL,
   `userName` varchar(80) COLLATE utf8mb4_unicode_ci NOT NULL,
