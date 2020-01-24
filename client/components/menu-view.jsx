@@ -162,8 +162,7 @@ class GMChooseSession extends React.Component {
 }
 
 function SessionList(props) {
-
-  const elementRows = props.sessionList.map(session => {
+  const elementRows = props.sessionList ? props.sessionList.map(session => {
     return (
       <tr
         key={session.sessionId}
@@ -172,7 +171,8 @@ function SessionList(props) {
         <td className="p-2">{session.sessionName}</td>
       </tr>
     );
-  });
+  })
+    : null;
   return (
     <tbody>{elementRows}</tbody>);
 }

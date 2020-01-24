@@ -124,7 +124,7 @@ class GMView extends React.Component {
       this.setState({ secondaryImagesArray: copy });
     });
 
-    this.socket.on('updateHeader', message => {
+    this.socket.on('update', message => {
       this.props.updateHeaderMessage(message);
     });
   }
