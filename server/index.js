@@ -46,6 +46,16 @@ app.post('/gmSessions', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// GET list of launched sessions
+app.get('/launchedSessions', (req, res, next) => {
+  if (!launchedSessions.length) {
+    res.status(200).json(null);
+  } else {
+    res.status(200).json(launchedSessions);
+  }
+
+});
+
 // GET list of all sessions (temp)
 app.get('/allsessions', (req, res, next) => {
   db.query('SELECT * FROM sessions')
@@ -156,6 +166,7 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 // POST to add user to user sockets object
 app.post('/userJoined', (req, res, next) => {
   userSockets[req.body.socketId].userName = req.body.playerConfig.userName;
+  userSockets[req.body.socketId].userId = req.body.playerConfig.userId;
   res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
 });
 
@@ -176,13 +187,17 @@ io.on('connection', socket => {
   socket.emit('connected', socket.id);
 
   socket.on('disconnect', reason => {
+    console.log(`${socket.id} disconnected`);
+    const disconnectingId = userSockets[socket.id].userId;
+    console.log(disconnectingId);
     for (const sessionIndex in launchedSessions) {
-      if (socket.id === launchedSessions[sessionIndex].sessionGM) {
+      if (disconnectingId === launchedSessions[sessionIndex].sessionGM) {
+        console.log(`Un-launching ${launchedSessions[sessionIndex].sessionName}`);
         launchedSessions.splice(sessionIndex, 1);
       }
     }
     delete userSockets[socket.id];
-
+    console.log(launchedSessions, userSockets);
   });
 
   socket.on('error', error => {

@@ -87,7 +87,7 @@ class PlayerChooseSession extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/allsessions', { method: 'GET' })
+    fetch('/launchedSessions', { method: 'GET' })
       .then(res => res.json())
       .then(sessionList => {
         this.setState({ sessionList });
