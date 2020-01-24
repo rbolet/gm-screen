@@ -60,6 +60,9 @@ class App extends React.Component {
   }
 
   goToSessionView(sessionConfig) {
+    if (!sessionConfig.sessionId) {
+      return;
+    }
     this.setState({
       view: 'session',
       sessionConfig
