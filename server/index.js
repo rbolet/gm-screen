@@ -187,17 +187,13 @@ io.on('connection', socket => {
   socket.emit('connected', socket.id);
 
   socket.on('disconnect', reason => {
-    console.log(`${socket.id} disconnected`);
     const disconnectingId = userSockets[socket.id].userId;
-    console.log(disconnectingId);
     for (const sessionIndex in launchedSessions) {
       if (disconnectingId === launchedSessions[sessionIndex].sessionGM) {
-        console.log(`Un-launching ${launchedSessions[sessionIndex].sessionName}`);
         launchedSessions.splice(sessionIndex, 1);
       }
     }
     delete userSockets[socket.id];
-    console.log(launchedSessions, userSockets);
   });
 
   socket.on('error', error => {
