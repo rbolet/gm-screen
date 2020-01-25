@@ -103,8 +103,8 @@ app.patch('/image', (req, res, next) => {
 
 // POST to update image to all
 app.post('/updateImage/:category', (req, res, next) => {
-
-  pushImageToAll(req.body.fileName, req.params.category);
+  pushImagetoRoom(req.body.fileName, req.params.category, req.body.sessionConfig);
+  // pushImageToAll(req.body.fileName, req.params.category);
   res.json({ message: 'Updating image ...' });
 });
 
@@ -207,10 +207,16 @@ io.on('connection', socket => {
   });
 });
 
-function pushImageToAll(fileName, category) {
-  for (const socket of socketArray) {
-    socket.emit(`update${category}Image`, fileName);
-  }
+// function pushImageToAll(fileName, category) {
+//   for (const socket of socketArray) {
+//     socket.emit(`update${category}Image`, fileName);
+//   }
+//   return fileName;
+// }
+
+function pushImagetoRoom(fileName, category, sessionConfig) {
+  const sessionRoom = nameSessionRoom(sessionConfig);
+  io.to(sessionRoom).emit(`update${category}Image`, fileName);
   return fileName;
 }
 

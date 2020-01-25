@@ -20,7 +20,7 @@ class GMView extends React.Component {
   }
 
   onGridClick(image) {
-    const imageFileName = JSON.stringify({ fileName: image.fileName });
+    const jsonBody = JSON.stringify({ fileName: image.fileName, sessionConfig: this.props.sessionConfig });
 
     switch (image.category) {
       case 'Environment':
@@ -30,7 +30,7 @@ class GMView extends React.Component {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: imageFileName
+          body: jsonBody
         })
           .catch(error => {
             alert(`Error in GET return: ${error}`);
