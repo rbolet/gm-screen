@@ -86,6 +86,8 @@ class GMView extends React.Component {
         .then(res => res.json())
         .then(jsonRes => {
           this.props.updateHeaderMessage(jsonRes.message);
+        })
+        .then(() => {
           const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
           fetch('/launchSession', {
             method: 'POST',

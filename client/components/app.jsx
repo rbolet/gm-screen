@@ -104,7 +104,11 @@ class App extends React.Component {
           updateHeaderMessage={this.updateHeaderMessage}/>;
         break;
       case 'player':
-        currentView = <PlayerView sessionId={this.state.sessionConfig.sessionId}/>;
+        currentView = <PlayerView
+          sessionConfig={this.state.sessionConfig}
+          sessionId={this.state.sessionConfig.sessionId}
+          playerConfig={this.state.playerConfig}
+          updateHeaderMessage={this.updateHeaderMessage}/>;
     }
     return (
       <div className="app-container container-fluid vh-100 px-0">
