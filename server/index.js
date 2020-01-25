@@ -170,12 +170,18 @@ app.post('/userJoined', (req, res, next) => {
   res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
 });
 
-// POST to add session to launched sessions
+// POST for GM to launch a new session
 const launchedSessions = [];
 app.post('/launchSession', (req, res, next) => {
   launchedSessions.push(req.body.sessionConfig);
   moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"`, launchedSessions });
+  res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
+});
+
+// POST for player to join a session room
+app.post('/joinSession', (req, res, next) => {
+  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
+  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
 // Socket io set up and incoming event handling
@@ -224,12 +230,17 @@ function clearSecondaryImage(paramObject) {
 function moveUsertoRoom(sessionConfig, socketId) {
 
   const socket = userSockets[socketId].socket;
-  const sessionRoom = `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
+  const sessionRoom = nameSessionRoom(sessionConfig);
   socket.join(sessionRoom, () => {
     io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
   });
 
 }
+
+function nameSessionRoom(sessionConfig) {
+  return `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
+}
+
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);

@@ -10,12 +10,41 @@ class PlayerView extends React.Component {
       secondaryImagesArray: [],
       sessionId: this.props.sessionId
     };
+
+    this.socket = {};
   }
 
   componentDidMount() {
     this.socket = io('/');
-    this.socket.on('newSocketID', socketID => {
-      // console.log(socketID);
+
+    this.socket.on('connected', socketID => {
+      const jsonPlayerConfig = JSON.stringify({ playerConfig: this.props.playerConfig, socketId: this.socket.id });
+      fetch('/userJoined', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonPlayerConfig
+      })
+        .then(res => res.json())
+        .then(jsonRes => {
+          this.props.updateHeaderMessage(jsonRes.message);
+        })
+        .then(() => {
+          const jsonSessionConfig = JSON.stringify({ sessionConfig: this.props.sessionConfig, socketId: this.socket.id });
+          fetch('/joinSession', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: jsonSessionConfig
+          })
+            .then(res => res.json())
+            .then(jsonRes => {
+              this.props.updateHeaderMessage(jsonRes.message);
+            });
+        })
+        .catch(err => { console.error(err); });
     });
 
     this.socket.on('updateEnvironmentImage', fileName => {
@@ -38,6 +67,10 @@ class PlayerView extends React.Component {
       copy.splice(indexToRemove, 1);
 
       this.setState({ secondaryImagesArray: copy });
+    });
+
+    this.socket.on('update', message => {
+      this.props.updateHeaderMessage(message);
     });
   }
 
