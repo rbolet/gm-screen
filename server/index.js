@@ -230,12 +230,17 @@ function clearSecondaryImage(paramObject) {
 function moveUsertoRoom(sessionConfig, socketId) {
 
   const socket = userSockets[socketId].socket;
-  const sessionRoom = `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
+  const sessionRoom = nameSessionRoom(sessionConfig);
   socket.join(sessionRoom, () => {
     io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
   });
 
 }
+
+function nameSessionRoom(sessionConfig) {
+  return `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
+}
+
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);
