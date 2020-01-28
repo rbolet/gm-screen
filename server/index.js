@@ -20,27 +20,49 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.post('/test', function (req, res, next) {
+function testForSQLInjection(input) {
+  const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
+  return regexPattern.test(input);
+}
+
+app.post('/newUser', function (req, res, next) {
   const userName = req.body.userName;
   const password = req.body.password;
-  const query = `SELECT userId, userName FROM users
-    WHERE userName = ? AND password = ?;`;
-  db.execute(query, [userName, password])
-    .then(([rows]) => {
-      res.status(200).json(rows);
-    })
-    .catch(err => next(err));
+
+  if (!userName || !password) {
+    res.status(401).json({ reason: 'incomplete' });
+  } else if (testForSQLInjection(userName) || testForSQLInjection(password)) {
+    res.status(401).json({ reason: 'injection' });
+  } else {
+    const passwordValidation = new RegExp(/(?= [#$ -/:-?{-~!"^_`[\]a-zA-Z]*([0-9#$-/:-?{-~!"^_`[\]]))(?=[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]*[a-zA-Z])[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]{4,20}/);
+    if (!passwordValidation.test(password)) {
+      res.status(401).json({ reason: 'weakPassword' });
+      return;
+    }
+    const query = 'INSERT INTO users(userName, password) VALUES(?,?);';
+    db.execute(query, [userName, password])
+      .then(([rows]) => {
+        res.status(200).json(rows);
+      })
+      .catch(err => next(err));
+  }
 });
 
 // POST login
 app.post('/auth', function (req, res, next) {
   const userName = req.body.userName;
+
   const password = req.body.password;
+  if (testForSQLInjection(userName) || testForSQLInjection(password)) {
+    res.status(401).json({ reason: 'injection' });
+    return;
+  }
+
   const query = `SELECT userId, userName FROM users WHERE userName = "${userName}" AND password = "${password}";`;
   db.query(query)
     .then(([rows]) => {
       if (!rows.length) {
-        res.status(401).json({ message: 'Please provide a valid username and password' });
+        res.status(401).json({ reason: 'failed' });
       } else {
         res.status(200).json(rows);
       }

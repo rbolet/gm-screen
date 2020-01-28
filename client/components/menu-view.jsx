@@ -26,7 +26,10 @@ class MenuView extends React.Component {
   render() {
     let currentMenu;
     if (!this.props.playerConfig.userId) {
-      currentMenu = <UserLogin loginUser={this.props.loginUser} playerConfig={this.props.playerConfig} />;
+      currentMenu = <UserLogin
+        loginUser={this.props.loginUser}
+        playerConfig={this.props.playerConfig}
+        newUser={this.props.newUser}/>;
     } else {
       switch (this.state.currentMenu) {
         case 'chooseRole':

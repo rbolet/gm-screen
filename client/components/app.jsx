@@ -34,7 +34,7 @@ class App extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
-          this.loginFailed();
+          this.loginFailed('failed');
         } else {
           return res.json();
         }
@@ -47,9 +47,34 @@ class App extends React.Component {
       .catch(err => { console.error(err); });
   }
 
-  loginFailed() {
-    const playerConfig = { auth: 'failed' };
+  loginFailed(reason) {
+    const playerConfig = { auth: reason };
     this.setState({ playerConfig });
+  }
+
+  newUser(login) {
+    const loginJSON = JSON.stringify(login);
+    fetch('/newUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: loginJSON
+    })
+      .then(res => {
+        if (!res.ok) {
+          const response = res.json();
+          this.loginFailed(response.reason);
+        } else {
+          return res.json();
+        }
+      })
+      .then(jsonRes => {
+        if (!jsonRes) return;
+        const playerConfig = jsonRes[0];
+        this.setState({ playerConfig });
+      })
+      .catch(err => { console.error(err); });
   }
 
   playerJoinSession(sessionConfig) {
@@ -90,7 +115,8 @@ class App extends React.Component {
           playerConfig={this.state.playerConfig}
           goToSessionView={this.goToSessionView}
           playerJoinSession={this.playerJoinSession}
-          loginUser={this.loginUser}/>;
+          loginUser={this.loginUser}
+          newUser={this.newUser}/>;
         break;
       case 'session':
         currentView = <SessionView

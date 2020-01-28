@@ -58,7 +58,10 @@ class UserLogin extends React.Component {
             <label htmlFor="user-password" className="text-light"> </label>
             <input value = {this.state.password} onChange={this.handleChange} type="password" required autoComplete="current-password" className="form-control" id="password" name="password" placeholder="Password"/>
           </div>
-          <button type="submit" className="btn btn-secondary text-light">Submit</button>
+          <div className="d-flex justify-content-between">
+            <button type="submit" className="btn btn-secondary text-light">Log In</button>
+            <button className="btn btn-outline-light" onClick={this.props.newUser}>New User</button>
+          </div>
         </form>
       </div>
     );
