@@ -34,15 +34,20 @@ app.post('/newUser', function (req, res, next) {
   } else if (testForSQLInjection(userName) || testForSQLInjection(password)) {
     res.status(401).json({ reason: 'injection' });
   } else {
-    const passwordValidation = new RegExp(/(?= [#$ -/:-?{-~!"^_`[\]a-zA-Z]*([0-9#$-/:-?{-~!"^_`[\]]))(?=[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]*[a-zA-Z])[#$-/:-?{-~!"^_`[\]a-zA-Z0-9]{4,20}/);
+    const passwordValidation = new RegExp(/^(?=.{6,20})(?!.*\s).*$/, 'gm');
+    const userNameValidation = new RegExp(/^(?=\S)([a-z]|[A-Z]){4,40}$/, 'gm');
+
     if (!passwordValidation.test(password)) {
-      res.status(401).json({ reason: 'weakPassword' });
+      res.status(401).json({ reason: 'invalidPassword' });
+      return;
+    } else if (!userNameValidation.test(userName)) {
+      res.status(401).json({ reason: 'invalidUserName' });
       return;
     }
     const query = 'INSERT INTO users(userName, password) VALUES(?,?);';
     db.execute(query, [userName, password])
       .then(([rows]) => {
-        res.status(200).json(rows);
+        res.status(200).json({ userId: rows.insertId });
       })
       .catch(err => next(err));
   }
