@@ -20,6 +20,18 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.post('/test', function (req, res, next) {
+  const userName = req.body.userName;
+  const password = req.body.password;
+  const query = `SELECT userId, userName FROM users
+    WHERE userName = ? AND password = ?;`;
+  db.execute(query, [userName, password])
+    .then(([rows]) => {
+      res.status(200).json(rows);
+    })
+    .catch(err => next(err));
+});
+
 // POST login
 app.post('/auth', function (req, res, next) {
   const userName = req.body.userName;
