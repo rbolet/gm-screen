@@ -97,7 +97,7 @@ class App extends React.Component {
   }
 
   returnToMenu() {
-    this.setState({ view: 'menu', sessionConfig: {} });
+    this.setState({ view: 'menu', sessionConfig: {}, message: '' });
   }
 
   updateHeaderMessage(message) {
