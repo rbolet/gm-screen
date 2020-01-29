@@ -9,12 +9,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'menu',
+      view: { menu: 'login' },
       sessionConfig: {},
       playerConfig: {},
       message: ''
     };
 
+    this.chooseSession = this.chooseSession.bind(this);
     this.goToSessionView = this.goToSessionView.bind(this);
     this.playerJoinSession = this.playerJoinSession.bind(this);
     this.launchSession = this.launchSession.bind(this);
@@ -22,6 +23,7 @@ class App extends React.Component {
     this.loginUser = this.loginUser.bind(this);
     this.newUser = this.newUser.bind(this);
     this.updateHeaderMessage = this.updateHeaderMessage.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   loginUser(login) {
@@ -43,7 +45,7 @@ class App extends React.Component {
       .then(jsonRes => {
         if (!jsonRes) return;
         const playerConfig = jsonRes[0];
-        this.setState({ playerConfig });
+        this.setState({ playerConfig, view: { menu: 'chooseRole' } });
       })
       .catch(err => { console.error(err); });
   }
@@ -68,10 +70,24 @@ class App extends React.Component {
           this.loginFailed(jsonRes.reason);
         } else {
           const playerConfig = { userId: jsonRes.userId, userName: login.userName };
-          this.setState({ playerConfig });
+          this.setState({ playerConfig, view: { menu: 'chooseRole' } });
         }
       })
       .catch(err => { console.error(err); });
+  }
+
+  chooseSession(role) {
+    let view = {};
+    switch (role) {
+      case 'gm':
+        view = { menu: 'gmChooseSession' };
+        break;
+      case 'player':
+        view = { menu: 'playerChooseSession' };
+        break;
+    }
+    this.setState({ view });
+
   }
 
   playerJoinSession(sessionConfig) {
@@ -97,7 +113,11 @@ class App extends React.Component {
   }
 
   returnToMenu() {
-    this.setState({ view: 'menu', sessionConfig: {}, message: '' });
+    this.setState({ view: { menu: 'chooseRole' }, sessionConfig: {}, message: '' });
+  }
+
+  logOut() {
+    this.setState({ playerConfig: {}, view: { menu: 'login' }, message: 'You have been logged out' });
   }
 
   updateHeaderMessage(message) {
@@ -106,33 +126,39 @@ class App extends React.Component {
 
   render() {
     let currentView;
-    switch (this.state.view) {
-      case 'menu':
-        currentView = <MenuView
-          playerConfig={this.state.playerConfig}
-          goToSessionView={this.goToSessionView}
-          playerJoinSession={this.playerJoinSession}
-          loginUser={this.loginUser}
-          newUser={this.newUser}/>;
-        break;
-      case 'session':
-        currentView = <SessionView
-          launchSession={this.launchSession}
-          sessionConfig={this.state.sessionConfig}/>;
-        break;
-      case 'gm':
-        currentView = <GMView
-          sessionConfig={this.state.sessionConfig}
-          playerConfig={this.state.playerConfig}
-          updateHeaderMessage={this.updateHeaderMessage}/>;
-        break;
-      case 'player':
-        currentView = <PlayerView
-          sessionConfig={this.state.sessionConfig}
-          sessionId={this.state.sessionConfig.sessionId}
-          playerConfig={this.state.playerConfig}
-          updateHeaderMessage={this.updateHeaderMessage}/>;
+    if (this.state.view.menu) {
+      currentView = <MenuView
+        menu={this.state.view.menu}
+        playerConfig={this.state.playerConfig}
+        chooseSession={this.chooseSession}
+        goToSessionView={this.goToSessionView}
+        playerJoinSession={this.playerJoinSession}
+        loginUser={this.loginUser}
+        newUser={this.newUser}
+        logOut={this.logOut} />;
+    } else {
+      switch (this.state.view) {
+
+        case 'session':
+          currentView = <SessionView
+            launchSession={this.launchSession}
+            sessionConfig={this.state.sessionConfig}/>;
+          break;
+        case 'gm':
+          currentView = <GMView
+            sessionConfig={this.state.sessionConfig}
+            playerConfig={this.state.playerConfig}
+            updateHeaderMessage={this.updateHeaderMessage}/>;
+          break;
+        case 'player':
+          currentView = <PlayerView
+            sessionConfig={this.state.sessionConfig}
+            sessionId={this.state.sessionConfig.sessionId}
+            playerConfig={this.state.playerConfig}
+            updateHeaderMessage={this.updateHeaderMessage}/>;
+      }
     }
+
     return (
       <div className="app-container container-fluid vh-100 px-0">
         <Header
