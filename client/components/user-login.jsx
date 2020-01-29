@@ -43,6 +43,16 @@ class UserLogin extends React.Component {
       case 'failed' :
         loginMessage = 'Invalid username and/or password';
         break;
+      case 'injection' :
+        loginMessage = 'Forbidden word in username';
+        break;
+      case 'invalidPassword':
+        loginMessage = 'Password must be between 6 and 20 characters long';
+        break;
+      case 'invalidUserName':
+        loginMessage = 'User name must be between 4 and 40 letters or numbers';
+        break;
+      case 'incomplete':
       default :
         loginMessage = 'Please enter your username and password';
     }
@@ -52,7 +62,7 @@ class UserLogin extends React.Component {
         <div className="w-100 h-25 text-light">
           <p id="login-response" className="pt-1">{loginMessage}</p>
         </div>
-        <form id="user-login-form">
+        <form id="user-login-form" onSubmit={() => event.preventDefault()}>
           <div className="form-group pt-4">
             <label htmlFor="user-name" className="text-light"> </label>
             <input value={this.state.userName} onChange={this.handleChange} type="text" required autoComplete="username" className="form-control" id="user-name" name="userName" aria-describedby="user name" placeholder="Enter User Name"/>
@@ -62,8 +72,8 @@ class UserLogin extends React.Component {
             <input value = {this.state.password} onChange={this.handleChange} type="password" required autoComplete="current-password" className="form-control" id="password" name="password" placeholder="Password"/>
           </div>
           <div className="d-flex justify-content-between">
-            <button className="btn btn-secondary text-light" onClick={this.userLogin}>Log In</button>
-            <button className="btn btn-outline-light" onClick={() => { this.userLogin(true); }}>New User</button>
+            <button type="submit" className="btn btn-secondary text-light" onClick={() => { this.userLogin(false); }}>Log In</button>
+            <button type="submit" className="btn btn-outline-light" onClick={() => { this.userLogin(true); }}>New User</button>
           </div>
         </form>
       </div>

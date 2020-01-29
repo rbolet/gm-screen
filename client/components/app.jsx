@@ -54,7 +54,6 @@ class App extends React.Component {
   }
 
   newUser(login) {
-    console.log(login);
     const loginJSON = JSON.stringify(login);
     fetch('/newUser', {
       method: 'POST',
@@ -68,9 +67,9 @@ class App extends React.Component {
         if (jsonRes.reason) {
           this.loginFailed(jsonRes.reason);
         } else {
-
+          const playerConfig = { userId: jsonRes.userId, userName: login.userName };
+          this.setState({ playerConfig });
         }
-        // this.setState({ playerConfig });
       })
       .catch(err => { console.error(err); });
   }
