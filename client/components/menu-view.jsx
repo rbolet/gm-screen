@@ -2,40 +2,25 @@ const React = require('react');
 const UserLogin = require('./user-login');
 
 class MenuView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentMenu: 'chooseRole'
-    };
-
-    this.chooseSession = this.chooseSession.bind(this);
-  }
-
-  chooseSession(role) {
-    switch (role) {
-      case 'gm' :
-        this.setState({ currentMenu: 'gmChooseSession' });
-        break;
-      case 'player':
-        this.setState({ currentMenu: 'playerChooseSession' });
-        break;
-    }
-
-  }
 
   render() {
     let currentMenu;
+    const UserLoginComponent = <UserLogin
+      loginUser={this.props.loginUser}
+      playerConfig={this.props.playerConfig}
+      newUser={this.props.newUser} />;
     if (!this.props.playerConfig.userId) {
-      currentMenu = <UserLogin
-        loginUser={this.props.loginUser}
-        playerConfig={this.props.playerConfig}
-        newUser={this.props.newUser}/>;
+      currentMenu = UserLoginComponent;
     } else {
-      switch (this.state.currentMenu) {
+      switch (this.props.menu) {
+        case 'login':
+          currentMenu = UserLoginComponent;
+          break;
         case 'chooseRole':
           currentMenu = <UserChooseRole
-            chooseSession={this.chooseSession}
-            goToSessionView={this.props.goToSessionView}/>;
+            chooseSession={this.props.chooseSession}
+            goToSessionView={this.props.goToSessionView}
+            logOut={this.props.logOut}/>;
           break;
         case 'playerChooseSession':
           currentMenu = <PlayerChooseSession playerJoinSession={this.props.playerJoinSession}/>;
@@ -64,10 +49,11 @@ class MenuView extends React.Component {
 function UserChooseRole(props) {
 
   return (
-    <div className="container d-flex flex-column justify-content-center pt-5 mt-5">
+    <div className="d-flex flex-column justify-content-center h-100">
       <h5 className="text-light text-center">Choose Your Role</h5>
       <button onClick={() => props.chooseSession('gm')} className="btn btn-secondary mb-4">Game Master</button>
       <button onClick={() => props.chooseSession('player')} className="btn btn-secondary mb-4">Player</button>
+      <button onClick={props.logOut} className="btn btn-outline-light">Log Out</button>
     </div>
   );
 }
