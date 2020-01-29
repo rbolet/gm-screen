@@ -44,12 +44,24 @@ app.post('/newUser', function (req, res, next) {
       res.status(401).json({ reason: 'invalidUserName' });
       return;
     }
-    const query = 'INSERT INTO users(userName, password) VALUES(?,?);';
-    db.execute(query, [userName, password])
-      .then(([rows]) => {
-        res.status(200).json({ userId: rows.insertId });
+    const getusersQuery = 'SELECT userName FROM users';
+    let exists = null;
+    db.query(getusersQuery)
+      .then(([users]) => {
+        exists = users.find(existingUserName => { return existingUserName.userName.toString() === userName; });
+        if (exists) {
+          res.status(200).json({ reason: 'exists' });
+        } else {
+          const insertQuery = 'INSERT INTO users(userName, password) VALUES(?,?);';
+          db.execute(insertQuery, [userName, password])
+            .then(([rows]) => {
+              res.status(200).json({ userId: rows.insertId });
+            })
+            .catch(err => next(err));
+        }
       })
       .catch(err => next(err));
+
   }
 });
 
