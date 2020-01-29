@@ -8,7 +8,7 @@ class UserLogin extends React.Component {
       password: ''
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.userLogin = this.userLogin.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -19,15 +19,18 @@ class UserLogin extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  userLogin(isNew) {
     const login = this.state;
-    this.props.loginUser(login);
+
+    if (isNew) {
+      this.props.newUser(login);
+    } else {
+      this.props.loginUser(login);
+    }
     this.clearForm();
   }
 
   clearForm() {
-    document.querySelector('#user-login-form').reset();
     this.setState({
       userName: '',
       password: ''
@@ -40,6 +43,19 @@ class UserLogin extends React.Component {
       case 'failed' :
         loginMessage = 'Invalid username and/or password';
         break;
+      case 'injection' :
+        loginMessage = 'Forbidden word in username';
+        break;
+      case 'invalidPassword':
+        loginMessage = 'Password must be between 6 and 20 characters long';
+        break;
+      case 'invalidUserName':
+        loginMessage = 'User name must be between 4 and 40 letters or numbers';
+        break;
+      case 'exists':
+        loginMessage = 'User name already exists, please choose another or click "Log in"';
+        break;
+      case 'incomplete':
       default :
         loginMessage = 'Please enter your username and password';
     }
@@ -49,7 +65,7 @@ class UserLogin extends React.Component {
         <div className="w-100 h-25 text-light">
           <p id="login-response" className="pt-1">{loginMessage}</p>
         </div>
-        <form id="user-login-form" onSubmit={this.handleSubmit}>
+        <form id="user-login-form" onSubmit={() => event.preventDefault()}>
           <div className="form-group pt-4">
             <label htmlFor="user-name" className="text-light"> </label>
             <input value={this.state.userName} onChange={this.handleChange} type="text" required autoComplete="username" className="form-control" id="user-name" name="userName" aria-describedby="user name" placeholder="Enter User Name"/>
@@ -58,7 +74,10 @@ class UserLogin extends React.Component {
             <label htmlFor="user-password" className="text-light"> </label>
             <input value = {this.state.password} onChange={this.handleChange} type="password" required autoComplete="current-password" className="form-control" id="password" name="password" placeholder="Password"/>
           </div>
-          <button type="submit" className="btn btn-secondary text-light">Submit</button>
+          <div className="d-flex justify-content-between">
+            <button type="submit" className="btn btn-secondary text-light" onClick={() => { this.userLogin(false); }}>Log In</button>
+            <button type="submit" className="btn btn-outline-light" onClick={() => { this.userLogin(true); }}>New User</button>
+          </div>
         </form>
       </div>
     );

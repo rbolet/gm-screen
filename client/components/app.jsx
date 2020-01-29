@@ -20,6 +20,7 @@ class App extends React.Component {
     this.launchSession = this.launchSession.bind(this);
     this.returnToMenu = this.returnToMenu.bind(this);
     this.loginUser = this.loginUser.bind(this);
+    this.newUser = this.newUser.bind(this);
     this.updateHeaderMessage = this.updateHeaderMessage.bind(this);
   }
 
@@ -34,7 +35,7 @@ class App extends React.Component {
     })
       .then(res => {
         if (!res.ok) {
-          this.loginFailed();
+          this.loginFailed('failed');
         } else {
           return res.json();
         }
@@ -47,9 +48,30 @@ class App extends React.Component {
       .catch(err => { console.error(err); });
   }
 
-  loginFailed() {
-    const playerConfig = { auth: 'failed' };
+  loginFailed(reason) {
+    const playerConfig = { auth: reason };
     this.setState({ playerConfig });
+  }
+
+  newUser(login) {
+    const loginJSON = JSON.stringify(login);
+    fetch('/newUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: loginJSON
+    })
+      .then(res => res.json())
+      .then(jsonRes => {
+        if (jsonRes.reason) {
+          this.loginFailed(jsonRes.reason);
+        } else {
+          const playerConfig = { userId: jsonRes.userId, userName: login.userName };
+          this.setState({ playerConfig });
+        }
+      })
+      .catch(err => { console.error(err); });
   }
 
   playerJoinSession(sessionConfig) {
@@ -90,7 +112,8 @@ class App extends React.Component {
           playerConfig={this.state.playerConfig}
           goToSessionView={this.goToSessionView}
           playerJoinSession={this.playerJoinSession}
-          loginUser={this.loginUser}/>;
+          loginUser={this.loginUser}
+          newUser={this.newUser}/>;
         break;
       case 'session':
         currentView = <SessionView

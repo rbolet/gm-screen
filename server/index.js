@@ -20,15 +20,66 @@ app.use(session({
   saveUninitialized: true
 }));
 
+function testForSQLInjection(input) {
+  const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
+  return regexPattern.test(input);
+}
+
+app.post('/newUser', function (req, res, next) {
+  const userName = req.body.userName;
+  const password = req.body.password;
+
+  if (!userName || !password) {
+    res.status(401).json({ reason: 'incomplete' });
+  } else if (testForSQLInjection(userName) || testForSQLInjection(password)) {
+    res.status(401).json({ reason: 'injection' });
+  } else {
+    const passwordValidation = new RegExp(/^(?=.{6,20})(?!.*\s).*$/, 'gm');
+    const userNameValidation = new RegExp(/^(?=\S)([a-z]|[A-Z]|[0-9]){4,40}$/, 'gm');
+
+    if (!passwordValidation.test(password)) {
+      res.status(401).json({ reason: 'invalidPassword' });
+      return;
+    } else if (!userNameValidation.test(userName)) {
+      res.status(401).json({ reason: 'invalidUserName' });
+      return;
+    }
+    const getusersQuery = 'SELECT userName FROM users';
+    let exists = null;
+    db.query(getusersQuery)
+      .then(([users]) => {
+        exists = users.find(existingUserName => { return existingUserName.userName.toString() === userName; });
+        if (exists) {
+          res.status(200).json({ reason: 'exists' });
+        } else {
+          const insertQuery = 'INSERT INTO users(userName, password) VALUES(?,?);';
+          db.execute(insertQuery, [userName, password])
+            .then(([rows]) => {
+              res.status(200).json({ userId: rows.insertId });
+            })
+            .catch(err => next(err));
+        }
+      })
+      .catch(err => next(err));
+
+  }
+});
+
 // POST login
 app.post('/auth', function (req, res, next) {
   const userName = req.body.userName;
+
   const password = req.body.password;
+  if (testForSQLInjection(userName) || testForSQLInjection(password)) {
+    res.status(401).json({ reason: 'injection' });
+    return;
+  }
+
   const query = `SELECT userId, userName FROM users WHERE userName = "${userName}" AND password = "${password}";`;
   db.query(query)
     .then(([rows]) => {
       if (!rows.length) {
-        res.status(401).json({ message: 'Please provide a valid username and password' });
+        res.status(401).json({ reason: 'failed' });
       } else {
         res.status(200).json(rows);
       }
