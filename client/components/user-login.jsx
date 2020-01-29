@@ -52,6 +52,9 @@ class UserLogin extends React.Component {
       case 'invalidUserName':
         loginMessage = 'User name must be between 4 and 40 letters or numbers';
         break;
+      case 'exists':
+        loginMessage = 'User name already exists, please choose another or click "Log in"';
+        break;
       case 'incomplete':
       default :
         loginMessage = 'Please enter your username and password';
