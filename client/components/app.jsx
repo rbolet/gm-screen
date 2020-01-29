@@ -20,6 +20,7 @@ class App extends React.Component {
     this.launchSession = this.launchSession.bind(this);
     this.returnToMenu = this.returnToMenu.bind(this);
     this.loginUser = this.loginUser.bind(this);
+    this.newUser = this.newUser.bind(this);
     this.updateHeaderMessage = this.updateHeaderMessage.bind(this);
   }
 
@@ -53,6 +54,7 @@ class App extends React.Component {
   }
 
   newUser(login) {
+    console.log(login);
     const loginJSON = JSON.stringify(login);
     fetch('/newUser', {
       method: 'POST',
@@ -61,18 +63,14 @@ class App extends React.Component {
       },
       body: loginJSON
     })
-      .then(res => {
-        if (!res.ok) {
-          const response = res.json();
-          this.loginFailed(response.reason);
-        } else {
-          return res.json();
-        }
-      })
+      .then(res => res.json())
       .then(jsonRes => {
-        if (!jsonRes) return;
-        const playerConfig = jsonRes[0];
-        this.setState({ playerConfig });
+        if (jsonRes.reason) {
+          this.loginFailed(jsonRes.reason);
+        } else {
+
+        }
+        // this.setState({ playerConfig });
       })
       .catch(err => { console.error(err); });
   }

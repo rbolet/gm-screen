@@ -35,7 +35,7 @@ app.post('/newUser', function (req, res, next) {
     res.status(401).json({ reason: 'injection' });
   } else {
     const passwordValidation = new RegExp(/^(?=.{6,20})(?!.*\s).*$/, 'gm');
-    const userNameValidation = new RegExp(/^(?=\S)([a-z]|[A-Z]){4,40}$/, 'gm');
+    const userNameValidation = new RegExp(/^(?=\S)([a-z]|[A-Z]|[0-9]){4,40}$/, 'gm');
 
     if (!passwordValidation.test(password)) {
       res.status(401).json({ reason: 'invalidPassword' });
