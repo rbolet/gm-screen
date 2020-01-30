@@ -2,13 +2,15 @@ const React = require('react');
 const io = require('socket.io-client');
 const ImageGrid = require('./image-grid');
 const SecondaryImages = require('./secondary-images');
+const GMFooterModal = require('./gm-footer-modal');
 
 class GMView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       environmentImage: null,
-      secondaryImagesArray: []
+      secondaryImagesArray: [],
+      detailImage: null
     };
 
     this.socket = {};
@@ -80,7 +82,7 @@ class GMView extends React.Component {
     });
     const selectedImage = copy.find(imageInArray => { return (image.randomKey === imageInArray.randomKey); });
     selectedImage.selected = true;
-    this.setState({ secondaryImagesArray: copy });
+    this.setState({ secondaryImagesArray: copy, detailImage: selectedImage });
 
   }
 
@@ -174,8 +176,7 @@ class GMView extends React.Component {
 
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
-        <div id="modal-background d-none">
-        </div>
+        {this.state.detailImage && <GMFooterModal image={this.state.detailImage}/>}
         <div className="row h-100 w-100">
           <div className="col-6 h-100">
             <div className="h-75">
