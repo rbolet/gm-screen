@@ -17,6 +17,7 @@ class GMView extends React.Component {
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
     this.removeOneImage = this.removeOneImage.bind(this);
+    this.handleFooterClick = this.handleFooterClick.bind(this);
   }
 
   onGridClick(image) {
@@ -70,6 +71,17 @@ class GMView extends React.Component {
       .catch(error => {
         alert(`Error in DELETE: ${error}`);
       });
+  }
+
+  handleFooterClick(image) {
+    const copy = this.state.secondaryImagesArray;
+    copy.map(secondaryImage => {
+      delete secondaryImage.selected;
+    });
+    const selectedImage = copy.find(imageInArray => { return (image.randomKey === imageInArray.randomKey); });
+    selectedImage.selected = true;
+    this.setState({ secondaryImagesArray: copy });
+
   }
 
   componentDidMount() {
@@ -148,7 +160,8 @@ class GMView extends React.Component {
           <SecondaryImages
             secondaryImagesArray={this.state.secondaryImagesArray}
             gmClick={this.clearAllSecondaryImages}
-            removeOneImage={this.removeOneImage}/>
+            removeOneImage={this.removeOneImage}
+            handleFooterClick={this.handleFooterClick}/>
         </div>
       );
     } else {
@@ -161,6 +174,8 @@ class GMView extends React.Component {
 
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
+        <div id="modal-background d-none">
+        </div>
         <div className="row h-100 w-100">
           <div className="col-6 h-100">
             <div className="h-75">

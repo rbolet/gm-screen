@@ -14,7 +14,8 @@ function SecondaryImages(props) {
       <div className="secondary-images h-100 d-inline-flex justify-content-center" >
         <SecondaryImage
           secondaryImagesArray={props.secondaryImagesArray}
-          removeOneImage={props.removeOneImage}/>
+          removeOneImage={props.removeOneImage}
+          handleFooterClick={props.handleFooterClick}/>
       </div>
       {closeButton}
     </div>
@@ -33,11 +34,13 @@ function SecondaryImage(props) {
     }
     return (
       <div
-        key={image.fileName + image.randomKey}
+        key={image.randomKey}
         style={{ backgroundImage: `url(./images/${image.fileName})` }}
         className="secondary-image mx-2">
         {closeButton}
-        <div className="secondary-footer"></div>
+        <div
+          className={`secondary-footer ${image.selected ? 'selected-footer' : ''}`}
+          onClick={props.handleFooterClick.bind(this, image)}/>
       </div>
     );
   });
