@@ -108,12 +108,12 @@ class GMView extends React.Component {
       this.setState({ environmentImage: fileName });
     });
 
-    this.socket.on('updateSecondaryImage', fileName => {
-      if (fileName === null) {
+    this.socket.on('updateSecondaryImage', secondaryImage => {
+      if (secondaryImage === null) {
         this.setState({ secondaryImagesArray: [] });
       } else {
         const copy = this.state.secondaryImagesArray;
-        copy.push(fileName);
+        copy.push(secondaryImage);
         this.setState({ secondaryImagesArray: copy });
       }
     });
