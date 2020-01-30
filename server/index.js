@@ -267,8 +267,18 @@ io.on('connection', socket => {
 
 function pushImagetoRoom(fileName, category, sessionConfig) {
   const sessionRoom = nameSessionRoom(sessionConfig);
-  io.to(sessionRoom).emit(`update${category}Image`, fileName);
-  return fileName;
+  let image = null;
+  if (category === 'Secondary') {
+    const imageObject = {
+      fileName,
+      randomKey: (new Date().getTime()).toString(12)
+    };
+    image = imageObject;
+  } else {
+    image = fileName;
+  }
+  io.to(sessionRoom).emit(`update${category}Image`, image);
+
 }
 
 function clearAllImages(category) {

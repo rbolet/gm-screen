@@ -2,13 +2,15 @@ const React = require('react');
 const io = require('socket.io-client');
 const ImageGrid = require('./image-grid');
 const SecondaryImages = require('./secondary-images');
+const GMFooterModal = require('./gm-footer-modal');
 
 class GMView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       environmentImage: null,
-      secondaryImagesArray: []
+      secondaryImagesArray: [],
+      detailImage: null
     };
 
     this.socket = {};
@@ -17,6 +19,7 @@ class GMView extends React.Component {
     this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
     this.clearAllSecondaryImages = this.clearAllSecondaryImages.bind(this);
     this.removeOneImage = this.removeOneImage.bind(this);
+    this.handleFooterClick = this.handleFooterClick.bind(this);
   }
 
   onGridClick(image) {
@@ -72,6 +75,17 @@ class GMView extends React.Component {
       });
   }
 
+  handleFooterClick(image) {
+    const copy = this.state.secondaryImagesArray;
+    copy.map(secondaryImage => {
+      delete secondaryImage.selected;
+    });
+    const selectedImage = copy.find(imageInArray => { return (image.randomKey === imageInArray.randomKey); });
+    selectedImage.selected = true;
+    this.setState({ secondaryImagesArray: copy, detailImage: selectedImage });
+
+  }
+
   componentDidMount() {
     this.socket = io('/');
     this.socket.on('connected', socketID => {
@@ -108,12 +122,12 @@ class GMView extends React.Component {
       this.setState({ environmentImage: fileName });
     });
 
-    this.socket.on('updateSecondaryImage', fileName => {
-      if (fileName === null) {
+    this.socket.on('updateSecondaryImage', secondaryImage => {
+      if (secondaryImage === null) {
         this.setState({ secondaryImagesArray: [] });
       } else {
         const copy = this.state.secondaryImagesArray;
-        copy.push(fileName);
+        copy.push(secondaryImage);
         this.setState({ secondaryImagesArray: copy });
       }
     });
@@ -148,7 +162,8 @@ class GMView extends React.Component {
           <SecondaryImages
             secondaryImagesArray={this.state.secondaryImagesArray}
             gmClick={this.clearAllSecondaryImages}
-            removeOneImage={this.removeOneImage}/>
+            removeOneImage={this.removeOneImage}
+            handleFooterClick={this.handleFooterClick}/>
         </div>
       );
     } else {
@@ -161,6 +176,7 @@ class GMView extends React.Component {
 
     return (
       <div className="view-body d-flex justify-content-center align-items-center">
+        {this.state.detailImage && <GMFooterModal image={this.state.detailImage}/>}
         <div className="row h-100 w-100">
           <div className="col-6 h-100">
             <div className="h-75">
