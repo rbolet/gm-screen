@@ -91,14 +91,14 @@ class App extends React.Component {
   }
 
   playerJoinSession(sessionConfig) {
-    if (!sessionConfig.sessionId) {
+    if (!sessionConfig) {
       return;
     }
     this.setState({ view: 'player', sessionConfig });
   }
 
   goToSessionView(sessionConfig) {
-    if (!sessionConfig.sessionId) {
+    if (!sessionConfig) {
       return;
     }
     this.setState({
