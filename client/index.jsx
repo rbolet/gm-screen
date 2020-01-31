@@ -1,5 +1,5 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const App = require('./components/app');
+const App = require('./src/app');
 
 ReactDOM.render(<App/>, document.querySelector('#root'));
