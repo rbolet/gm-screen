@@ -1,9 +1,18 @@
+body * {
+  font-family: 'Arima Madurai';
+  user-select: none;
+}
+
+img {
+    object-fit: contain;
+}
+
 .app-body{
   width: 100%;
   height: 93vh;
   background-image: linear-gradient(to bottom, #000807, rgb(214, 214, 214));
   background-size: 200% 200%;
-  animation: gradientShift 20s ease infinite;
+  animation: gradientShift 10s ease infinite;
 
 }
 
@@ -16,4 +25,18 @@
 
 .app-header{
   height: 7vh;
+}
+
+.menu-view{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.background-title{
+  position: absolute;
+  z-index: -1;
+  font-size: 6rem;
+  color: white;
+  font-family: 'Rakkas';
 }
