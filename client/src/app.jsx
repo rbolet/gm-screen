@@ -7,10 +7,11 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      view: 'menu',
+      view: ['menu', 'login'],
       message: '',
       config: {
         user: {
+          auth: null,
           userId: null,
           userName: null,
           userRole: null,
@@ -36,7 +37,7 @@ class App extends React.Component {
   }
 
   render() {
-    const CurrentView = <MenuView config={this.state.config}/>;
+    const CurrentView = <MenuView config={this.state.config} view={this.state.view}/>;
     return (
       <div className="app h-100 w-100">
         <Header/>
