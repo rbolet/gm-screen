@@ -56,7 +56,7 @@ class App extends React.Component {
         } else {
           const config = produce(this.state.config, draft => {
             draft.user.userId = jsonRes.userId;
-            draft.userName = login.name;
+            draft.userName = login.userName;
           });
           this.setState({ config, view: ['menu', 'chooseRole'] });
         }
@@ -98,6 +98,10 @@ class App extends React.Component {
   loginFailed(reason) {
     const playerConfig = { auth: reason };
     this.setState({ playerConfig });
+  }
+
+  chooseRole(role) {
+
   }
 
   render() {
