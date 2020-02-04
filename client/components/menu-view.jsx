@@ -1,5 +1,5 @@
-const React = require('react');
-const UserLogin = require('../components/user-login');
+import React from 'react';
+import UserLogin from './user-login';
 
 class MenuView extends React.Component {
 
@@ -20,4 +20,4 @@ class MenuView extends React.Component {
   }
 }
 
-module.exports = MenuView;
+export default MenuView;

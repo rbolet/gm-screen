@@ -1,7 +1,7 @@
-const React = require('react');
-const produce = require('immer');
-const Header = require('./components/header');
-const MenuView = require('./views/menu-view');
+import React from 'react';
+import Header from './header';
+import MenuView from './menu-view';
+import produce from 'immer';
 
 class App extends React.Component {
   constructor(props) {
@@ -56,7 +56,7 @@ class App extends React.Component {
         } else {
           const config = produce(this.state.config, draft => {
             draft.user.userId = jsonRes.userId;
-            draft.userName = login.name;
+            draft.userName = login.userName;
           });
           this.setState({ config, view: ['menu', 'chooseRole'] });
         }
@@ -86,19 +86,24 @@ class App extends React.Component {
 
         } else {
           const config = produce(this.state.config, draft => {
-            draft.user.userId = jsonRes.userId;
-            draft.userName = login.name;
-
+            draft.user.userId = jsonRes[0].userId;
+            draft.user.userName = jsonRes[0].userName;
           });
-          this.setState({ config });
+          this.setState({ config, view: ['menu', 'chooseRole'] });
         }
       })
       .catch(err => { console.error(err); });
   }
 
   loginFailed(reason) {
-    const playerConfig = { auth: reason };
-    this.setState({ playerConfig });
+    const config = produce(this.state.config, draft => {
+      draft.user.auth = reason;
+    });
+    this.setState({ config });
+  }
+
+  chooseRole(role) {
+
   }
 
   render() {
@@ -109,7 +114,7 @@ class App extends React.Component {
       newUser={this.newUser}/>;
     return (
       <div className="app h-100 w-100">
-        <Header/>
+        <Header config={this.state.config} message={this.state.message}/>
         <div className="app-body">
           {CurrentView}
         </div>
@@ -118,4 +123,4 @@ class App extends React.Component {
   }
 }
 
-module.exports = App;
+export default App;
