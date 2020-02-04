@@ -36,8 +36,20 @@ class App extends React.Component {
       }
     };
 
+    this.returntoMenu = this.returntoMenu.bind(this);
     this.newUser = this.newUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
+    this.chooseRole = this.chooseRole.bind(this);
+  }
+
+  returntoMenu() {
+    const config = produce(this.state.config, draft => {
+      draft.user.userRole = null;
+      for (const property in draft.gameSession) {
+        draft.gameSession[property] = null;
+      }
+    });
+    this.setState({ config, view: ['menu', 'chooseRole'] });
   }
 
   newUser(login) {
@@ -103,7 +115,10 @@ class App extends React.Component {
   }
 
   chooseRole(role) {
-
+    const config = produce(this.state.config, draft => {
+      draft.user.userRole = role;
+    });
+    this.setState({ config, view: ['menu', 'chooseCampaign'] });
   }
 
   render() {
@@ -111,10 +126,11 @@ class App extends React.Component {
       config={this.state.config}
       view={this.state.view}
       loginUser={this.loginUser}
-      newUser={this.newUser}/>;
+      newUser={this.newUser}
+      chooseRole={this.chooseRole}/>;
     return (
       <div className="app h-100 w-100">
-        <Header config={this.state.config} message={this.state.message}/>
+        <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu}/>
         <div className="app-body">
           {CurrentView}
         </div>
