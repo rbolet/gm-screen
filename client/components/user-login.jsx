@@ -1,4 +1,4 @@
-const React = require('react');
+import React from 'react';
 
 class UserLogin extends React.Component {
   constructor(props) {
@@ -21,7 +21,6 @@ class UserLogin extends React.Component {
 
   userLogin(isNew) {
     const login = this.state;
-
     if (isNew) {
       this.props.newUser(login);
     } else {
@@ -83,4 +82,4 @@ class UserLogin extends React.Component {
   }
 }
 
-module.exports = UserLogin;
+export default UserLogin;
