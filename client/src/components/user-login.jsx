@@ -1,4 +1,4 @@
-import React from 'react';
+const React = require('react');
 
 class UserLogin extends React.Component {
   constructor(props) {
@@ -83,4 +83,4 @@ class UserLogin extends React.Component {
   }
 }
 
-export default UserLogin;
+module.exports = UserLogin;

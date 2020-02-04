@@ -1,6 +1,7 @@
-import React from 'react';
-import Header from './components/header';
-import MenuView from './views/menu-view';
+const React = require('react');
+const produce = require('immer');
+const Header = require('./components/header');
+const MenuView = require('./views/menu-view');
 
 class App extends React.Component {
   constructor(props) {
@@ -53,9 +54,11 @@ class App extends React.Component {
         if (jsonRes.reason) {
           this.loginFailed(jsonRes.reason);
         } else {
-          this.setState({
-            userId: jsonRes.userId, userName: login.userName
+          const config = produce(this.state.config, draft => {
+            draft.user.userId = jsonRes.userId;
+            draft.userName = login.name;
           });
+          this.setState({ config, view: ['menu', 'chooseRole'] });
         }
       })
       .catch(err => { console.error(err); });
@@ -78,9 +81,17 @@ class App extends React.Component {
         }
       })
       .then(jsonRes => {
-        if (!jsonRes) return;
-        const playerConfig = jsonRes[0];
-        this.setState({ playerConfig, view: { menu: 'chooseRole' } });
+        if (!jsonRes) {
+          this.loginFailed('failed');
+
+        } else {
+          const config = produce(this.state.config, draft => {
+            draft.user.userId = jsonRes.userId;
+            draft.userName = login.name;
+
+          });
+          this.setState({ config });
+        }
       })
       .catch(err => { console.error(err); });
   }
@@ -91,7 +102,11 @@ class App extends React.Component {
   }
 
   render() {
-    const CurrentView = <MenuView config={this.state.config} view={this.state.view}/>;
+    const CurrentView = <MenuView
+      config={this.state.config}
+      view={this.state.view}
+      loginUser={this.loginUser}
+      newUser={this.newUser}/>;
     return (
       <div className="app h-100 w-100">
         <Header/>
@@ -102,4 +117,5 @@ class App extends React.Component {
     );
   }
 }
-export default App;
+
+module.exports = App;
