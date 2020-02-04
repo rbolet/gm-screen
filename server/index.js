@@ -87,9 +87,9 @@ app.post('/auth', function (req, res, next) {
     .catch(err => next(err));
 });
 
-// POST sessions per GM
-app.post('/gmSessions', (req, res, next) => {
-  const query = `SELECT * FROM sessions WHERE sessionGM = "${req.body.userId}";`;
+// POST campaigns per GM
+app.post('/gmCampaigns', (req, res, next) => {
+  const query = `SELECT * FROM campaigns WHERE campaignGM = "${req.body.userId}";`;
   db.query(query)
     .then(([rows]) => {
       res.status(200).json(rows);
@@ -97,23 +97,14 @@ app.post('/gmSessions', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// GET list of launched sessions
-app.get('/launchedSessions', (req, res, next) => {
-  if (!launchedSessions.length) {
+// GET list of active Campaigns
+app.get('/activeCampaigns', (req, res, next) => {
+  if (!activeCampaigns.length) {
     res.status(200).json(null);
   } else {
-    res.status(200).json(launchedSessions);
+    res.status(200).json(activeCampaigns);
   }
 
-});
-
-// GET list of all sessions (temp)
-app.get('/allsessions', (req, res, next) => {
-  db.query('SELECT * FROM sessions')
-    .then(([rows]) => {
-      res.status(200).json(rows);
-    })
-    .catch(error => { next(error); });
 });
 
 // GET images from given session
@@ -222,11 +213,11 @@ app.post('/userJoined', (req, res, next) => {
 });
 
 // POST for GM to launch a new session
-const launchedSessions = [];
+const activeCampaigns = [];
 app.post('/launchSession', (req, res, next) => {
-  launchedSessions.push(req.body.sessionConfig);
+  // activeCampaigns.push(req.body.sessionConfig);
   moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
+  // res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
 });
 
 // POST for player to join a session room
@@ -245,9 +236,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', reason => {
     const disconnectingId = userSockets[socket.id].userId;
-    for (const sessionIndex in launchedSessions) {
-      if (disconnectingId === launchedSessions[sessionIndex].sessionGM) {
-        launchedSessions.splice(sessionIndex, 1);
+    for (const campaignIndex in activeCampaigns) {
+      if (disconnectingId === activeCampaigns[campaignIndex].campaignGM) {
+        activeCampaigns.splice(campaignIndex, 1);
       }
     }
     delete userSockets[socket.id];

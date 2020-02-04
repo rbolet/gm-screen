@@ -1,24 +1,29 @@
 import React from 'react';
 import UserLogin from './user-login';
+import UserChooseCampaign from './user-choose-campaign';
 
 class MenuView extends React.Component {
 
   render() {
-    let menuScreen = null;
+    let MenuScreen = null;
     const config = this.props.config;
     switch (this.props.view[1]) {
       case 'login':
-        menuScreen = <UserLogin
+        MenuScreen = <UserLogin
           config={config}
           loginUser={this.props.loginUser}
           newUser={this.props.newUser}/>;
         break;
       case 'chooseRole':
-        menuScreen = <UserChooseRole chooseRole={this.props.chooseRole}/>;
+        MenuScreen = <UserChooseRole chooseRole={this.props.chooseRole}/>;
+        break;
+      case 'chooseCampaign':
+        MenuScreen = <UserChooseCampaign config={this.props.config} setCampaign={this.props.setCampaign}/>;
+        break;
     }
     return (
       <div className="menu-view row col-12 justify-content-center align-items-center">
-        {menuScreen}
+        {MenuScreen}
       </div>
     );
   }

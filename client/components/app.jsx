@@ -40,6 +40,7 @@ class App extends React.Component {
     this.newUser = this.newUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
     this.chooseRole = this.chooseRole.bind(this);
+    this.setCampaign = this.setCampaign.bind(this);
   }
 
   returntoMenu() {
@@ -121,13 +122,24 @@ class App extends React.Component {
     this.setState({ config, view: ['menu', 'chooseCampaign'] });
   }
 
+  setCampaign(campaign) {
+    const config = produce(this.state.config, draft => {
+      draft.gameSession.campaignId = campaign.campaignId;
+      draft.gameSession.campaignName = campaign.campaignName;
+    });
+
+    this.setState({ config });
+  }
+
   render() {
     const CurrentView = <MenuView
       config={this.state.config}
       view={this.state.view}
       loginUser={this.loginUser}
       newUser={this.newUser}
-      chooseRole={this.chooseRole}/>;
+      chooseRole={this.chooseRole}
+      setCampaign={this.setCampaign}/>;
+
     return (
       <div className="app h-100 w-100">
         <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu}/>
