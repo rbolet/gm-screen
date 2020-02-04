@@ -96,8 +96,10 @@ class App extends React.Component {
   }
 
   loginFailed(reason) {
-    const playerConfig = { auth: reason };
-    this.setState({ playerConfig });
+    const config = produce(this.state.config, draft => {
+      draft.user.auth = reason;
+    });
+    this.setState({ config });
   }
 
   chooseRole(role) {
