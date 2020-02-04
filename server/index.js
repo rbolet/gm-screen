@@ -236,9 +236,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', reason => {
     const disconnectingId = userSockets[socket.id].userId;
-    for (const sessionIndex in launchedSessions) {
-      if (disconnectingId === launchedSessions[sessionIndex].sessionGM) {
-        launchedSessions.splice(sessionIndex, 1);
+    for (const campaignIndex in activeCampaigns) {
+      if (disconnectingId === activeCampaigns[campaignIndex].campaignGM) {
+        activeCampaigns.splice(campaignIndex, 1);
       }
     }
     delete userSockets[socket.id];
