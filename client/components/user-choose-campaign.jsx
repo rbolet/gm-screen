@@ -42,6 +42,15 @@ class UserChooseCampaign extends React.Component {
   }
 
   render() {
+    let ButtonFooter;
+    if (this.props.config.user.userRole === 'gm') {
+      ButtonFooter = (
+        <div className="">
+          <button type="button" className="btn btn-outline-light">New</button>
+          <button type="button" className="btn btn-secondary" onClick={() => this.props.setCampaign(this.state.selectedCampaign)}>Select</button>
+        </div>
+      );
+    }
     return (
       <div className="user-choose-campaign d-flex flex-column justify-content-center col-3 bg-dark rounded">
         <h5 className="text-light text-center">{`${this.props.config.user.userId === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
@@ -50,9 +59,7 @@ class UserChooseCampaign extends React.Component {
             <CampaignList campaignList={this.state.campaignList} onClick={this.highlightRow} className="px-2 pt-2 list-display" />
           </table>
         </div>
-        <div className="">
-          <button type="button" className="btn btn-secondary" onClick={() => null}>Select</button>
-        </div>
+        {ButtonFooter}
       </div>
     );
   }

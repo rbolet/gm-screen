@@ -18,7 +18,7 @@ class MenuView extends React.Component {
         MenuScreen = <UserChooseRole chooseRole={this.props.chooseRole}/>;
         break;
       case 'chooseCampaign':
-        MenuScreen = <UserChooseCampaign config={this.props.config}/>;
+        MenuScreen = <UserChooseCampaign config={this.props.config} setCampaign={this.props.setCampaign}/>;
         break;
     }
     return (
