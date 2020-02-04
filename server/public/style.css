@@ -41,6 +41,6 @@ img {
   font-family: 'Rakkas';
 }
 
-.user-login{
+.user-login, .user-choose-role {
   height: 65%;
 }
