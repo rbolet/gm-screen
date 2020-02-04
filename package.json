@@ -9,7 +9,8 @@
     "build": "webpack --mode=production",
     "dev": "npm-run-all --silent --parallel dev:*",
     "dev:client": "webpack-dev-server",
-    "dev:server": "nodemon server/index.js"
+    "dev:server": "nodemon server/index.js",
+    "watch": "webpack --watch"
   },
   "devDependencies": {
     "@babel/core": "7.7.4",

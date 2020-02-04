@@ -34,6 +34,60 @@ class App extends React.Component {
         }
       }
     };
+
+    this.newUser = this.newUser.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+  }
+
+  newUser(login) {
+    const loginJSON = JSON.stringify(login);
+    fetch('/newUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: loginJSON
+    })
+      .then(res => res.json())
+      .then(jsonRes => {
+        if (jsonRes.reason) {
+          this.loginFailed(jsonRes.reason);
+        } else {
+          this.setState({
+            userId: jsonRes.userId, userName: login.userName
+          });
+        }
+      })
+      .catch(err => { console.error(err); });
+  }
+
+  loginUser(login) {
+    const loginJSON = JSON.stringify(login);
+    fetch('/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: loginJSON
+    })
+      .then(res => {
+        if (!res.ok) {
+          this.loginFailed('failed');
+        } else {
+          return res.json();
+        }
+      })
+      .then(jsonRes => {
+        if (!jsonRes) return;
+        const playerConfig = jsonRes[0];
+        this.setState({ playerConfig, view: { menu: 'chooseRole' } });
+      })
+      .catch(err => { console.error(err); });
+  }
+
+  loginFailed(reason) {
+    const playerConfig = { auth: reason };
+    this.setState({ playerConfig });
   }
 
   render() {

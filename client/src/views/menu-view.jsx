@@ -10,7 +10,7 @@ class MenuView extends React.Component {
         menuScreen = <UserLogin config={this.props.config}/>;
     }
     return (
-      <div className="row no-gutters menu-view">
+      <div className="menu-view row col-12 justify-content-center align-items-center">
         {menuScreen}
       </div>
     );
