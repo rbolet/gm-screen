@@ -41,6 +41,12 @@ img {
   font-family: 'Rakkas';
 }
 
-.user-login, .user-choose-role {
+.user-login, .user-choose-role, .user-choose-campaign, #menu-campaign-list {
   height: 65%;
+}
+
+.selected{
+  color: white;
+  background-color: #932b2b;
+  opacity: .5;
 }
