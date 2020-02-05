@@ -45,6 +45,30 @@ img {
   height: 65%;
 }
 
+.campaign-images, .campaign-asset-details{
+  height: 98%;
+}
+
+.grid-image{
+  height: 30%;
+  width: 30%;
+}
+
+.image-grid{
+  height: 100%;
+}
+
+.image-grid-body{
+  height: 90.5%;
+  background-color: white;
+  overflow-y: scroll;
+}
+
+.selected-tab{
+  color: white;
+  background-color: #343a40;
+}
+
 .selected{
   color: white;
   background-color: #932b2b;
