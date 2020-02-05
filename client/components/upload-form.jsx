@@ -16,7 +16,7 @@ class UploadForm extends React.Component {
 
   render() {
     return (
-      <div className="upload-form container pl-2 h-100">
+      <div className="upload-form pl-2 h-100">
         <form onSubmit={this.props.onUploadSubmit} id="upload-file">
           <div className="row col-12">
             <div className="col-4">

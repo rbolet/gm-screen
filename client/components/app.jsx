@@ -126,7 +126,7 @@ class App extends React.Component {
 
   setCampaign(campaign) {
     let campaignAssets = [];
-    const currentSession = JSON.stringify({ campaignId: this.state.config.gameSession.campaignId });
+    const currentSession = JSON.stringify({ campaignId: campaign.campaignId });
     fetch('/campaignAssets', {
       method: 'POST',
       headers: {
@@ -137,18 +137,18 @@ class App extends React.Component {
       .then(res => res.json())
       .then(resultsArray => {
         campaignAssets = resultsArray;
+
+        const config = produce(this.state.config, draft => {
+          draft.gameSession.campaignId = campaign.campaignId;
+          draft.gameSession.campaignName = campaign.campaignName;
+          draft.gameSession.campaignAssets = campaignAssets;
+        });
+
+        this.setState({ config, view: ['campaignConfig', 'default'] });
       })
       .catch(error => {
         console.error(`Error in GET return: ${error}`);
       });
-
-    const config = produce(this.state.config, draft => {
-      draft.gameSession.campaignId = campaign.campaignId;
-      draft.gameSession.campaignName = campaign.campaignName;
-      draft.gameSession.campaignAssets = campaignAssets;
-    });
-
-    this.setState({ config, view: ['campaignConfig', 'default'] });
   }
 
   onUploadSubmit(event) {
@@ -185,9 +185,9 @@ class App extends React.Component {
         CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit}/>;
     }
     return (
-      <div className="app h-100 w-100">
+      <div className="app row no-gutters h-100">
         <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu}/>
-        <div className="app-body">
+        <div className="app-body row no-gutters">
           {CurrentView}
         </div>
       </div>

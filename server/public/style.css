@@ -9,7 +9,6 @@ img {
 
 .app-body{
   width: 100%;
-  padding: .5rem;
   height: 93vh;
   background-image: linear-gradient(to bottom, #000807, rgb(214, 214, 214));
   background-size: 200% 200%;
@@ -46,8 +45,28 @@ img {
   height: 65%;
 }
 
-.campaign-images{
-  height: 95%;
+.campaign-images, .campaign-asset-details{
+  height: 98%;
+}
+
+.grid-image{
+  height: 30%;
+  width: 30%;
+}
+
+.image-grid{
+  height: 100%;
+}
+
+.image-grid-body{
+  height: 90.5%;
+  background-color: white;
+  overflow-y: scroll;
+}
+
+.selected-tab{
+  color: white;
+  background-color: #343a40;
 }
 
 .selected{
