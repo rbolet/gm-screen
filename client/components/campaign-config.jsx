@@ -14,7 +14,7 @@ class CampaignConfig extends React.Component {
   }
 
   onGridClick(image) {
-    this.setState({ assetImage: image.fileName });
+    this.setState({ assetImage: image });
 
   }
 
@@ -33,7 +33,7 @@ class CampaignConfig extends React.Component {
         </div>
         <div className="col-6 row no-gutters campaign-asset-details p-1">
           <div className="square bg-dark rounded w-100 h-100 pt-3">
-            <AssetDetails assetImage={this.state.assetImage}/>
+            <AssetDetails assetImage={this.state.assetImage} launchSession={this.props.launchSession}/>
           </div>
         </div>
       </div>

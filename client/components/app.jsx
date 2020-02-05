@@ -43,6 +43,7 @@ class App extends React.Component {
     this.chooseRole = this.chooseRole.bind(this);
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
+    this.launchSession = this.launchSession.bind(this);
   }
 
   returntoMenu() {
@@ -169,6 +170,10 @@ class App extends React.Component {
     document.querySelector('#filepath-label').innerText = '';
   }
 
+  launchSession() {
+    alert('launched');
+  }
+
   render() {
     let CurrentView;
     switch (this.state.view[0]) {
@@ -182,7 +187,7 @@ class App extends React.Component {
           setCampaign={this.setCampaign}/>;
         break;
       case 'campaignConfig':
-        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit}/>;
+        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} launchSession={this.launchSession}/>;
     }
     return (
       <div className="app row no-gutters h-100">
