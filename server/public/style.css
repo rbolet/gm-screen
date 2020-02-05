@@ -9,6 +9,7 @@ img {
 
 .app-body{
   width: 100%;
+  padding: .5rem;
   height: 93vh;
   background-image: linear-gradient(to bottom, #000807, rgb(214, 214, 214));
   background-size: 200% 200%;
@@ -43,6 +44,10 @@ img {
 
 .user-login, .user-choose-role, .user-choose-campaign, #menu-campaign-list {
   height: 65%;
+}
+
+.campaign-images{
+  height: 95%;
 }
 
 .selected{

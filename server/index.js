@@ -108,10 +108,10 @@ app.get('/activeCampaigns', (req, res, next) => {
 });
 
 // GET images from given session
-app.post('/imagelist', (req, res, next) => {
+app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
-              JOIN sessionImages ON images.imageID = sessionImages.imageID
-              WHERE sessionImages.sessionID = ${req.body.sessionId}`)
+              JOIN campaignImages ON images.imageID = campaignImages.imageID
+              WHERE campaignImages.campaignID = ${req.body.campaignId}`)
     .then(([rows]) => {
       res.status(200).json(rows);
     })
@@ -177,29 +177,29 @@ const upload = multer({ storage: storage });
 app.post('/upload', upload.single('image-upload'), (req, res, next) => {
   let responseObject = {};
   const insertImageSQL = `INSERT INTO
-                            images (filename, userGivenName, category)
+                            images (filename, alias, category)
                           VALUES ('${req.file.filename}',
-                            '${req.body['given-name']}',
+                            '${req.body.alias}',
                             '${req.body.category}'
                             )`;
   db.query(insertImageSQL)
     .then(result => {
       responseObject = {
         imageId: result[0].insertId,
-        fileName: req.file.filename,
-        userGivenName: req.body['given-name'],
+        filename: req.file.filename,
+        alias: req.body.alias,
         category: req.body.category
       };
-
-      const insertSessionImageSQL = `INSERT INTO
-                                      sessionImages (sessionId, imageId)
-                                    VALUES ('1', '${result[0].insertId}')`;
-      db.query(insertSessionImageSQL)
+      const insertCampaignImageSQL = `INSERT INTO
+                                      campaignImages (campaignId, imageId)
+                                    VALUES (${req.body.campaignId}, '${result[0].insertId}')`;
+      db.query(insertCampaignImageSQL)
         .then(() => {
         })
         .catch(error => { next(error); });
     })
     .then(result => {
+
       res.status(200).json(responseObject);
     })
     .catch(error => { next(error); });
