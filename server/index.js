@@ -108,13 +108,30 @@ app.get('/activeCampaigns', (req, res, next) => {
 });
 
 // GET images from given session
-app.post('/campaignAssets', (req, res, next) => {
+app.post('/campaignConfig', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN campaignImages ON images.imageID = campaignImages.imageID
               WHERE campaignImages.campaignID = ${req.body.campaignId}`)
-    .then(([rows]) => {
-      res.status(200).json(rows);
+    .then(([campaignAssets]) => {
+      const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${req.body.campaignId};`;
+      return db
+        .query(sessionQuery)
+        .then(([session]) => {
+          if (session.length > 0) {
+            return { session, campaignAssets };
+          }
+          return db
+            .query(`INSERT INTO sessions(campaignID) VALUES(${req.body.campaignId});`)
+            .then(([insertRes]) => {
+              return db
+                .query(sessionQuery)
+                .then(([session]) => {
+                  return { session, campaignAssets };
+                });
+            });
+        });
     })
+    .then(results => res.json(results))
     .catch(err => next(err));
 });
 
@@ -207,17 +224,17 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 
 // POST to add user to user sockets object
 app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].userName = req.body.playerConfig.userName;
-  userSockets[req.body.socketId].userId = req.body.playerConfig.userId;
-  res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
+  userSockets[req.body.socketId].userName = req.body.user.userName;
+  userSockets[req.body.socketId].userId = req.body.user.userId;
+  res.status(200).json({ message: `${req.body.user.userName} connected` });
 });
 
 // POST for GM to launch a new session
 const activeCampaigns = [];
 app.post('/launchSession', (req, res, next) => {
-  // activeCampaigns.push(req.body.sessionConfig);
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  // res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
+  activeCampaigns.push(req.body.gameSession);
+  moveUsertoRoom(req.body.gameSession, req.body.socketId);
+  res.status(200).json({ message: `"${req.body.gameSession.campaignName} session launched!"` });
 });
 
 // POST for player to join a session room

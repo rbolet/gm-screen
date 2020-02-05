@@ -23,15 +23,15 @@ class App extends React.Component {
           campaignId: null,
           campaignName: null,
           campaignAssets: [],
-          sessionId: null,
-          sessionName: null,
-          sessionState: {
-            sessionUsers: {
-              gm: null,
-              players: []
-            },
+          sessionUsers: {
+            gm: null,
+            players: []
+          },
+          session: {
+            sessionId: null,
+            sessionName: null,
             environmentImage: null,
-            activeSecondaries: []
+            tokens: []
           }
         }
       }
@@ -126,18 +126,17 @@ class App extends React.Component {
   }
 
   setCampaign(campaign) {
-    let campaignAssets = [];
-    const currentSession = JSON.stringify({ campaignId: campaign.campaignId });
-    fetch('/campaignAssets', {
+    const currentCampaign = JSON.stringify({ campaignId: campaign.campaignId });
+    fetch('/campaignConfig', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: currentSession
+      body: currentCampaign
     })
-      .then(res => res.json())
-      .then(resultsArray => {
-        campaignAssets = resultsArray;
+      .then(jsonRes => jsonRes.json())
+      .then(res => {
+        const campaignAssets = res.campaignAssets;
 
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
