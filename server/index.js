@@ -98,11 +98,11 @@ app.post('/gmCampaigns', (req, res, next) => {
 });
 
 // GET list of active Campaigns
-app.get('/activeCampaigns', (req, res, next) => {
-  if (!activeCampaigns.length) {
+app.get('/activeGameSessions', (req, res, next) => {
+  if (!activeGameSessions.length) {
     res.status(200).json(null);
   } else {
-    res.status(200).json(activeCampaigns);
+    res.status(200).json(activeGameSessions);
   }
 
 });
@@ -112,19 +112,59 @@ app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN campaignImages ON images.imageID = campaignImages.imageID
               WHERE campaignImages.campaignID = ${req.body.campaignId}`)
-    .then(([rows]) => {
-      res.status(200).json(rows);
+    .then(([campaignAssets]) => {
+      res.status(200).json(campaignAssets).end();
     })
     .catch(err => next(err));
 });
 
-// GET all from any session
-app.get('/allimages', (req, res, next) => {
-  db.query('SELECT * FROM images')
-    .then(([rows]) => {
-      res.status(200).json(rows);
+app.post('/');
+
+// POST to add user to user sockets object
+app.post('/userJoined', (req, res, next) => {
+  userSockets[req.body.socketId].userName = req.body.user.userName;
+  userSockets[req.body.socketId].userId = req.body.user.userId;
+  res.status(200).json({ message: `${req.body.user.userName} connected` });
+});
+
+// POST for GM to launch a session
+const activeGameSessions = [];
+app.post('/launchSession', (req, res, next) => {
+  const gameSession = req.body;
+  const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
+  db.query(sessionQuery)
+    .then(([session]) => {
+      if (session.length > 0) {
+
+        return { session: session[0] };
+      }
+      return db
+        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
+        .then(([insertRes]) => {
+          return db
+            .query(sessionQuery)
+            .then(([session]) => {
+              return { session: session[0] };
+            });
+        });
+    })
+    .then(results => {
+      gameSession.session = {
+        sessionId: results.session.sessionId,
+        updated: results.session.updated,
+        environmentImageFileName: results.session.environmentImageFileName,
+        tokens: results.session.tokens
+      };
+      activeGameSessions.push(gameSession);
+      res.json(results.session);
     })
     .catch(err => next(err));
+});
+
+// POST for player to join a session room
+app.post('/joinSession', (req, res, next) => {
+  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
+  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
 // PATCH to update image properties
@@ -205,27 +245,6 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-// POST to add user to user sockets object
-app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].userName = req.body.playerConfig.userName;
-  userSockets[req.body.socketId].userId = req.body.playerConfig.userId;
-  res.status(200).json({ message: `${req.body.playerConfig.userName} connected` });
-});
-
-// POST for GM to launch a new session
-const activeCampaigns = [];
-app.post('/launchSession', (req, res, next) => {
-  // activeCampaigns.push(req.body.sessionConfig);
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  // res.status(200).json({ message: `launched session "${req.body.sessionConfig.sessionName}"` });
-});
-
-// POST for player to join a session room
-app.post('/joinSession', (req, res, next) => {
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
-});
-
 // Socket io set up and incoming event handling
 const userSockets = {};
 const socketArray = [];
@@ -236,9 +255,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', reason => {
     const disconnectingId = userSockets[socket.id].userId;
-    for (const campaignIndex in activeCampaigns) {
-      if (disconnectingId === activeCampaigns[campaignIndex].campaignGM) {
-        activeCampaigns.splice(campaignIndex, 1);
+    for (const campaignIndex in activeGameSessions) {
+      if (disconnectingId === activeGameSessions[campaignIndex].campaignGM) {
+        activeGameSessions.splice(campaignIndex, 1);
       }
     }
     delete userSockets[socket.id];
