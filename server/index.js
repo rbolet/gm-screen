@@ -149,6 +149,9 @@ app.post('/launchSession', (req, res, next) => {
         });
     })
     .then(results => {
+
+      results.session.tokens = results.session.tokens ? results.session.tokens : [];
+
       gameSession.session = {
         sessionId: results.session.sessionId,
         updated: results.session.updated,

@@ -7,6 +7,10 @@ img {
     object-fit: contain;
 }
 
+.backdrop-blur{
+  backdrop-filter: blur(8px);
+}
+
 .app-body{
   width: 100%;
   height: 93vh;
@@ -111,4 +115,13 @@ img {
   opacity: 1;
   color: white;
   animation: flickerAnimation 5s infinite;
+}
+
+.tokens-container{
+  width: 100%;
+  height: 25%;
+  position: relative;
+  top: 60%;
+  padding: .25rem;
+  z-index: 1;
 }

@@ -47,7 +47,7 @@ class App extends React.Component {
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
     this.onGMGridClick = this.onGMGridClick.bind(this);
-    this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
+    this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
     this.socketIO = this.socketIO.bind(this);
   }
 
@@ -196,16 +196,11 @@ class App extends React.Component {
       });
   }
 
-  onGMGridClick(image) {
-    if (image.category === 'Environment') {
-      const config = produce(this.state.config, draft => {
-        draft.gameSession.session.environmentImageFileName = image.fileName;
-      });
-      this.setState({ config });
-    }
-  }
-
-  clearEnvironmentImage() {
+  updateEnvironmentImage(image) {
+    const requestBody = JSON.stringify({
+      session: this.state.config.gameSession.session,
+      newImage: image
+    });
 
   }
 
@@ -237,7 +232,7 @@ class App extends React.Component {
       case 'gmView':
         CurrentView = <GMView
           config={this.state.config}
-          clearEnvironmentImage={this.clearEnvironmentImage}
+          updateEnvironmentImage={this.updateEnvironmentImage}
           onGridClick={this.onGMGridClick}/>;
         break;
     }

@@ -1,15 +1,13 @@
 import React from 'react';
 import ImageGrid from './image-grid';
+import Tokens from './tokens';
 
 class GMView extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.onGridClick = this.onGridClick.bind(this);
-  }
-
-  onGridClick() {
-
+  onGMGridClick(image) {
+    if (image.category === 'Environment') {
+      this.props.updateEnvironmentImage(image);
+    }
   }
 
   render() {
@@ -35,6 +33,7 @@ function HeroView(props) {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i>
           </div>
+          <Tokens tokens={props.session.tokens}/>
         </div>
       </div>
     );
