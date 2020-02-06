@@ -46,6 +46,9 @@ class App extends React.Component {
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
+    this.onGMGridClick = this.onGMGridClick.bind(this);
+    this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
+    this.socketIO = this.socketIO.bind(this);
   }
 
   returntoMenu() {
@@ -73,6 +76,7 @@ class App extends React.Component {
           this.loginFailed(jsonRes.reason);
         } else {
           const config = produce(this.state.config, draft => {
+            draft.user.auth = 'ok';
             draft.user.userId = jsonRes.userId;
             draft.userName = login.userName;
           });
@@ -104,6 +108,7 @@ class App extends React.Component {
 
         } else {
           const config = produce(this.state.config, draft => {
+            draft.user.auth = 'ok';
             draft.user.userId = jsonRes[0].userId;
             draft.user.userName = jsonRes[0].userName;
           });
@@ -170,6 +175,7 @@ class App extends React.Component {
   }
 
   launchSession() {
+    this.socketIO();
     const gameSession = JSON.stringify(this.state.config.gameSession);
     fetch('/launchSession', {
       method: 'POST',
@@ -182,7 +188,6 @@ class App extends React.Component {
       .then(resSession => {
         const session = resSession;
         const config = produce(this.state.config, draft => {
-          draft.user.socketId = this.socketIO();
           draft.gameSession.sessionUsers.gm = draft.user;
           draft.gameSession.session = session;
         });
@@ -191,10 +196,27 @@ class App extends React.Component {
       });
   }
 
+  onGMGridClick(image) {
+    if (image.category === 'Environment') {
+      const config = produce(this.state.config, draft => {
+        draft.gameSession.session.environmentImageFileName = image.fileName;
+      });
+      this.setState({ config });
+    }
+  }
+
+  clearEnvironmentImage() {
+
+  }
+
   socketIO() {
     this.socket = io('/');
-
-    return this.socket.id;
+    this.socket.on('connect', () => {
+      const config = produce(this.state.config, draft => {
+        draft.user.socketId = this.socket.id;
+      });
+      this.setState({ config });
+    });
   }
 
   render() {
@@ -213,7 +235,10 @@ class App extends React.Component {
         CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} launchSession={this.launchSession}/>;
         break;
       case 'gmView':
-        CurrentView = <GMView config={this.state.config}/>;
+        CurrentView = <GMView
+          config={this.state.config}
+          clearEnvironmentImage={this.clearEnvironmentImage}
+          onGridClick={this.onGMGridClick}/>;
         break;
     }
     return (
