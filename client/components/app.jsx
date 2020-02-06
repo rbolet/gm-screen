@@ -48,7 +48,7 @@ class App extends React.Component {
     this.launchSession = this.launchSession.bind(this);
     this.onGMGridClick = this.onGMGridClick.bind(this);
     this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
-    this.socketIO = this.socketIO.bind(this);
+    this.connectSocket = this.connectSocket.bind(this);
   }
 
   returntoMenu() {
@@ -175,7 +175,7 @@ class App extends React.Component {
   }
 
   launchSession() {
-    this.socketIO();
+    this.connectSocket();
     const gameSession = JSON.stringify(this.state.config.gameSession);
     fetch('/launchSession', {
       method: 'POST',
@@ -196,21 +196,34 @@ class App extends React.Component {
       });
   }
 
-  updateEnvironmentImage(image) {
-    const requestBody = JSON.stringify({
-      session: this.state.config.gameSession.session,
-      newImage: image
-    });
+  // updateEnvironmentImage(image) {
+  //   const requestBody = JSON.stringify({
+  //     session: this.state.config.gameSession.session,
+  //     newImage: image
+  //   });
 
-  }
+  // }
 
-  socketIO() {
+  connectSocket() {
     this.socket = io('/');
     this.socket.on('connect', () => {
-      const config = produce(this.state.config, draft => {
-        draft.user.socketId = this.socket.id;
-      });
-      this.setState({ config });
+      const socketIdToState = async function () {
+        const config = produce(this.state.config, draft => { draft.user.socketId = this.socket.id; });
+        this.setState({ config });
+      };
+
+      socketIdToState()
+        .then(() => {
+          const user = JSON.stringify(this.state.config.user);
+          fetch('/configUserSocket', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: user
+          });
+        })
+        .catch(err => console.error(err));
     });
   }
 

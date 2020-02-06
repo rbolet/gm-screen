@@ -170,6 +170,11 @@ app.post('/joinSession', (req, res, next) => {
   res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
+app.post('/configUserSocket', (req, res, next) => {
+  configUserSocket(req.body.user);
+  res.json({ message: `configuring ${req.body.user.userName}'s socket (${req.body.user.socketId})` });
+});
+
 app.post('/updateEnvironment', (req, res, next) => {
   const query = `UPDATE session
     SET updated = ${Date.now()},
@@ -259,9 +264,7 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 
 // Socket io set up and incoming event handling
 const userSockets = {};
-const socketArray = [];
 io.on('connection', socket => {
-  socketArray.push(socket);
   userSockets[socket.id] = { socket };
   socket.emit('connected', socket.id);
 
@@ -279,6 +282,24 @@ io.on('connection', socket => {
     console.error('Sockect.io error:', error);
   });
 });
+
+function configUserSocket(user) {
+  userSockets[user.socketId].user = user;
+}
+
+function moveUsertoRoom(gameSession, socketId) {
+
+  const socket = userSockets[socketId].socket;
+  const sessionRoom = nameSessionRoom(gameSession);
+  socket.join(sessionRoom, () => {
+    io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
+  });
+
+}
+
+function nameSessionRoom(gameSession) {
+  return `${gameSession.campaignName} (${gameSession.campaignId})`;
+}
 
 // function pushImageToAll(fileName, category) {
 //   for (const socket of socketArray) {
@@ -315,20 +336,6 @@ io.on('connection', socket => {
 //     socket.emit('clearOneImage', paramObject.fileName);
 //   }
 // }
-
-function moveUsertoRoom(sessionConfig, socketId) {
-
-  const socket = userSockets[socketId].socket;
-  const sessionRoom = nameSessionRoom(sessionConfig);
-  socket.join(sessionRoom, () => {
-    io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
-  });
-
-}
-
-function nameSessionRoom(sessionConfig) {
-  return `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
-}
 
 // Error Handler
 app.use((error, req, res, next) => {
