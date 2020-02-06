@@ -120,6 +120,53 @@ app.post('/campaignAssets', (req, res, next) => {
 
 app.post('/');
 
+// POST to add user to user sockets object
+app.post('/userJoined', (req, res, next) => {
+  userSockets[req.body.socketId].userName = req.body.user.userName;
+  userSockets[req.body.socketId].userId = req.body.user.userId;
+  res.status(200).json({ message: `${req.body.user.userName} connected` });
+});
+
+// POST for GM to launch a session
+const activeGameSessions = [];
+app.post('/launchSession', (req, res, next) => {
+  const gameSession = req.body;
+  const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
+  db.query(sessionQuery)
+    .then(([session]) => {
+      if (session.length > 0) {
+
+        return { session: session[0] };
+      }
+      return db
+        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
+        .then(([insertRes]) => {
+          return db
+            .query(sessionQuery)
+            .then(([session]) => {
+              return { session: session[0] };
+            });
+        });
+    })
+    .then(results => {
+      gameSession.session = {
+        sessionId: results.session.sessionId,
+        updated: results.session.updated,
+        environmentImageFileName: results.session.environmentImageFileName,
+        tokens: results.session.tokens
+      };
+      activeGameSessions.push(gameSession);
+      res.json(results.session);
+    })
+    .catch(err => next(err));
+});
+
+// POST for player to join a session room
+app.post('/joinSession', (req, res, next) => {
+  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
+  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
+});
+
 // PATCH to update image properties
 app.patch('/image', (req, res, next) => {
   if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
@@ -196,53 +243,6 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
       res.status(200).json(responseObject);
     })
     .catch(error => { next(error); });
-});
-
-// POST to add user to user sockets object
-app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].userName = req.body.user.userName;
-  userSockets[req.body.socketId].userId = req.body.user.userId;
-  res.status(200).json({ message: `${req.body.user.userName} connected` });
-});
-
-// POST for GM to launch a session
-const activeGameSessions = [];
-app.post('/launchSession', (req, res, next) => {
-  const gameSession = req.body;
-  const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
-  db.query(sessionQuery)
-    .then(([session]) => {
-      if (session.length > 0) {
-
-        return { session: session[0] };
-      }
-      return db
-        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
-        .then(([insertRes]) => {
-          return db
-            .query(sessionQuery)
-            .then(([session]) => {
-              return { session: session[0] };
-            });
-        });
-    })
-    .then(results => {
-      gameSession.session = {
-        sessionId: results.session.sessionId,
-        updated: results.session.updated,
-        environmentImageFileName: results.session.environmentImageFileName,
-        tokens: results.session.tokens
-      };
-      activeGameSessions.push(gameSession);
-      res.json(results);
-    })
-    .catch(err => next(err));
-});
-
-// POST for player to join a session room
-app.post('/joinSession', (req, res, next) => {
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
 // Socket io set up and incoming event handling

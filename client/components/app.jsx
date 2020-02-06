@@ -3,6 +3,8 @@ import Header from './header';
 import MenuView from './menu-view';
 import produce from 'immer';
 import CampaignConfig from './campaign-config';
+import GMView from './gm-vew';
+import io from 'socket.io-client';
 
 class App extends React.Component {
   constructor(props) {
@@ -127,7 +129,7 @@ class App extends React.Component {
 
   setCampaign(campaign) {
     const currentCampaign = JSON.stringify({ campaignId: campaign.campaignId });
-    fetch('/campaignConfig', {
+    fetch('/campaignAssets', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -136,14 +138,10 @@ class App extends React.Component {
     })
       .then(jsonRes => jsonRes.json())
       .then(res => {
-        const campaignAssets = res.campaignAssets;
-
+        const campaignAssets = res;
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
-          draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
-          draft.gameSession.sessionUsers.gm = draft.user;
-
         });
 
         this.setState({ config, view: ['campaignConfig', 'default'] });
@@ -172,7 +170,31 @@ class App extends React.Component {
   }
 
   launchSession() {
-    alert('launched');
+    const gameSession = JSON.stringify(this.state.config.gameSession);
+    fetch('/launchSession', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: gameSession
+    })
+      .then(res => res.json())
+      .then(resSession => {
+        const session = resSession;
+        const config = produce(this.state.config, draft => {
+          draft.user.socketId = this.socketIO();
+          draft.gameSession.sessionUsers.gm = draft.user;
+          draft.gameSession.session = session;
+        });
+        this.setState({ config, view: ['gmView', 'default'] });
+
+      });
+  }
+
+  socketIO() {
+    this.socket = io('/');
+
+    return this.socket.id;
   }
 
   render() {
@@ -189,6 +211,10 @@ class App extends React.Component {
         break;
       case 'campaignConfig':
         CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} launchSession={this.launchSession}/>;
+        break;
+      case 'gmView':
+        CurrentView = <GMView config={this.state.config}/>;
+        break;
     }
     return (
       <div className="app row no-gutters h-100">
