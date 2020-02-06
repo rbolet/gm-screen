@@ -139,7 +139,7 @@ app.post('/launchSession', (req, res, next) => {
         return { session: session[0] };
       }
       return db
-        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
+        .query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${Date.now});`)
         .then(([insertRes]) => {
           return db
             .query(sessionQuery)
@@ -170,39 +170,48 @@ app.post('/joinSession', (req, res, next) => {
   res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
-// PATCH to update image properties
-app.patch('/image', (req, res, next) => {
-  if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
-  const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
-  const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
+app.post('/updateEnvironment', (req, res, next) => {
+  const query = `UPDATE session
+    SET updated = ${Date.now()},
+        environmentImageFileName = ${req.body.newImage.fileName}
+    WHERE sessionId = ${req.body.session.sessionId};`;
 
-  const updateQuery = `UPDATE images
-                        SET ${patchGivenName} ${patchCategory}
-                        WHERE imageId = ${req.body.imageId};`;
-  db.query(updateQuery)
-    .then(rows => {
-      res.status(200).json(rows);
-    })
-    .catch(error => { next(error); });
+  db.query(query);
 });
 
-// POST to update image to all
-app.post('/updateImage/:category', (req, res, next) => {
-  pushImagetoRoom(req.body.fileName, req.params.category, req.body.sessionConfig);
-  // pushImageToAll(req.body.fileName, req.params.category);
-  res.json({ message: 'Updating image ...' });
-});
+// // PATCH to update image properties
+// app.patch('/image', (req, res, next) => {
+//   if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
+//   const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
+//   const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
 
-// DELETE to clear images (within category) from all
-app.delete('/updateImage/:category/:fileName', (req, res, next) => {
-  if (req.params.fileName === 'all') {
-    clearAllImages(req.params.category);
-    res.json({ message: 'Clearing image(s) ...' });
-  } else {
-    clearSecondaryImage(req.params);
-    res.json({ message: 'Clearing one secondary image ...' });
-  }
-});
+//   const updateQuery = `UPDATE images
+//                         SET ${patchGivenName} ${patchCategory}
+//                         WHERE imageId = ${req.body.imageId};`;
+//   db.query(updateQuery)
+//     .then(rows => {
+//       res.status(200).json(rows);
+//     })
+//     .catch(error => { next(error); });
+// });
+
+// // POST to update image to all
+// app.post('/updateImage/:category', (req, res, next) => {
+//   pushImagetoRoom(req.body.fileName, req.params.category, req.body.sessionConfig);
+//   // pushImageToAll(req.body.fileName, req.params.category);
+//   res.json({ message: 'Updating image ...' });
+// });
+
+// // DELETE to clear images (within category) from all
+// app.delete('/updateImage/:category/:fileName', (req, res, next) => {
+//   if (req.params.fileName === 'all') {
+//     clearAllImages(req.params.category);
+//     res.json({ message: 'Clearing image(s) ...' });
+//   } else {
+//     clearSecondaryImage(req.params);
+//     res.json({ message: 'Clearing one secondary image ...' });
+//   }
+// });
 
 // upload middleware config
 const storage = multer.diskStorage({
@@ -278,34 +287,34 @@ io.on('connection', socket => {
 //   return fileName;
 // }
 
-function pushImagetoRoom(fileName, category, sessionConfig) {
-  const sessionRoom = nameSessionRoom(sessionConfig);
-  let image = null;
-  if (category === 'Secondary') {
-    const imageObject = {
-      fileName,
-      randomKey: (new Date().getTime()).toString(12)
-    };
-    image = imageObject;
-  } else {
-    image = fileName;
-  }
-  io.to(sessionRoom).emit(`update${category}Image`, image);
+// function pushImagetoRoom(fileName, category, sessionConfig) {
+//   const sessionRoom = nameSessionRoom(sessionConfig);
+//   let image = null;
+//   if (category === 'Secondary') {
+//     const imageObject = {
+//       fileName,
+//       randomKey: (new Date().getTime()).toString(12)
+//     };
+//     image = imageObject;
+//   } else {
+//     image = fileName;
+//   }
+//   io.to(sessionRoom).emit(`update${category}Image`, image);
 
-}
+// }
 
-function clearAllImages(category) {
-  for (const socket of socketArray) {
-    socket.emit(`update${category}Image`, null);
-  }
-}
+// function clearAllImages(category) {
+//   for (const socket of socketArray) {
+//     socket.emit(`update${category}Image`, null);
+//   }
+// }
 
-function clearSecondaryImage(paramObject) {
+// function clearSecondaryImage(paramObject) {
 
-  for (const socket of socketArray) {
-    socket.emit('clearOneImage', paramObject.fileName);
-  }
-}
+//   for (const socket of socketArray) {
+//     socket.emit('clearOneImage', paramObject.fileName);
+//   }
+// }
 
 function moveUsertoRoom(sessionConfig, socketId) {
 
