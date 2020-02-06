@@ -46,7 +46,6 @@ class App extends React.Component {
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
-    this.onGMGridClick = this.onGMGridClick.bind(this);
     this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
   }
@@ -196,25 +195,24 @@ class App extends React.Component {
       });
   }
 
-  // updateEnvironmentImage(image) {
-  //   const requestBody = JSON.stringify({
-  //     session: this.state.config.gameSession.session,
-  //     newImage: image
-  //   });
+  updateEnvironmentImage(image) {
+    // const requestBody = JSON.stringify({
+    //   session: this.state.config.gameSession.session,
+    //   newImage: image
+    // });
 
-  // }
+  }
 
   connectSocket() {
     this.socket = io('/');
-    this.socket.on('connect', () => {
-      const socketIdToState = async function () {
-        const config = produce(this.state.config, draft => { draft.user.socketId = this.socket.id; });
-        this.setState({ config });
-      };
+    async function socketIdToState(stateConfig, socketId) {
+      return produce(stateConfig, draft => { draft.user.socketId = socketId; });
+    }
 
-      socketIdToState()
-        .then(() => {
-          const user = JSON.stringify(this.state.config.user);
+    this.socket.on('connect', () => {
+      socketIdToState(this.state.config, this.socket.id)
+        .then(config => {
+          const user = JSON.stringify(config.user);
           fetch('/configUserSocket', {
             method: 'POST',
             headers: {
@@ -222,7 +220,10 @@ class App extends React.Component {
             },
             body: user
           });
+
+          return config;
         })
+        .then(config => this.setState({ config }))
         .catch(err => console.error(err));
     });
   }

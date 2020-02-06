@@ -5,20 +5,21 @@ const http = require('http').createServer(app);
 const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
-const session = require('express-session');
+// const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
+const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
 const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
-app.use(session({
-  secret: 'itsasecrettoeveryone',
-  resave: true,
-  saveUninitialized: true
-}));
+// app.use(session({
+//   secret: 'itsasecrettoeveryone',
+//   resave: true,
+//   saveUninitialized: true
+// }));
 
 function testForSQLInjection(input) {
   const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
@@ -139,7 +140,7 @@ app.post('/launchSession', (req, res, next) => {
         return { session: session[0] };
       }
       return db
-        .query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${Date.now});`)
+        .query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${justNow});`)
         .then(([insertRes]) => {
           return db
             .query(sessionQuery)
@@ -171,13 +172,14 @@ app.post('/joinSession', (req, res, next) => {
 });
 
 app.post('/configUserSocket', (req, res, next) => {
-  configUserSocket(req.body.user);
-  res.json({ message: `configuring ${req.body.user.userName}'s socket (${req.body.user.socketId})` });
+  const user = req.body;
+  configUserSocket(user);
+  res.json({ message: `configuring ${user.userName}'s socket (${user.socketId})` });
 });
 
 app.post('/updateEnvironment', (req, res, next) => {
   const query = `UPDATE session
-    SET updated = ${Date.now()},
+    SET updated = ${justNow},
         environmentImageFileName = ${req.body.newImage.fileName}
     WHERE sessionId = ${req.body.session.sessionId};`;
 

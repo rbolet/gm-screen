@@ -18,7 +18,7 @@ class GMView extends React.Component {
           session={this.props.config.gameSession.session}
           clearEnvironmentImage={this.props.clearEnvironmentImage}/>
         <div className="image-grid-container col-4">
-          <ImageGrid onGridClick={this.props.onGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
+          <ImageGrid onGridClick={this.onGMGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
         </div>
       </div>
     );
