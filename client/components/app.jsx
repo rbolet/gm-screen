@@ -30,7 +30,7 @@ class App extends React.Component {
           session: {
             sessionId: null,
             sessionName: null,
-            environmentImage: null,
+            environmentImageFileName: null,
             tokens: []
           }
         }
@@ -142,6 +142,8 @@ class App extends React.Component {
           draft.gameSession.campaignId = campaign.campaignId;
           draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
+          draft.gameSession.sessionUsers.gm = draft.user;
+
         });
 
         this.setState({ config, view: ['campaignConfig', 'default'] });

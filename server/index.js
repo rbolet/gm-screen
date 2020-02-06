@@ -98,51 +98,27 @@ app.post('/gmCampaigns', (req, res, next) => {
 });
 
 // GET list of active Campaigns
-app.get('/activeCampaigns', (req, res, next) => {
-  if (!activeCampaigns.length) {
+app.get('/activeGameSessions', (req, res, next) => {
+  if (!activeGameSessions.length) {
     res.status(200).json(null);
   } else {
-    res.status(200).json(activeCampaigns);
+    res.status(200).json(activeGameSessions);
   }
 
 });
 
 // GET images from given session
-app.post('/campaignConfig', (req, res, next) => {
+app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN campaignImages ON images.imageID = campaignImages.imageID
               WHERE campaignImages.campaignID = ${req.body.campaignId}`)
     .then(([campaignAssets]) => {
-      const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${req.body.campaignId};`;
-      return db
-        .query(sessionQuery)
-        .then(([session]) => {
-          if (session.length > 0) {
-            return { session, campaignAssets };
-          }
-          return db
-            .query(`INSERT INTO sessions(campaignID) VALUES(${req.body.campaignId});`)
-            .then(([insertRes]) => {
-              return db
-                .query(sessionQuery)
-                .then(([session]) => {
-                  return { session, campaignAssets };
-                });
-            });
-        });
+      res.status(200).json(campaignAssets).end();
     })
-    .then(results => res.json(results))
     .catch(err => next(err));
 });
 
-// GET all from any session
-app.get('/allimages', (req, res, next) => {
-  db.query('SELECT * FROM images')
-    .then(([rows]) => {
-      res.status(200).json(rows);
-    })
-    .catch(err => next(err));
-});
+app.post('/');
 
 // PATCH to update image properties
 app.patch('/image', (req, res, next) => {
@@ -229,12 +205,38 @@ app.post('/userJoined', (req, res, next) => {
   res.status(200).json({ message: `${req.body.user.userName} connected` });
 });
 
-// POST for GM to launch a new session
-const activeCampaigns = [];
+// POST for GM to launch a session
+const activeGameSessions = [];
 app.post('/launchSession', (req, res, next) => {
-  activeCampaigns.push(req.body.gameSession);
-  moveUsertoRoom(req.body.gameSession, req.body.socketId);
-  res.status(200).json({ message: `"${req.body.gameSession.campaignName} session launched!"` });
+  const gameSession = req.body;
+  const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
+  db.query(sessionQuery)
+    .then(([session]) => {
+      if (session.length > 0) {
+
+        return { session: session[0] };
+      }
+      return db
+        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
+        .then(([insertRes]) => {
+          return db
+            .query(sessionQuery)
+            .then(([session]) => {
+              return { session: session[0] };
+            });
+        });
+    })
+    .then(results => {
+      gameSession.session = {
+        sessionId: results.session.sessionId,
+        updated: results.session.updated,
+        environmentImageFileName: results.session.environmentImageFileName,
+        tokens: results.session.tokens
+      };
+      activeGameSessions.push(gameSession);
+      res.json(results);
+    })
+    .catch(err => next(err));
 });
 
 // POST for player to join a session room
@@ -253,9 +255,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', reason => {
     const disconnectingId = userSockets[socket.id].userId;
-    for (const campaignIndex in activeCampaigns) {
-      if (disconnectingId === activeCampaigns[campaignIndex].campaignGM) {
-        activeCampaigns.splice(campaignIndex, 1);
+    for (const campaignIndex in activeGameSessions) {
+      if (disconnectingId === activeGameSessions[campaignIndex].campaignGM) {
+        activeGameSessions.splice(campaignIndex, 1);
       }
     }
     delete userSockets[socket.id];
