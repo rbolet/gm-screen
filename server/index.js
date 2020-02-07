@@ -175,7 +175,7 @@ app.post('/updateEnvironment', (req, res, next) => {
   const fileName = req.body.newImage.fileName ? `"${req.body.newImage.fileName}"` : null;
   const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = ${fileName} WHERE sessionId = ${reqSessionId};`;
   db.query(query)
-    .then(rowsAffects => {
+    .then(rowsAffected => {
       return db.query(`SELECT * FROM sessions WHERE sessions.sessionId = ${reqSessionId};`);
     })
     .then(([row]) => {
@@ -185,6 +185,32 @@ app.post('/updateEnvironment', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.post('/addToken', (req, res, next) => {
+  // const gameSession = req.body.gameSession;
+  // const reqSessionId = req.body.gameSession.session.sessionId;
+  buildSession(req.body.sessionId).then(session => res.json(session));
+
+});
+
+async function buildSession(sessionId) {
+  let tokens = [];
+  return new Promise(resolve => {
+    db.query(`SELECT tokens.tokenId, tokens.imageId FROM tokens WHERE sessionId = ${sessionId}`)
+      .then(([rows]) => {
+        tokens = rows;
+        return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
+      })
+      .then(([result]) => {
+        return {
+          sessionId: result[0].sessionId,
+          environmentImageFileName: result[0].environmentImageFileName,
+          tokens
+        };
+      })
+      .then(done => resolve(done));
+  });
+}
 
 // upload middleware config
 const storage = multer.diskStorage({
