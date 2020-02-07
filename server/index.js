@@ -180,7 +180,8 @@ app.post('/updateEnvironment', (req, res, next) => {
     })
     .then(session => {
       gameSession.session = session;
-      pushEnvironmenttoRoom(gameSession);
+      pushNewSessionState(gameSession);
+      // pushEnvironmenttoRoom(gameSession);
       res.json({ message: 'pushing new environment ...' });
     })
     .catch(err => next(err));
@@ -298,9 +299,9 @@ function nameSessionRoom(gameSession) {
   return `${gameSession.campaignName} (${gameSession.campaignId})`;
 }
 
-function pushEnvironmenttoRoom(gameSession) {
+function pushNewSessionState(gameSession) {
   const sessionRoom = nameSessionRoom(gameSession);
-  io.to(sessionRoom).emit('updateEnvironmentImage', gameSession.session.environmentImageFileName);
+  io.to(sessionRoom).emit('updateSessionState', gameSession.session);
 }
 
 // Error Handler

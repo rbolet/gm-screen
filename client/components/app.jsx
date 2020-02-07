@@ -240,9 +240,9 @@ class App extends React.Component {
         .catch(err => console.error(err));
     });
 
-    this.socket.on('updateEnvironmentImage', fileName => {
+    this.socket.on('updateSessionState', session => {
       const config = produce(this.state.config, draft => {
-        draft.gameSession.session.environmentImageFileName = fileName;
+        draft.gameSession.session = session;
       });
       this.setState({ config });
     });
