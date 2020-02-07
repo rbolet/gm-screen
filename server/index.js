@@ -5,20 +5,21 @@ const http = require('http').createServer(app);
 const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
-const session = require('express-session');
+// const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
+const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
 const staticMiddleware = express.static(staticPath);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
-app.use(session({
-  secret: 'itsasecrettoeveryone',
-  resave: true,
-  saveUninitialized: true
-}));
+// app.use(session({
+//   secret: 'itsasecrettoeveryone',
+//   resave: true,
+//   saveUninitialized: true
+// }));
 
 function testForSQLInjection(input) {
   const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
@@ -118,19 +119,11 @@ app.post('/campaignAssets', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/');
-
-// POST to add user to user sockets object
-app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].userName = req.body.user.userName;
-  userSockets[req.body.socketId].userId = req.body.user.userId;
-  res.status(200).json({ message: `${req.body.user.userName} connected` });
-});
-
 // POST for GM to launch a session
 const activeGameSessions = [];
 app.post('/launchSession', (req, res, next) => {
-  const gameSession = req.body;
+  const gameSession = req.body.gameSession;
+  const user = req.body.user;
   const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
   db.query(sessionQuery)
     .then(([session]) => {
@@ -139,7 +132,7 @@ app.post('/launchSession', (req, res, next) => {
         return { session: session[0] };
       }
       return db
-        .query(`INSERT INTO sessions(campaignID) VALUES(${gameSession.campaignId});`)
+        .query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${justNow});`)
         .then(([insertRes]) => {
           return db
             .query(sessionQuery)
@@ -149,6 +142,9 @@ app.post('/launchSession', (req, res, next) => {
         });
     })
     .then(results => {
+      moveUsertoRoom(gameSession, user);
+      results.session.tokens = results.session.tokens ? results.session.tokens : [];
+
       gameSession.session = {
         sessionId: results.session.sessionId,
         updated: results.session.updated,
@@ -167,38 +163,26 @@ app.post('/joinSession', (req, res, next) => {
   res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
 });
 
-// PATCH to update image properties
-app.patch('/image', (req, res, next) => {
-  if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
-  const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
-  const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
+app.post('/configUserSocket', (req, res, next) => {
+  const user = req.body;
+  configUserSocket(user);
+  res.json({ message: `configuring ${user.userName}'s socket` });
+});
 
-  const updateQuery = `UPDATE images
-                        SET ${patchGivenName} ${patchCategory}
-                        WHERE imageId = ${req.body.imageId};`;
-  db.query(updateQuery)
-    .then(rows => {
-      res.status(200).json(rows);
+app.post('/updateEnvironment', (req, res, next) => {
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = "${req.body.newImage.fileName}" WHERE sessionId = ${reqSessionId};`;
+  db.query(query)
+    .then(rowsAffects => {
+      return db.query(`SELECT * FROM sessions WHERE sessions.sessionId = ${reqSessionId};`);
     })
-    .catch(error => { next(error); });
-});
-
-// POST to update image to all
-app.post('/updateImage/:category', (req, res, next) => {
-  pushImagetoRoom(req.body.fileName, req.params.category, req.body.sessionConfig);
-  // pushImageToAll(req.body.fileName, req.params.category);
-  res.json({ message: 'Updating image ...' });
-});
-
-// DELETE to clear images (within category) from all
-app.delete('/updateImage/:category/:fileName', (req, res, next) => {
-  if (req.params.fileName === 'all') {
-    clearAllImages(req.params.category);
-    res.json({ message: 'Clearing image(s) ...' });
-  } else {
-    clearSecondaryImage(req.params);
-    res.json({ message: 'Clearing one secondary image ...' });
-  }
+    .then(([row]) => {
+      gameSession.session = row[0];
+      pushEnvironmenttoRoom(gameSession);
+      res.json({ message: 'pushing new environment ...' });
+    })
+    .catch(err => next(err));
 });
 
 // upload middleware config
@@ -247,9 +231,7 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
 
 // Socket io set up and incoming event handling
 const userSockets = {};
-const socketArray = [];
 io.on('connection', socket => {
-  socketArray.push(socket);
   userSockets[socket.id] = { socket };
   socket.emit('connected', socket.id);
 
@@ -268,54 +250,30 @@ io.on('connection', socket => {
   });
 });
 
-// function pushImageToAll(fileName, category) {
-//   for (const socket of socketArray) {
-//     socket.emit(`update${category}Image`, fileName);
-//   }
-//   return fileName;
-// }
-
-function pushImagetoRoom(fileName, category, sessionConfig) {
-  const sessionRoom = nameSessionRoom(sessionConfig);
-  let image = null;
-  if (category === 'Secondary') {
-    const imageObject = {
-      fileName,
-      randomKey: (new Date().getTime()).toString(12)
-    };
-    image = imageObject;
-  } else {
-    image = fileName;
-  }
-  io.to(sessionRoom).emit(`update${category}Image`, image);
+function configUserSocket(user) {
+  const userSocket = userSockets[user.socketId];
+  userSocket.user = user;
+  userSocket.socket.emit();
 
 }
 
-function clearAllImages(category) {
-  for (const socket of socketArray) {
-    socket.emit(`update${category}Image`, null);
-  }
-}
+function moveUsertoRoom(gameSession, user) {
 
-function clearSecondaryImage(paramObject) {
-
-  for (const socket of socketArray) {
-    socket.emit('clearOneImage', paramObject.fileName);
-  }
-}
-
-function moveUsertoRoom(sessionConfig, socketId) {
-
-  const socket = userSockets[socketId].socket;
-  const sessionRoom = nameSessionRoom(sessionConfig);
+  const socket = userSockets[user.socketId].socket;
+  const sessionRoom = nameSessionRoom(gameSession);
   socket.join(sessionRoom, () => {
-    io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
+    io.to(sessionRoom).emit('update', `${user.userName} has joined ${sessionRoom}`);
   });
 
 }
 
-function nameSessionRoom(sessionConfig) {
-  return `${sessionConfig.sessionName} (${sessionConfig.sessionId})`;
+function nameSessionRoom(gameSession) {
+  return `${gameSession.campaignName} (${gameSession.campaignId})`;
+}
+
+function pushEnvironmenttoRoom(gameSession) {
+  const sessionRoom = nameSessionRoom(gameSession);
+  io.to(sessionRoom).emit('updateEnvironmentImage', gameSession.session.environmentImageFileName);
 }
 
 // Error Handler

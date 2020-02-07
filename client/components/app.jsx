@@ -46,9 +46,8 @@ class App extends React.Component {
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
-    this.onGMGridClick = this.onGMGridClick.bind(this);
-    this.clearEnvironmentImage = this.clearEnvironmentImage.bind(this);
-    this.socketIO = this.socketIO.bind(this);
+    this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
+    this.connectSocket = this.connectSocket.bind(this);
   }
 
   returntoMenu() {
@@ -146,6 +145,7 @@ class App extends React.Component {
         const campaignAssets = res;
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
+          draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
         });
 
@@ -175,14 +175,13 @@ class App extends React.Component {
   }
 
   launchSession() {
-    this.socketIO();
-    const gameSession = JSON.stringify(this.state.config.gameSession);
+    const stateConfig = JSON.stringify(this.state.config);
     fetch('/launchSession', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: gameSession
+      body: stateConfig
     })
       .then(res => res.json())
       .then(resSession => {
@@ -192,31 +191,63 @@ class App extends React.Component {
           draft.gameSession.session = session;
         });
         this.setState({ config, view: ['gmView', 'default'] });
-
-      });
+      })
+      .catch(err => console.error(err));
   }
 
-  onGMGridClick(image) {
-    if (image.category === 'Environment') {
-      const config = produce(this.state.config, draft => {
-        draft.gameSession.session.environmentImageFileName = image.fileName;
-      });
-      this.setState({ config });
-    }
+  updateEnvironmentImage(image) {
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession,
+      newImage: image
+    });
+
+    fetch('/updateEnvironment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
+
   }
 
-  clearEnvironmentImage() {
-
-  }
-
-  socketIO() {
+  connectSocket() {
     this.socket = io('/');
+    async function socketIdToState(stateConfig, socketId) {
+      return produce(stateConfig, draft => { draft.user.socketId = socketId; });
+    }
+
     this.socket.on('connect', () => {
+      socketIdToState(this.state.config, this.socket.id)
+        .then(config => {
+          const user = JSON.stringify(config.user);
+          fetch('/configUserSocket', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: user
+          })
+            .then(jsonRes => jsonRes.json())
+            .then(res => { this.setState({ message: res.message }); });
+
+          return config;
+        })
+        .then(config => {
+          this.setState({ config });
+          this.launchSession();
+        })
+        .catch(err => console.error(err));
+    });
+
+    this.socket.on('updateEnvironmentImage', fileName => {
       const config = produce(this.state.config, draft => {
-        draft.user.socketId = this.socket.id;
+        draft.gameSession.session.environmentImageFileName = fileName;
       });
       this.setState({ config });
     });
+
+    this.socket.on('update', string => { this.setState({ message: string }); });
   }
 
   render() {
@@ -232,12 +263,12 @@ class App extends React.Component {
           setCampaign={this.setCampaign}/>;
         break;
       case 'campaignConfig':
-        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} launchSession={this.launchSession}/>;
+        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} connectSocket={this.connectSocket}/>;
         break;
       case 'gmView':
         CurrentView = <GMView
           config={this.state.config}
-          clearEnvironmentImage={this.clearEnvironmentImage}
+          updateEnvironmentImage={this.updateEnvironmentImage}
           onGridClick={this.onGMGridClick}/>;
         break;
     }

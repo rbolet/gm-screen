@@ -1,15 +1,18 @@
 import React from 'react';
 import ImageGrid from './image-grid';
+import Tokens from './tokens';
 
 class GMView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.onGridClick = this.onGridClick.bind(this);
+    this.onGMGridClick = this.onGMGridClick.bind(this);
   }
 
-  onGridClick() {
-
+  onGMGridClick(image) {
+    if (image.category === 'Environment') {
+      this.props.updateEnvironmentImage(image);
+    }
   }
 
   render() {
@@ -20,7 +23,7 @@ class GMView extends React.Component {
           session={this.props.config.gameSession.session}
           clearEnvironmentImage={this.props.clearEnvironmentImage}/>
         <div className="image-grid-container col-4">
-          <ImageGrid onGridClick={this.props.onGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
+          <ImageGrid onGridClick={this.onGMGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
         </div>
       </div>
     );
@@ -35,6 +38,7 @@ function HeroView(props) {
           <div className="close m-1">
             <i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i>
           </div>
+          <Tokens tokens={props.session.tokens}/>
         </div>
       </div>
     );

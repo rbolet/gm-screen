@@ -15,7 +15,7 @@ class AssetDetails extends React.Component {
               <button type="button" className="btn btn-secondary">Edit</button>
             </div>
           </div>
-          <button type="button" onClick={this.props.launchSession} className="btn btn-lg btn-success">Launch Session</button>
+          <button type="button" onClick={this.props.connectSocket} className="btn btn-lg btn-success">Launch Session</button>
         </div>
       </div>
     );
