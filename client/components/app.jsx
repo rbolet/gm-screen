@@ -269,6 +269,7 @@ class App extends React.Component {
         CurrentView = <GMView
           config={this.state.config}
           updateEnvironmentImage={this.updateEnvironmentImage}
+          clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}
           onGridClick={this.onGMGridClick}/>;
         break;
     }

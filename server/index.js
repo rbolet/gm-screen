@@ -172,7 +172,8 @@ app.post('/configUserSocket', (req, res, next) => {
 app.post('/updateEnvironment', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
-  const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = "${req.body.newImage.fileName}" WHERE sessionId = ${reqSessionId};`;
+  const fileName = req.body.newImage.fileName ? `"${req.body.newImage.fileName}"` : null;
+  const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = ${fileName} WHERE sessionId = ${reqSessionId};`;
   db.query(query)
     .then(rowsAffects => {
       return db.query(`SELECT * FROM sessions WHERE sessions.sessionId = ${reqSessionId};`);
