@@ -47,6 +47,7 @@ class App extends React.Component {
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
     this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
+    this.addToken = this.addToken.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
   }
 
@@ -208,7 +209,21 @@ class App extends React.Component {
       },
       body: requestBody
     });
+  }
 
+  addToken(image) {
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession,
+      image: image
+    });
+
+    fetch('/addToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
   }
 
   connectSocket() {
@@ -270,6 +285,7 @@ class App extends React.Component {
           config={this.state.config}
           updateEnvironmentImage={this.updateEnvironmentImage}
           clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}
+          addToken={this.addToken}
           onGridClick={this.onGMGridClick}/>;
         break;
     }
