@@ -176,10 +176,10 @@ app.post('/updateEnvironment', (req, res, next) => {
   const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = ${fileName} WHERE sessionId = ${reqSessionId};`;
   db.query(query)
     .then(rowsAffected => {
-      return db.query(`SELECT * FROM sessions WHERE sessions.sessionId = ${reqSessionId};`);
+      return buildSession(reqSessionId);
     })
-    .then(([row]) => {
-      gameSession.session = row[0];
+    .then(session => {
+      gameSession.session = session;
       pushEnvironmenttoRoom(gameSession);
       res.json({ message: 'pushing new environment ...' });
     })
