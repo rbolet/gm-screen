@@ -119,40 +119,30 @@ app.post('/campaignAssets', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// POST for GM to launch a session
 const activeGameSessions = [];
+// POST for GM to launch a session
 app.post('/launchSession', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const user = req.body.user;
-  const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
-  db.query(sessionQuery)
-    .then(([session]) => {
-      if (session.length > 0) {
-
-        return { session: session[0] };
+  db.query(`SELECT sessionId FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`)
+    .then(([sessionRes]) => {
+      if (sessionRes.length > 0) {
+        return sessionRes[0];
+      } else {
+        return db.query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${justNow});`)
+          .then(insertRes => {
+            return { sessionId: insertRes[0].insertId };
+          });
       }
-      return db
-        .query(`INSERT INTO sessions(campaignID, updated) VALUES(${gameSession.campaignId}, ${justNow});`)
-        .then(([insertRes]) => {
-          return db
-            .query(sessionQuery)
-            .then(([session]) => {
-              return { session: session[0] };
-            });
-        });
     })
-    .then(results => {
+    .then(result => {
+      return buildSession(result.sessionId);
+    })
+    .then(session => {
       moveUsertoRoom(gameSession, user);
-      results.session.tokens = results.session.tokens ? results.session.tokens : [];
-
-      gameSession.session = {
-        sessionId: results.session.sessionId,
-        updated: results.session.updated,
-        environmentImageFileName: results.session.environmentImageFileName,
-        tokens: results.session.tokens
-      };
       activeGameSessions.push(gameSession);
-      res.json(results.session);
+      gameSession.session = session;
+      res.json(session);
     })
     .catch(err => next(err));
 });
