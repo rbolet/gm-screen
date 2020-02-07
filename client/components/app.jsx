@@ -145,6 +145,7 @@ class App extends React.Component {
         const campaignAssets = res;
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
+          draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
         });
 
@@ -174,14 +175,13 @@ class App extends React.Component {
   }
 
   launchSession() {
-    this.connectSocket();
-    const gameSession = JSON.stringify(this.state.config.gameSession);
+    const stateConfig = JSON.stringify(this.state.config);
     fetch('/launchSession', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: gameSession
+      body: stateConfig
     })
       .then(res => res.json())
       .then(resSession => {
@@ -191,8 +191,8 @@ class App extends React.Component {
           draft.gameSession.session = session;
         });
         this.setState({ config, view: ['gmView', 'default'] });
-
-      });
+      })
+      .catch(err => console.error(err));
   }
 
   updateEnvironmentImage(image) {
@@ -219,13 +219,20 @@ class App extends React.Component {
               'Content-Type': 'application/json'
             },
             body: user
-          });
+          })
+            .then(jsonRes => jsonRes.json())
+            .then(res => { this.setState({ message: res.message }); });
 
           return config;
         })
-        .then(config => this.setState({ config }))
+        .then(config => {
+          this.setState({ config });
+          this.launchSession();
+        })
         .catch(err => console.error(err));
     });
+
+    this.socket.on('update', string => { this.setState({ message: string }); });
   }
 
   render() {
@@ -241,7 +248,7 @@ class App extends React.Component {
           setCampaign={this.setCampaign}/>;
         break;
       case 'campaignConfig':
-        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} launchSession={this.launchSession}/>;
+        CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} connectSocket={this.connectSocket}/>;
         break;
       case 'gmView':
         CurrentView = <GMView

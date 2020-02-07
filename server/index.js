@@ -122,16 +122,17 @@ app.post('/campaignAssets', (req, res, next) => {
 app.post('/');
 
 // POST to add user to user sockets object
-app.post('/userJoined', (req, res, next) => {
-  userSockets[req.body.socketId].userName = req.body.user.userName;
-  userSockets[req.body.socketId].userId = req.body.user.userId;
-  res.status(200).json({ message: `${req.body.user.userName} connected` });
-});
+// app.post('/userJoined', (req, res, next) => {
+//   userSockets[req.body.socketId].userName = req.body.user.userName;
+//   userSockets[req.body.socketId].userId = req.body.user.userId;
+//   res.status(200).json({ message: `${req.body.user.userName} connected` });
+// });
 
 // POST for GM to launch a session
 const activeGameSessions = [];
 app.post('/launchSession', (req, res, next) => {
-  const gameSession = req.body;
+  const gameSession = req.body.gameSession;
+  const user = req.body.user;
   const sessionQuery = `SELECT * FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`;
   db.query(sessionQuery)
     .then(([session]) => {
@@ -150,7 +151,7 @@ app.post('/launchSession', (req, res, next) => {
         });
     })
     .then(results => {
-
+      moveUsertoRoom(gameSession, user);
       results.session.tokens = results.session.tokens ? results.session.tokens : [];
 
       gameSession.session = {
@@ -174,7 +175,7 @@ app.post('/joinSession', (req, res, next) => {
 app.post('/configUserSocket', (req, res, next) => {
   const user = req.body;
   configUserSocket(user);
-  res.json({ message: `configuring ${user.userName}'s socket (${user.socketId})` });
+  res.json({ message: `configuring ${user.userName}'s socket` });
 });
 
 app.post('/updateEnvironment', (req, res, next) => {
@@ -185,40 +186,6 @@ app.post('/updateEnvironment', (req, res, next) => {
 
   db.query(query);
 });
-
-// // PATCH to update image properties
-// app.patch('/image', (req, res, next) => {
-//   if (!req.body['given-name'] && req.body.category) next(`Empty PATCH request body: ${req.body}`);
-//   const patchGivenName = req.body['given-name'] ? `userGivenName = '${req.body['given-name']}',` : '';
-//   const patchCategory = req.body.category ? `category = '${req.body.category}'` : '';
-
-//   const updateQuery = `UPDATE images
-//                         SET ${patchGivenName} ${patchCategory}
-//                         WHERE imageId = ${req.body.imageId};`;
-//   db.query(updateQuery)
-//     .then(rows => {
-//       res.status(200).json(rows);
-//     })
-//     .catch(error => { next(error); });
-// });
-
-// // POST to update image to all
-// app.post('/updateImage/:category', (req, res, next) => {
-//   pushImagetoRoom(req.body.fileName, req.params.category, req.body.sessionConfig);
-//   // pushImageToAll(req.body.fileName, req.params.category);
-//   res.json({ message: 'Updating image ...' });
-// });
-
-// // DELETE to clear images (within category) from all
-// app.delete('/updateImage/:category/:fileName', (req, res, next) => {
-//   if (req.params.fileName === 'all') {
-//     clearAllImages(req.params.category);
-//     res.json({ message: 'Clearing image(s) ...' });
-//   } else {
-//     clearSecondaryImage(req.params);
-//     res.json({ message: 'Clearing one secondary image ...' });
-//   }
-// });
 
 // upload middleware config
 const storage = multer.diskStorage({
@@ -286,15 +253,18 @@ io.on('connection', socket => {
 });
 
 function configUserSocket(user) {
-  userSockets[user.socketId].user = user;
+  const userSocket = userSockets[user.socketId];
+  userSocket.user = user;
+  userSocket.socket.emit();
+
 }
 
-function moveUsertoRoom(gameSession, socketId) {
+function moveUsertoRoom(gameSession, user) {
 
-  const socket = userSockets[socketId].socket;
+  const socket = userSockets[user.socketId].socket;
   const sessionRoom = nameSessionRoom(gameSession);
   socket.join(sessionRoom, () => {
-    io.to(sessionRoom).emit('update', `${userSockets[socketId].userName} has joined ${sessionRoom}`);
+    io.to(sessionRoom).emit('update', `${user.userName} has joined ${sessionRoom}`);
   });
 
 }
