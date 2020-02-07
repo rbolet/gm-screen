@@ -188,9 +188,17 @@ app.post('/updateEnvironment', (req, res, next) => {
 });
 
 app.post('/addToken', (req, res, next) => {
-  // const gameSession = req.body.gameSession;
-  // const reqSessionId = req.body.gameSession.session.sessionId;
-  buildSession(req.body.sessionId).then(session => res.json(session));
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  db.query(`INSERT INTO tokens (sessionId, imageId) VALUES(${reqSessionId}, ${req.body.image.imageId})`)
+    .then(insertRes => {
+      return buildSession(reqSessionId);
+    })
+    .then(session => {
+      gameSession.session = session;
+      pushNewSessionState(gameSession);
+      res.json({ message: 'pushing new token ...' });
+    });
 
 });
 
