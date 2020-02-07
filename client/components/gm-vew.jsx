@@ -10,9 +10,14 @@ class GMView extends React.Component {
   }
 
   onGMGridClick(image) {
-    if (image.category === 'Environment') {
-      this.props.updateEnvironmentImage(image);
+    switch (image.category) {
+      case 'Environment':
+        this.props.updateEnvironmentImage(image);
+        break;
+      case 'Secondary':
+        this.props.addToken(image);
     }
+
   }
 
   render() {
