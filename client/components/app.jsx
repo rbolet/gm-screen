@@ -196,10 +196,18 @@ class App extends React.Component {
   }
 
   updateEnvironmentImage(image) {
-    // const requestBody = JSON.stringify({
-    //   session: this.state.config.gameSession.session,
-    //   newImage: image
-    // });
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession,
+      newImage: image
+    });
+
+    fetch('/updateEnvironment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
 
   }
 
@@ -230,6 +238,13 @@ class App extends React.Component {
           this.launchSession();
         })
         .catch(err => console.error(err));
+    });
+
+    this.socket.on('updateEnvironmentImage', fileName => {
+      const config = produce(this.state.config, draft => {
+        draft.gameSession.session.environmentImageFileName = fileName;
+      });
+      this.setState({ config });
     });
 
     this.socket.on('update', string => { this.setState({ message: string }); });

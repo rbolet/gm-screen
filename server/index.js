@@ -119,15 +119,6 @@ app.post('/campaignAssets', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/');
-
-// POST to add user to user sockets object
-// app.post('/userJoined', (req, res, next) => {
-//   userSockets[req.body.socketId].userName = req.body.user.userName;
-//   userSockets[req.body.socketId].userId = req.body.user.userId;
-//   res.status(200).json({ message: `${req.body.user.userName} connected` });
-// });
-
 // POST for GM to launch a session
 const activeGameSessions = [];
 app.post('/launchSession', (req, res, next) => {
@@ -179,12 +170,19 @@ app.post('/configUserSocket', (req, res, next) => {
 });
 
 app.post('/updateEnvironment', (req, res, next) => {
-  const query = `UPDATE session
-    SET updated = ${justNow},
-        environmentImageFileName = ${req.body.newImage.fileName}
-    WHERE sessionId = ${req.body.session.sessionId};`;
-
-  db.query(query);
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = "${req.body.newImage.fileName}" WHERE sessionId = ${reqSessionId};`;
+  db.query(query)
+    .then(rowsAffects => {
+      return db.query(`SELECT * FROM sessions WHERE sessions.sessionId = ${reqSessionId};`);
+    })
+    .then(([row]) => {
+      gameSession.session = row[0];
+      pushEnvironmenttoRoom(gameSession);
+      res.json({ message: 'pushing new environment ...' });
+    })
+    .catch(err => next(err));
 });
 
 // upload middleware config
@@ -273,41 +271,10 @@ function nameSessionRoom(gameSession) {
   return `${gameSession.campaignName} (${gameSession.campaignId})`;
 }
 
-// function pushImageToAll(fileName, category) {
-//   for (const socket of socketArray) {
-//     socket.emit(`update${category}Image`, fileName);
-//   }
-//   return fileName;
-// }
-
-// function pushImagetoRoom(fileName, category, sessionConfig) {
-//   const sessionRoom = nameSessionRoom(sessionConfig);
-//   let image = null;
-//   if (category === 'Secondary') {
-//     const imageObject = {
-//       fileName,
-//       randomKey: (new Date().getTime()).toString(12)
-//     };
-//     image = imageObject;
-//   } else {
-//     image = fileName;
-//   }
-//   io.to(sessionRoom).emit(`update${category}Image`, image);
-
-// }
-
-// function clearAllImages(category) {
-//   for (const socket of socketArray) {
-//     socket.emit(`update${category}Image`, null);
-//   }
-// }
-
-// function clearSecondaryImage(paramObject) {
-
-//   for (const socket of socketArray) {
-//     socket.emit('clearOneImage', paramObject.fileName);
-//   }
-// }
+function pushEnvironmenttoRoom(gameSession) {
+  const sessionRoom = nameSessionRoom(gameSession);
+  io.to(sessionRoom).emit('updateEnvironmentImage', gameSession.session.environmentImageFileName);
+}
 
 // Error Handler
 app.use((error, req, res, next) => {

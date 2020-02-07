@@ -3,6 +3,11 @@ import ImageGrid from './image-grid';
 import Tokens from './tokens';
 
 class GMView extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onGMGridClick = this.onGMGridClick.bind(this);
+  }
 
   onGMGridClick(image) {
     if (image.category === 'Environment') {
