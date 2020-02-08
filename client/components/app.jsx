@@ -25,11 +25,8 @@ class App extends React.Component {
         gameSession: {
           campaignId: null,
           campaignName: null,
+          campaignGM: null,
           campaignAssets: [],
-          sessionUsers: {
-            gm: null,
-            players: []
-          },
           session: {
             sessionId: null,
             sessionName: null,
@@ -55,13 +52,23 @@ class App extends React.Component {
   }
 
   returntoMenu() {
-    const config = produce(this.state.config, draft => {
-      draft.user.userRole = null;
-      for (const property in draft.gameSession) {
-        draft.gameSession[property] = null;
+    const message = 'returning to menu ...';
+    const gameSession = {
+      campaignId: null,
+      campaignName: null,
+      campaignGM: null,
+      campaignAssets: [],
+      session: {
+        sessionId: null,
+        sessionName: null,
+        environmentImageFileName: null,
+        tokens: []
       }
+    };
+    const config = produce(this.state.config, draft => {
+      draft.gameSession = gameSession;
     });
-    this.setState({ config, view: ['menu', 'chooseRole'] });
+    this.setState({ config, view: ['menu', 'chooseRole'], message });
   }
 
   newUser(login) {
@@ -136,7 +143,7 @@ class App extends React.Component {
   }
 
   setCampaign(campaign, skip) {
-    const currentCampaign = JSON.stringify({ campaignId: campaign.campaignId });
+    const currentCampaign = JSON.stringify({ campaign });
     fetch('/campaignAssets', {
       method: 'POST',
       headers: {
@@ -150,6 +157,7 @@ class App extends React.Component {
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
           draft.gameSession.campaignName = campaign.campaignName;
+          draft.gameSession.campaignGM = campaign.campaignGM;
           draft.gameSession.campaignAssets = campaignAssets;
         });
         if (config.user.userRole === 'gm' && !skip) {
@@ -195,7 +203,6 @@ class App extends React.Component {
       .then(resSession => {
         const session = resSession;
         const config = produce(this.state.config, draft => {
-          draft.gameSession.sessionUsers.gm = draft.user;
           draft.gameSession.session = session;
         });
         this.setState({ config, view: [`${config.user.userRole}View`, 'default'] });
@@ -299,7 +306,13 @@ class App extends React.Component {
       this.setState({ config });
     });
 
-    this.socket.on('update', string => { this.setState({ message: string }); });
+    this.socket.on('update', message => { this.setState({ message }); });
+
+    this.socket.on('kick', message => {
+      this.socket.close();
+      this.setState({ message });
+      this.returntoMenu();
+    });
   }
 
   render() {

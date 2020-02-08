@@ -90,7 +90,7 @@ app.post('/auth', function (req, res, next) {
 
 // POST campaigns per GM
 app.post('/gmCampaigns', (req, res, next) => {
-  const query = `SELECT campaignId, campaignName FROM campaigns WHERE campaignGM = "${req.body.userId}";`;
+  const query = `SELECT * FROM campaigns WHERE campaignGM = "${req.body.userId}";`;
   db.query(query)
     .then(([rows]) => {
       res.status(200).json(rows);
@@ -120,7 +120,7 @@ app.get('/activeGameSessions', (req, res, next) => {
 app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN campaignImages ON images.imageId = campaignImages.imageId
-              WHERE campaignImages.campaignId = ${req.body.campaignId}`)
+              WHERE campaignImages.campaignId = ${req.body.campaign.campaignId}`)
     .then(([campaignAssets]) => {
       res.status(200).json(campaignAssets).end();
     })
@@ -157,11 +157,6 @@ app.post('/launchSession', (req, res, next) => {
       res.json(session);
     })
     .catch(err => next(err));
-});
-
-// POST for player to join a session room
-app.post('/joinSession', (req, res, next) => {
-
 });
 
 app.post('/configUserSocket', (req, res, next) => {
@@ -302,9 +297,11 @@ io.on('connection', socket => {
   socket.emit('connected', socket.id);
 
   socket.on('disconnect', reason => {
-    const disconnectingId = userSockets[socket.id].userId;
+    const disconnectingUser = userSockets[socket.id].user;
     for (const campaignIndex in activeGameSessions) {
-      if (disconnectingId === activeGameSessions[campaignIndex].campaignGM) {
+      if (disconnectingUser.userId === activeGameSessions[campaignIndex].campaignGM) {
+        const sessionRoom = nameSessionRoom(activeGameSessions[campaignIndex]);
+        io.to(sessionRoom).emit('kick', `${disconnectingUser.userName} has ended the session`);
         activeGameSessions.splice(campaignIndex, 1);
       }
     }
@@ -319,7 +316,6 @@ io.on('connection', socket => {
 function configUserSocket(user) {
   const userSocket = userSockets[user.socketId];
   userSocket.user = user;
-  userSocket.socket.emit();
 
 }
 
