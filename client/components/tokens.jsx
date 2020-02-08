@@ -1,10 +1,16 @@
 import React from 'react';
 
 function TokensDisplay(props) {
-
+  let CloseButton = null;
+  if (props.clearAllTokens) {
+    CloseButton = <div className="close m-1 d-inline">
+      <i className="fa fa-times-circle" onClick={props.clearAllTokens}></i>
+    </div>;
+  }
   return (
     <div className={'tokens-container backdrop-blur'}>
       <Tokens tokens={props.tokens} removeToken={props.removeToken}/>
+      {CloseButton}
     </div>
   );
 }

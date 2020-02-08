@@ -49,6 +49,7 @@ class App extends React.Component {
     this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
     this.addToken = this.addToken.bind(this);
     this.removeToken = this.removeToken.bind(this);
+    this.clearAllTokens = this.clearAllTokens.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
   }
 
@@ -242,6 +243,21 @@ class App extends React.Component {
     });
   }
 
+  clearAllTokens() {
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession
+    });
+
+    fetch('/clearAllTokens', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
+
+  }
+
   connectSocket() {
     this.socket = io('/');
     async function socketIdToState(stateConfig, socketId) {
@@ -303,6 +319,7 @@ class App extends React.Component {
           clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}
           addToken={this.addToken}
           removeToken={this.removeToken}
+          clearAllTokens={this.clearAllTokens}
           onGridClick={this.onGMGridClick}/>;
         break;
     }

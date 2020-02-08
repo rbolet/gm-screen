@@ -27,7 +27,8 @@ class GMView extends React.Component {
         <HeroView
           session={this.props.config.gameSession.session}
           clearEnvironmentImage={this.props.clearEnvironmentImage}
-          removeToken={this.props.removeToken}/>
+          removeToken={this.props.removeToken}
+          clearAllTokens={this.props.clearAllTokens}/>
         <div className="image-grid-container col-4">
           <ImageGrid onGridClick={this.onGMGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
         </div>
@@ -55,7 +56,7 @@ function HeroView(props) {
   return (
     <div className="hero-view col-8 h-100">
       {HeroView}
-      <TokensDisplay tokens={props.session.tokens} removeToken={props.removeToken} />
+      <TokensDisplay tokens={props.session.tokens} removeToken={props.removeToken} clearAllTokens={props.clearAllTokens}/>
     </div>
   );
 }

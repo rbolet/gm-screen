@@ -155,8 +155,9 @@ app.post('/joinSession', (req, res, next) => {
 
 app.post('/configUserSocket', (req, res, next) => {
   const user = req.body;
-  configUserSocket(user);
   res.json({ message: `configuring ${user.userName}'s socket` });
+  configUserSocket(user);
+
 });
 
 app.post('/updateEnvironment', (req, res, next) => {
@@ -164,6 +165,7 @@ app.post('/updateEnvironment', (req, res, next) => {
   const reqSessionId = req.body.gameSession.session.sessionId;
   const fileName = req.body.newImage.fileName ? `"${req.body.newImage.fileName}"` : null;
   const query = `UPDATE sessions SET updated = ${justNow}, environmentImageFileName = ${fileName} WHERE sessionId = ${reqSessionId};`;
+  res.json({ message: 'pushing new environment ...' });
   db.query(query)
     .then(rowsAffected => {
       return buildSession(reqSessionId);
@@ -171,8 +173,6 @@ app.post('/updateEnvironment', (req, res, next) => {
     .then(session => {
       gameSession.session = session;
       pushNewSessionState(gameSession);
-      // pushEnvironmenttoRoom(gameSession);
-      res.json({ message: 'pushing new environment ...' });
     })
     .catch(err => next(err));
 });
@@ -180,6 +180,7 @@ app.post('/updateEnvironment', (req, res, next) => {
 app.post('/addToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
+  res.json({ message: 'pushing new token ...' });
   db.query(`INSERT INTO tokens (sessionId, imageFileName) VALUES(${reqSessionId}, "${req.body.image.fileName}")`)
     .then(insertRes => {
       return buildSession(reqSessionId);
@@ -187,7 +188,6 @@ app.post('/addToken', (req, res, next) => {
     .then(session => {
       gameSession.session = session;
       pushNewSessionState(gameSession);
-      res.json({ message: 'pushing new token ...' });
     });
 });
 
@@ -195,6 +195,7 @@ app.post('/removeToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
   const token = req.body.token;
+  res.json({ message: 'removing one token ...' });
   db.query(`DELETE FROM tokens WHERE tokenId = ${token.tokenId}`)
     .then(affectedRows => {
       return buildSession(reqSessionId);
@@ -202,7 +203,21 @@ app.post('/removeToken', (req, res, next) => {
     .then(session => {
       gameSession.session = session;
       pushNewSessionState(gameSession);
-      res.json({ message: 'removing one token ...' });
+
+    });
+});
+
+app.post('/clearAllTokens', (req, res, next) => {
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  res.json({ message: 'clearing all tokens ...' });
+  db.query(`DELETE FROM tokens WHERE sessionId = ${reqSessionId}`)
+    .then(affectedRows => {
+      return buildSession(reqSessionId);
+    })
+    .then(session => {
+      gameSession.session = session;
+      pushNewSessionState(gameSession);
     });
 });
 
