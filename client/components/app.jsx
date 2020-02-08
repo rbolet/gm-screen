@@ -52,13 +52,23 @@ class App extends React.Component {
   }
 
   returntoMenu() {
-    const config = produce(this.state.config, draft => {
-      draft.user.userRole = null;
-      for (const property in draft.gameSession) {
-        draft.gameSession[property] = null;
+    const message = 'returning to menu ...';
+    const gameSession = {
+      campaignId: null,
+      campaignName: null,
+      campaignGM: null,
+      campaignAssets: [],
+      session: {
+        sessionId: null,
+        sessionName: null,
+        environmentImageFileName: null,
+        tokens: []
       }
+    };
+    const config = produce(this.state.config, draft => {
+      draft.gameSession = gameSession;
     });
-    this.setState({ config, view: ['menu', 'chooseRole'] });
+    this.setState({ config, view: ['menu', 'chooseRole'], message });
   }
 
   newUser(login) {
@@ -296,7 +306,13 @@ class App extends React.Component {
       this.setState({ config });
     });
 
-    this.socket.on('update', string => { this.setState({ message: string }); });
+    this.socket.on('update', message => { this.setState({ message }); });
+
+    this.socket.on('kick', message => {
+      this.socket.close();
+      this.setState({ message });
+      this.returntoMenu();
+    });
   }
 
   render() {

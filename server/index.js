@@ -297,9 +297,11 @@ io.on('connection', socket => {
   socket.emit('connected', socket.id);
 
   socket.on('disconnect', reason => {
-    const disconnectingId = userSockets[socket.id].user.userId;
+    const disconnectingUser = userSockets[socket.id].user;
     for (const campaignIndex in activeGameSessions) {
-      if (disconnectingId === activeGameSessions[campaignIndex].campaignGM) {
+      if (disconnectingUser.userId === activeGameSessions[campaignIndex].campaignGM) {
+        const sessionRoom = nameSessionRoom(activeGameSessions[campaignIndex]);
+        io.to(sessionRoom).emit('kick', `${disconnectingUser.userName} has ended the session`);
         activeGameSessions.splice(campaignIndex, 1);
       }
     }
