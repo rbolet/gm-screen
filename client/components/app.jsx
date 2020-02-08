@@ -151,8 +151,12 @@ class App extends React.Component {
           draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
         });
-
-        this.setState({ config, view: ['campaignConfig', 'default'] });
+        if (config.user.userRole === 'gm') {
+          this.setState({ config, view: ['campaignConfig', 'default'] });
+        } else {
+          this.setState({ config });
+          this.connectSocket();
+        }
       })
       .catch(error => {
         console.error(`Error in GET return: ${error}`);
@@ -177,10 +181,6 @@ class App extends React.Component {
     document.querySelector('#filepath-label').innerText = '';
   }
 
-  joinSession(gameSession) {
-
-  }
-
   launchSession() {
     const stateConfig = JSON.stringify(this.state.config);
     fetch('/launchSession', {
@@ -197,7 +197,7 @@ class App extends React.Component {
           draft.gameSession.sessionUsers.gm = draft.user;
           draft.gameSession.session = session;
         });
-        this.setState({ config, view: ['gmView', 'default'] });
+        this.setState({ config, view: [`${config.user.userRole}View`, 'default'] });
       })
       .catch(err => console.error(err));
   }
