@@ -33,9 +33,15 @@ function UserChooseRole(props) {
 
   return (
     <div className="user-choose-role d-flex flex-column justify-content-center col-3 bg-dark rounded">
-      <h5 className="text-light text-center mb-3">Choose Your Role</h5>
-      <button onClick={() => { props.chooseRole('gm'); }} className="btn btn-secondary mb-4">Game Master</button>
-      <button onClick={() => { props.chooseRole('player'); }} className="btn btn-secondary mb-4">Player</button>
+      <div className="menu-box-header d-flex align-items-center justify-content-center p-2 h-25">
+        <h5 className="text-light text-center mb-3">Choose Your Role</h5>
+      </div>
+      <div className="h-50 d-flex w-100">
+        <div className="buttons w-100 d-flex flex-column justify-content-start">
+          <button onClick={() => { props.chooseRole('gm'); }} className="btn btn-secondary my-4">Game Master</button>
+          <button onClick={() => { props.chooseRole('player'); }} className="btn btn-secondary mb-4">Player</button>
+        </div>
+      </div>
     </div>
   );
 }

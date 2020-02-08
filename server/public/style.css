@@ -7,6 +7,9 @@ img {
     object-fit: contain;
 }
 
+button{
+  vertical-align: center;
+}
 .backdrop-blur{
   backdrop-filter: blur(8px);
 }
@@ -47,6 +50,10 @@ img {
 
 .user-login, .user-choose-role, .user-choose-campaign, #menu-campaign-list {
   height: 65%;
+}
+
+#menu-campaign-list{
+  overflow-y: scroll;
 }
 
 .campaign-images, .campaign-asset-details{
@@ -143,4 +150,16 @@ img {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+
+.file-browse{
+  position: relative;
+}
+
+#hidden-file-input {
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
 }

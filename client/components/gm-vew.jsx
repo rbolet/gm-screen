@@ -33,7 +33,11 @@ class GMView extends React.Component {
             clearAllTokens={this.props.clearAllTokens}/>
         </div>
         <div className="image-grid-container col-4">
-          <ImageGrid onGridClick={this.onGMGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
+          <ImageGrid
+            onGridClick={this.onGMGridClick}
+            campaignAssets={this.props.config.gameSession.campaignAssets}
+            setCampaign={this.props.setCampaign}
+            gmView={{ campaignId: this.props.config.gameSession.campaignId }}/>
         </div>
       </div>
     );

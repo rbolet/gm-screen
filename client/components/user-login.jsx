@@ -60,10 +60,10 @@ class UserLogin extends React.Component {
     }
     return (
       <div className="user-login d-flex flex-column justify-content-center col-3 bg-dark rounded">
-        <div className="w-100 h-25 text-light px-1 text-center">
-          <p id="login-response" className="pt-1">{loginMessage}</p>
+        <div className="w-100 h-25 text-light text-center p-2 d-flex align-items-center justify-content-center menu-box-header">
+          <div id="login-response" className="pt-1">{loginMessage}</div>
         </div>
-        <form id="user-login-form" onSubmit={() => event.preventDefault()}>
+        <form id="user-login-form" className="h-75" onSubmit={() => event.preventDefault()}>
           <div className="form-group pt-4">
             <label htmlFor="user-name" className="text-light"> </label>
             <input value={this.state.userName} onChange={this.handleChange} type="text" required autoComplete="username" className="form-control" id="user-name" name="userName" aria-describedby="user name" placeholder="Enter User Name"/>
@@ -72,9 +72,11 @@ class UserLogin extends React.Component {
             <label htmlFor="user-password" className="text-light"> </label>
             <input value = {this.state.password} onChange={this.handleChange} type="password" required autoComplete="current-password" className="form-control" id="password" name="password" placeholder="Password"/>
           </div>
-          <div className="d-flex justify-content-between">
-            <button type="submit" className="btn btn-secondary text-light" onClick={() => { this.userLogin(false); }}>Log In</button>
-            <button type="submit" className="btn btn-outline-light" onClick={() => { this.userLogin(true); }}>New User</button>
+          <div className="d-flex h-25 w-100 align-items-center">
+            <div className="menu-box-footer w-100 d-flex justify-content-between px-2">
+              <button type="submit" className="btn btn-outline-light w-25" onClick={() => { this.userLogin(true); }}><i className="fas fa-user-plus"></i></button>
+              <button type="submit" className="btn btn-success text-light w-25" onClick={() => { this.userLogin(false); }}><i className="fas fa-sign-in-alt"></i></button>
+            </div>
           </div>
         </form>
       </div>
