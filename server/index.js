@@ -189,7 +189,21 @@ app.post('/addToken', (req, res, next) => {
       pushNewSessionState(gameSession);
       res.json({ message: 'pushing new token ...' });
     });
+});
 
+app.post('/removeToken', (req, res, next) => {
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  const token = req.body.token;
+  db.query(`DELETE FROM tokens WHERE tokenId = ${token.tokenId}`)
+    .then(affectedRows => {
+      return buildSession(reqSessionId);
+    })
+    .then(session => {
+      gameSession.session = session;
+      pushNewSessionState(gameSession);
+      res.json({ message: 'removing one token ...' });
+    });
 });
 
 async function buildSession(sessionId) {
