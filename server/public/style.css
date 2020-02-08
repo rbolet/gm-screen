@@ -122,9 +122,9 @@ img {
   justify-self: center;
   justify-content: space-around;
   width: 95%;
-  height: 25%;
+  height: 30%;
   position: absolute;
-  bottom: 10%;
+  bottom: 5%;
   padding: .25rem;
   z-index: 2;
 }
