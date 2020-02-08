@@ -52,7 +52,7 @@ function GridHeaderButtons(props) {
   return (
     <div className="btn-group row d-flex justify-start">
       {ButtonElements}
-      {props.gmView && <button type="button" className="btn btn-secondary col-2" onClick={() => { props.setCampaign(props.gmView); }}><i className="fas fa-cogs" /></button>}
+      {/* {props.gmView && <button type="button" className="btn btn-secondary col-2" onClick={() => { props.setCampaign(props.gmView); }}><i className="fas fa-cogs" /></button>} */}
     </div>
   );
 }
