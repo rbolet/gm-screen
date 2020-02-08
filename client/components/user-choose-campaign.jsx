@@ -52,15 +52,21 @@ class UserChooseCampaign extends React.Component {
   render() {
     return (
       <div className="user-choose-campaign d-flex flex-column justify-content-center col-3 bg-dark rounded">
-        <h5 className="text-light text-center">{`${this.props.config.user.userRole === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
-        <div className="bg-light text-dark h-50 mb-3" id="menu-campaign-list">
-          <table className="m-0 w-100">
+        <div className="menu-box-header h-25 d-flex align-items-center justify-content-center">
+          <h5 className="text-light text-center">{`${this.props.config.user.userRole === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
+        </div>
+        <div className="bg-light text-dark h-50 mb-3 rounded" id="menu-campaign-list">
+          <table className="m-0 w-100" id="campaign-list">
             <CampaignList campaignList={this.state.campaignList} onClick={this.highlightRow} className="px-2 pt-2 list-display" />
           </table>
         </div>
-        <div className="">
-          <button type="button" className="btn btn-outline-light">New</button>
-          <button type="button" className="btn btn-secondary" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}>Select</button>
+        <div className="menu-box-footer d-flex align-items-center h-25 w-100">
+          <div className="d-flex justify-content-between w-100 px-2">
+            <button type="button" className="btn btn-outline-light w-25">
+              <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
+            </button>
+            <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-check-circle"></i></button>
+          </div>
         </div>
       </div>
     );
@@ -75,7 +81,7 @@ function CampaignList(props) {
       return (
         <tr
           key={campaign.campaignId}
-          className={`list-display w-100 ${props.selectedRow === campaign.campaignId ? 'selected' : ''}`}
+          className={'list-display w-100'}
           onClick={props.onClick.bind(this, campaign)}>
           <td className="p-2">{campaign.campaignName}</td>
         </tr>

@@ -49,6 +49,10 @@ img {
   height: 65%;
 }
 
+#menu-campaign-list{
+  overflow-y: scroll;
+}
+
 .campaign-images, .campaign-asset-details{
   height: 98%;
 }
@@ -143,4 +147,16 @@ img {
   position: absolute;
   top: 5px;
   right: 5px;
+}
+
+.file-browse{
+  position: relative;
+}
+
+#hidden-file-input {
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
