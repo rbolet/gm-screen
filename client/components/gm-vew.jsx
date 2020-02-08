@@ -1,6 +1,6 @@
 import React from 'react';
 import ImageGrid from './image-grid';
-import Tokens from './tokens';
+import TokensDisplay from './tokens';
 
 class GMView extends React.Component {
   constructor(props) {
@@ -36,24 +36,27 @@ class GMView extends React.Component {
 }
 
 function HeroView(props) {
+  let HeroView;
   if (props.session.environmentImageFileName) {
-    return (
-      <div className="hero-view col-8 h-100">
-        <div className="environment-image h-100 w-100" style={{ backgroundImage: `url(./images/${props.session.environmentImageFileName})` }}>
-          <div className="close m-1">
-            <i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i>
-          </div>
-          <Tokens tokens={props.session.tokens}/>
-        </div>
+    HeroView = (
+      <div className="environment-image h-100 w-100 position-relative" style={{ backgroundImage: `url(./images/${props.session.environmentImageFileName})` }}>
+        <div className="close m-1"><i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i></div>
       </div>
     );
   } else {
-    return (
-      <div className="placeholder d-flex justify-content-center align-items-center col-8 h-100">
-        <div className="fade-loop" id="GM-alt-text">GM-Screen</div>
+    HeroView = (
+      <div className="placeholder d-flex justify-content-center align-items-center w-100 h-100">
+        <div className="fade-loop w-100" id="GM-alt-text">GM-Screen</div>
       </div>
     );
   }
+
+  return (
+    <div className="hero-view col-8 h-100">
+      {HeroView}
+      <TokensDisplay tokens={props.session.tokens} removeToken={props.removeToken} />
+    </div>
+  );
 }
 
 export default GMView;

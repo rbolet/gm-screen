@@ -180,7 +180,7 @@ app.post('/updateEnvironment', (req, res, next) => {
 app.post('/addToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
-  db.query(`INSERT INTO tokens (sessionId, imageId) VALUES(${reqSessionId}, ${req.body.image.imageId})`)
+  db.query(`INSERT INTO tokens (sessionId, imageFileName) VALUES(${reqSessionId}, "${req.body.image.fileName}")`)
     .then(insertRes => {
       return buildSession(reqSessionId);
     })
@@ -195,7 +195,7 @@ app.post('/addToken', (req, res, next) => {
 async function buildSession(sessionId) {
   let tokens = [];
   return new Promise(resolve => {
-    db.query(`SELECT tokens.tokenId, tokens.imageId FROM tokens WHERE sessionId = ${sessionId}`)
+    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
       .then(([rows]) => {
         tokens = rows;
         return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);

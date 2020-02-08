@@ -80,17 +80,18 @@ img {
 }
 
 .environment-image{
+  display: flex;
+  justify-content: center;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  position: relative;
+  z-index: 1;
 }
 
-.placeholder {
-  opacity: .8;
-  background-size: cover;
-  height: 100%;
-  filter: blur(6px);
-  display: flex;
+.placeholder{
+  filter: blur(4px);
+  justify-content: center;
   align-items: center;
 }
 
@@ -112,16 +113,33 @@ img {
 }
 
 .fade-loop {
-  opacity: 1;
   color: white;
   animation: flickerAnimation 5s infinite;
 }
 
 .tokens-container{
-  width: 100%;
+  display:flex;
+  justify-content: space-around;
+  width: 95%;
   height: 25%;
-  position: relative;
-  top: 60%;
+  position: absolute;
+  bottom: 10%;
   padding: .25rem;
-  z-index: 1;
+  z-index: 2;
+}
+
+.token{
+  position: relative;
+  height: 100%;
+  width: 15%;
+  font-size: .75rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.close{
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }

@@ -48,6 +48,7 @@ class App extends React.Component {
     this.launchSession = this.launchSession.bind(this);
     this.updateEnvironmentImage = this.updateEnvironmentImage.bind(this);
     this.addToken = this.addToken.bind(this);
+    this.removeToken = this.removeToken.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
   }
 
@@ -224,6 +225,10 @@ class App extends React.Component {
       },
       body: requestBody
     });
+  }
+
+  removeToken(token) {
+    alert(`remove token ${token.tokenId}`);
   }
 
   connectSocket() {
