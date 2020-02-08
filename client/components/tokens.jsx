@@ -8,7 +8,7 @@ function TokensDisplay(props) {
     </div>;
   }
   return (
-    <div className={'tokens-container backdrop-blur'}>
+    <div className={`tokens-container backdrop-blur${props.tokens.length > 0 ? '' : ' d-none'}`}>
       <Tokens tokens={props.tokens} removeToken={props.removeToken}/>
       {CloseButton}
     </div>

@@ -5,6 +5,7 @@ import produce from 'immer';
 import CampaignConfig from './campaign-config';
 import GMView from './gm-vew';
 import io from 'socket.io-client';
+import PlayerView from './player-view';
 
 class App extends React.Component {
   constructor(props) {
@@ -151,8 +152,12 @@ class App extends React.Component {
           draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
         });
-
-        this.setState({ config, view: ['campaignConfig', 'default'] });
+        if (config.user.userRole === 'gm') {
+          this.setState({ config, view: ['campaignConfig', 'default'] });
+        } else {
+          this.setState({ config });
+          this.connectSocket();
+        }
       })
       .catch(error => {
         console.error(`Error in GET return: ${error}`);
@@ -193,7 +198,7 @@ class App extends React.Component {
           draft.gameSession.sessionUsers.gm = draft.user;
           draft.gameSession.session = session;
         });
-        this.setState({ config, view: ['gmView', 'default'] });
+        this.setState({ config, view: [`${config.user.userRole}View`, 'default'] });
       })
       .catch(err => console.error(err));
   }
@@ -307,7 +312,8 @@ class App extends React.Component {
           loginUser={this.loginUser}
           newUser={this.newUser}
           chooseRole={this.chooseRole}
-          setCampaign={this.setCampaign}/>;
+          setCampaign={this.setCampaign}
+          joinSession={this.joinSession}/>;
         break;
       case 'campaignConfig':
         CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} connectSocket={this.connectSocket}/>;
@@ -321,6 +327,9 @@ class App extends React.Component {
           removeToken={this.removeToken}
           clearAllTokens={this.clearAllTokens}
           onGridClick={this.onGMGridClick}/>;
+        break;
+      case 'playerView':
+        CurrentView = <PlayerView config={this.state.config}/>;
         break;
     }
     return (

@@ -24,11 +24,14 @@ class GMView extends React.Component {
 
     return (
       <div className="gm-view row no-gutters h-100 w-100">
-        <HeroView
-          session={this.props.config.gameSession.session}
-          clearEnvironmentImage={this.props.clearEnvironmentImage}
-          removeToken={this.props.removeToken}
-          clearAllTokens={this.props.clearAllTokens}/>
+        <div className="hero-view-container col-8">
+          <HeroView
+            session={this.props.config.gameSession.session}
+            isGM={true}
+            clearEnvironmentImage={this.props.clearEnvironmentImage}
+            removeToken={this.props.removeToken}
+            clearAllTokens={this.props.clearAllTokens}/>
+        </div>
         <div className="image-grid-container col-4">
           <ImageGrid onGridClick={this.onGMGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
         </div>

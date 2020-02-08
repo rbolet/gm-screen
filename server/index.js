@@ -90,7 +90,7 @@ app.post('/auth', function (req, res, next) {
 
 // POST campaigns per GM
 app.post('/gmCampaigns', (req, res, next) => {
-  const query = `SELECT * FROM campaigns WHERE campaignGM = "${req.body.userId}";`;
+  const query = `SELECT campaignId, campaignName FROM campaigns WHERE campaignGM = "${req.body.userId}";`;
   db.query(query)
     .then(([rows]) => {
       res.status(200).json(rows);
@@ -100,10 +100,18 @@ app.post('/gmCampaigns', (req, res, next) => {
 
 // GET list of active Campaigns
 app.get('/activeGameSessions', (req, res, next) => {
+  const activeCampaigns = [];
   if (!activeGameSessions.length) {
     res.status(200).json(null);
   } else {
-    res.status(200).json(activeGameSessions);
+    for (const gameSession of activeGameSessions) {
+      const campaign = {
+        campaignId: gameSession.campaignId,
+        campaignName: gameSession.campaignName
+      };
+      activeCampaigns.push(campaign);
+    }
+    res.status(200).json(activeCampaigns);
   }
 
 });
@@ -111,8 +119,8 @@ app.get('/activeGameSessions', (req, res, next) => {
 // GET images from given session
 app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
-              JOIN campaignImages ON images.imageID = campaignImages.imageID
-              WHERE campaignImages.campaignID = ${req.body.campaignId}`)
+              JOIN campaignImages ON images.imageId = campaignImages.imageId
+              WHERE campaignImages.campaignId = ${req.body.campaignId}`)
     .then(([campaignAssets]) => {
       res.status(200).json(campaignAssets).end();
     })
@@ -124,7 +132,7 @@ const activeGameSessions = [];
 app.post('/launchSession', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const user = req.body.user;
-  db.query(`SELECT sessionId FROM sessions WHERE sessions.campaignID = ${gameSession.campaignId};`)
+  db.query(`SELECT sessionId FROM sessions WHERE sessions.campaignId = ${gameSession.campaignId};`)
     .then(([sessionRes]) => {
       if (sessionRes.length > 0) {
         return sessionRes[0];
@@ -139,9 +147,13 @@ app.post('/launchSession', (req, res, next) => {
       return buildSession(result.sessionId);
     })
     .then(session => {
-      moveUsertoRoom(gameSession, user);
-      activeGameSessions.push(gameSession);
       gameSession.session = session;
+      moveUsertoRoom(gameSession, user);
+      let alreadyActive = false;
+      for (const activeSession of activeGameSessions) {
+        if (activeSession.campaignId === gameSession.campaignId) alreadyActive = true;
+      }
+      if (!alreadyActive) activeGameSessions.push(gameSession);
       res.json(session);
     })
     .catch(err => next(err));
@@ -149,8 +161,7 @@ app.post('/launchSession', (req, res, next) => {
 
 // POST for player to join a session room
 app.post('/joinSession', (req, res, next) => {
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
+
 });
 
 app.post('/configUserSocket', (req, res, next) => {

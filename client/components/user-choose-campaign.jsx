@@ -16,6 +16,14 @@ class UserChooseCampaign extends React.Component {
     this.setState({ selectedCampaign: campaign });
   }
 
+  selectCampaign() {
+    if (this.props.config.user.userRole === 'gm') {
+      this.props.setCampaign(this.state.selectedCampaign);
+    } else {
+      this.props.joinSession(this.state.selectedCampaign);
+    }
+  }
+
   componentDidMount() {
     if (this.props.config.user.userRole === 'gm') {
       const requestBody = JSON.stringify({ userId: this.props.config.user.userId });
@@ -32,7 +40,7 @@ class UserChooseCampaign extends React.Component {
         });
 
     } else {
-      fetch('/activeCampaigns', { method: 'GET' })
+      fetch('/activeGameSessions', { method: 'GET' })
         .then(res => res.json())
         .then(campaignList => {
           this.setState({ campaignList });
@@ -42,24 +50,18 @@ class UserChooseCampaign extends React.Component {
   }
 
   render() {
-    let ButtonFooter;
-    if (this.props.config.user.userRole === 'gm') {
-      ButtonFooter = (
-        <div className="">
-          <button type="button" className="btn btn-outline-light">New</button>
-          <button type="button" className="btn btn-secondary" onClick={() => this.props.setCampaign(this.state.selectedCampaign)}>Select</button>
-        </div>
-      );
-    }
     return (
       <div className="user-choose-campaign d-flex flex-column justify-content-center col-3 bg-dark rounded">
-        <h5 className="text-light text-center">{`${this.props.config.user.userId === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
+        <h5 className="text-light text-center">{`${this.props.config.user.userRole === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
         <div className="bg-light text-dark h-50 mb-3" id="menu-campaign-list">
           <table className="m-0 w-100">
             <CampaignList campaignList={this.state.campaignList} onClick={this.highlightRow} className="px-2 pt-2 list-display" />
           </table>
         </div>
-        {ButtonFooter}
+        <div className="">
+          <button type="button" className="btn btn-outline-light">New</button>
+          <button type="button" className="btn btn-secondary" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}>Select</button>
+        </div>
       </div>
     );
   }
