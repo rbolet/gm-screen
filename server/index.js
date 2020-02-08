@@ -148,10 +148,10 @@ app.post('/launchSession', (req, res, next) => {
 });
 
 // POST for player to join a session room
-app.post('/joinSession', (req, res, next) => {
-  moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
-  res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
-});
+// app.post('/joinSession', (req, res, next) => {
+//   moveUsertoRoom(req.body.sessionConfig, req.body.socketId);
+//   res.status(200).json({ message: `joined session "${req.body.sessionConfig.sessionName}"` });
+// });
 
 app.post('/configUserSocket', (req, res, next) => {
   const user = req.body;

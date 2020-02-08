@@ -177,6 +177,10 @@ class App extends React.Component {
     document.querySelector('#filepath-label').innerText = '';
   }
 
+  joinSession(gameSession) {
+
+  }
+
   launchSession() {
     const stateConfig = JSON.stringify(this.state.config);
     fetch('/launchSession', {
@@ -307,7 +311,8 @@ class App extends React.Component {
           loginUser={this.loginUser}
           newUser={this.newUser}
           chooseRole={this.chooseRole}
-          setCampaign={this.setCampaign}/>;
+          setCampaign={this.setCampaign}
+          joinSession={this.joinSession}/>;
         break;
       case 'campaignConfig':
         CurrentView = <CampaignConfig config={this.state.config} onUploadSubmit={this.onUploadSubmit} connectSocket={this.connectSocket}/>;

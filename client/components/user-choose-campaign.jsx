@@ -9,11 +9,20 @@ class UserChooseCampaign extends React.Component {
     };
 
     this.highlightRow = this.highlightRow.bind(this);
+    this.selectCampaign = this.selectCampaign.bind(this);
   }
 
   highlightRow(campaign) {
     event.target.classList.toggle('selected');
     this.setState({ selectedCampaign: campaign });
+  }
+
+  selectCampaign() {
+    if (this.props.config.user.userRole === 'gm') {
+      this.props.setCampaign(this.state.selectedCampaign);
+    } else {
+      this.props.joinSession(this.state.selectedCampaign);
+    }
   }
 
   componentDidMount() {
@@ -47,7 +56,7 @@ class UserChooseCampaign extends React.Component {
       ButtonFooter = (
         <div className="">
           <button type="button" className="btn btn-outline-light">New</button>
-          <button type="button" className="btn btn-secondary" onClick={() => this.props.setCampaign(this.state.selectedCampaign)}>Select</button>
+          <button type="button" className="btn btn-secondary" onClick={this.selectCampaign}>Select</button>
         </div>
       );
     }
