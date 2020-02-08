@@ -228,7 +228,18 @@ class App extends React.Component {
   }
 
   removeToken(token) {
-    alert(`remove token ${token.tokenId}`);
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession,
+      token
+    });
+
+    fetch('/removeToken', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
   }
 
   connectSocket() {
