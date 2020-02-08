@@ -135,7 +135,7 @@ class App extends React.Component {
     this.setState({ config, view: ['menu', 'chooseCampaign'] });
   }
 
-  setCampaign(campaign) {
+  setCampaign(campaign, skip) {
     const currentCampaign = JSON.stringify({ campaignId: campaign.campaignId });
     fetch('/campaignAssets', {
       method: 'POST',
@@ -152,7 +152,7 @@ class App extends React.Component {
           draft.gameSession.campaignName = campaign.campaignName;
           draft.gameSession.campaignAssets = campaignAssets;
         });
-        if (config.user.userRole === 'gm') {
+        if (config.user.userRole === 'gm' && !skip) {
           this.setState({ config, view: ['campaignConfig', 'default'] });
         } else {
           this.setState({ config });
@@ -326,7 +326,8 @@ class App extends React.Component {
           addToken={this.addToken}
           removeToken={this.removeToken}
           clearAllTokens={this.clearAllTokens}
-          onGridClick={this.onGMGridClick}/>;
+          onGridClick={this.onGMGridClick}
+          setCampaign={this.setCampaign}/>;
         break;
       case 'playerView':
         CurrentView = <PlayerView config={this.state.config}/>;

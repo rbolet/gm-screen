@@ -7,6 +7,9 @@ img {
     object-fit: contain;
 }
 
+button{
+  vertical-align: center;
+}
 .backdrop-blur{
   backdrop-filter: blur(8px);
 }

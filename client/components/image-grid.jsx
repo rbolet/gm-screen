@@ -22,7 +22,9 @@ class ImageGrid extends React.Component {
           <GridHeaderButtons
             campaignAssets={this.props.campaignAssets}
             selectedTab={this.state.selectedTab}
-            onClick={this.selectCategory}/>
+            onClick={this.selectCategory}
+            gmView={this.props.gmView}
+            setCampaign={this.props.setCampaign}/>
         </div>
         <GridImages
           images={this.props.campaignAssets}
@@ -50,6 +52,7 @@ function GridHeaderButtons(props) {
   return (
     <div className="btn-group row d-flex justify-start">
       {ButtonElements}
+      {props.gmView && <button type="button" className="btn btn-secondary col-2" onClick={() => { props.setCampaign(props.gmView); }}><i className="fas fa-cogs" /></button>}
     </div>
   );
 }

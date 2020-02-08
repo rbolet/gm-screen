@@ -65,7 +65,8 @@ class UserChooseCampaign extends React.Component {
             <button type="button" className="btn btn-outline-light w-25">
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
             </button>
-            <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-check-circle"></i></button>
+            {this.props.config.user.userRole === 'gm' && <button type="button" className="btn btn-secondary w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-cogs"/></button>}
+            <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}><i className="fas fa-play"></i></button>
           </div>
         </div>
       </div>
