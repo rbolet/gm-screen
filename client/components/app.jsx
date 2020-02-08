@@ -25,11 +25,8 @@ class App extends React.Component {
         gameSession: {
           campaignId: null,
           campaignName: null,
+          campaignGM: null,
           campaignAssets: [],
-          sessionUsers: {
-            gm: null,
-            players: []
-          },
           session: {
             sessionId: null,
             sessionName: null,
@@ -136,7 +133,7 @@ class App extends React.Component {
   }
 
   setCampaign(campaign, skip) {
-    const currentCampaign = JSON.stringify({ campaignId: campaign.campaignId });
+    const currentCampaign = JSON.stringify({ campaign });
     fetch('/campaignAssets', {
       method: 'POST',
       headers: {
@@ -150,6 +147,7 @@ class App extends React.Component {
         const config = produce(this.state.config, draft => {
           draft.gameSession.campaignId = campaign.campaignId;
           draft.gameSession.campaignName = campaign.campaignName;
+          draft.gameSession.campaignGM = campaign.campaignGM;
           draft.gameSession.campaignAssets = campaignAssets;
         });
         if (config.user.userRole === 'gm' && !skip) {
@@ -195,7 +193,6 @@ class App extends React.Component {
       .then(resSession => {
         const session = resSession;
         const config = produce(this.state.config, draft => {
-          draft.gameSession.sessionUsers.gm = draft.user;
           draft.gameSession.session = session;
         });
         this.setState({ config, view: [`${config.user.userRole}View`, 'default'] });
