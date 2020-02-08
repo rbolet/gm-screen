@@ -291,6 +291,7 @@ class App extends React.Component {
           updateEnvironmentImage={this.updateEnvironmentImage}
           clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}
           addToken={this.addToken}
+          removeToken={this.removeToken}
           onGridClick={this.onGMGridClick}/>;
         break;
     }
