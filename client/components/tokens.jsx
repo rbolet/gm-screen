@@ -2,7 +2,7 @@ import React from 'react';
 
 function TokensDisplay(props) {
   let CloseButton = null;
-  if (props.clearAllTokens) {
+  if (props.clearAllTokens && props.tokens.length > 0) {
     CloseButton = <div className="close m-1 d-inline">
       <i className="fa fa-times-circle" onClick={props.clearAllTokens}></i>
     </div>;
