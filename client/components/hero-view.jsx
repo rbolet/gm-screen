@@ -6,7 +6,7 @@ function HeroView(props) {
   if (props.session.environmentImageFileName) {
     HeroView = (
       <div className="environment-image h-100 w-100 position-relative" style={{ backgroundImage: `url(./images/${props.session.environmentImageFileName})` }}>
-        <div className="close m-1"><i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i></div>
+        {props.isGM && <div className="close m-1"><i className="fa fa-times-circle" onClick={props.clearEnvironmentImage}></i></div>}
       </div>
     );
   } else {

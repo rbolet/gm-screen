@@ -27,6 +27,7 @@ class GMView extends React.Component {
         <div className="hero-view-container col-8">
           <HeroView
             session={this.props.config.gameSession.session}
+            isGM={true}
             clearEnvironmentImage={this.props.clearEnvironmentImage}
             removeToken={this.props.removeToken}
             clearAllTokens={this.props.clearAllTokens}/>
