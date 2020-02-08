@@ -5,6 +5,7 @@ import produce from 'immer';
 import CampaignConfig from './campaign-config';
 import GMView from './gm-vew';
 import io from 'socket.io-client';
+import PlayerView from './player-view';
 
 class App extends React.Component {
   constructor(props) {
@@ -326,6 +327,9 @@ class App extends React.Component {
           removeToken={this.removeToken}
           clearAllTokens={this.clearAllTokens}
           onGridClick={this.onGMGridClick}/>;
+        break;
+      case 'playerView':
+        CurrentView = <PlayerView config={this.state.config}/>;
         break;
     }
     return (

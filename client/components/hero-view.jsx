@@ -18,7 +18,7 @@ function HeroView(props) {
   }
 
   return (
-    <div className="hero-view col-8 h-100 d-flex justify-content-center">
+    <div className="hero-view w-100 h-100 d-flex justify-content-center">
       {HeroView}
       <TokensDisplay tokens={props.session.tokens} removeToken={props.removeToken} clearAllTokens={props.clearAllTokens} />
     </div>
