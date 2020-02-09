@@ -53,11 +53,20 @@ class UserChooseCampaign extends React.Component {
   }
 
   render() {
+    let Headline = null;
+    if (this.props.config.user.userRole === 'gm') {
+      Headline = <h5 className="text-light text-center">
+        Choose Campaign&nbsp;&nbsp;<span><i className="fas fa-hat-wizard text-danger" /></span></h5>;
+    } else {
+      Headline = <h5 className="text-light text-center">
+        Join Campaign&nbsp;&nbsp;<span><i className="fas fa-dice text-warning" /></span></h5>;
+    }
+
     return (
       <div className="user-choose-campaign d-flex flex-column justify-content-center col-3 bg-dark rounded">
         {this.state.showModal && <NewCampaignModal toggleModal={this.toggleModal} newCampaign={this.props.newCampaign}/>}
         <div className="menu-box-header h-25 d-flex align-items-center justify-content-center">
-          <h5 className="text-light text-center">{`${this.props.config.user.userRole === 'gm' ? 'Choose' : 'Join'} Campaign`}</h5>
+          {Headline}
         </div>
         <div className="bg-light text-dark h-50 mb-3 rounded" id="menu-campaign-list">
           <table className="m-0 w-100" id="campaign-list">
@@ -70,7 +79,7 @@ class UserChooseCampaign extends React.Component {
               onClick={this.props.config.user.userRole === 'gm' ? this.toggleModal : this.refreshList}>
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
             </button>
-            {this.props.config.user.userRole === 'gm' && <button type="button" className="btn btn-secondary w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-cogs"/></button>}
+            {this.props.config.user.userRole === 'gm' && <button type="button" className="btn btn-secondary w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-file-upload"></i></button>}
             <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}><i className="fas fa-play"></i></button>
           </div>
         </div>
