@@ -84,6 +84,22 @@ class App extends React.Component {
     this.setState({ config, view: ['menu', 'chooseRole'], message });
   }
 
+  logout() {
+    const user = {
+      auth: null,
+      userId: null,
+      userName: null,
+      userRole: null,
+      socketId: null
+    };
+
+    const config = produce(this.state.config, draft => {
+      draft.user = user;
+    });
+
+    this.setState({ config, view: ['menu', 'title'] });
+  }
+
   newUser(login) {
     const loginJSON = JSON.stringify(login);
     fetch('/newUser', {
