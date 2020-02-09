@@ -6,13 +6,16 @@ import CampaignConfig from './campaign-config';
 import GMView from './gm-vew';
 import io from 'socket.io-client';
 import PlayerView from './player-view';
+import TitleScreen from './title-screen';
+import HelpModal from './help-modal';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      view: ['menu', 'login'],
+      view: ['title', 'default'],
+      showHelpModal: false,
       message: '',
       config: {
         user: {
@@ -37,6 +40,8 @@ class App extends React.Component {
       }
     };
 
+    this.start = this.start.bind(this);
+    this.toggleHelpModal = this.toggleHelpModal.bind(this);
     this.returntoMenu = this.returntoMenu.bind(this);
     this.newUser = this.newUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
@@ -50,6 +55,14 @@ class App extends React.Component {
     this.removeToken = this.removeToken.bind(this);
     this.clearAllTokens = this.clearAllTokens.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
+  }
+
+  start() {
+    this.setState({ view: ['menu', 'login'] });
+  }
+
+  toggleHelpModal() {
+    this.setState({ showHelpModal: !this.state.showHelpModal });
   }
 
   returntoMenu() {
@@ -338,6 +351,11 @@ class App extends React.Component {
   render() {
     let CurrentView;
     switch (this.state.view[0]) {
+      case 'title':
+        CurrentView = <TitleScreen
+          toggleHelpModal={this.toggleHelpModal}
+          start={this.start}/>;
+        break;
       case 'menu':
         CurrentView = <MenuView
           config={this.state.config}
@@ -368,7 +386,8 @@ class App extends React.Component {
         break;
     }
     return (
-      <div className="app row no-gutters h-100">
+      <div className="app row no-gutters h-100 d-relative">
+        {this.state.showHelpModal && <HelpModal toggleHelpModal={this.toggleHelpModal}/>}
         <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu}/>
         <div className="app-body row no-gutters">
           {CurrentView}
