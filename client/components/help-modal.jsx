@@ -4,7 +4,8 @@ class HelpModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 1
+      page: 1,
+      lastPage: 5
     };
 
     this.turnPage = this.turnPage.bind(this);
@@ -12,10 +13,10 @@ class HelpModal extends React.Component {
   }
 
   turnPage(change) {
-    const lastPage = 3;
+
     let page = this.state.page + change;
-    if (page < 1) page = lastPage;
-    if (page > lastPage) page = 1;
+    if (page < 1) page = this.state.page;
+    if (page > this.state.lastPage) page = 1;
     this.setState({ page });
   }
 
@@ -49,10 +50,10 @@ class HelpModal extends React.Component {
             </div>
             <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
               <div className="p-2 d-inline col">
-                <img src="./assets/gmscreen_userlogin_help.png" alt="user login example" className="img-fluid"/>
+                <img src="./assets/gmscreen_userlogin_help.png" className="img-fluid"/>
               </div>
               <div className="p-2 d-inline col">
-                <img src="./assets/gmscreen_chooserole_help.png" alt="user login example" className="img-fluid"/>
+                <img src="./assets/gmscreen_chooserole_help.png" className="img-fluid"/>
               </div>
             </div>
           </div>
@@ -76,16 +77,71 @@ class HelpModal extends React.Component {
             </div>
             <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
               <div className="p-2 d-inline col">
-                <img src="./assets/gmscreen_gmchoosecampaign_help.png" alt="user login example" className="img-fluid" />
+                <img src="./assets/gmscreen_gmchoosecampaign_help.png" className="img-fluid" />
               </div>
               <div className="p-2 d-inline col">
-                <img src="./assets/gmscreen_playerchoosecampaign_help.png" alt="user login example" className="img-fluid" />
+                <img src="./assets/gmscreen_playerchoosecampaign_help.png" className="img-fluid" />
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      case 4:
+        CurrentPage = (
+          <div className="page">
+            <div className="page-text px-4 row no-gutters">
+              <p>
+                GameMasters can configure a Campaign by uploading images to be shared.
+                After you have chosen the image to upload from your local computer,
+                give it a short, descriptive name rather than having to use the filename.
+                Then, choose a category for your image:
+                Environment images are background images, usually of locations your party will be visiting.
+                Secondary images are people, items,
+                or anything else of visual interest to your group that you may want to display in &#40;or independent of&#41; an Environment.
+
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_campaignconfig_help.png" className="img-fluid" />
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      case 5:
+        CurrentPage = (
+          <div className="page">
+            <div className="page-text px-4 row no-gutters">
+              <p>
+                Finally, you will arrive at your primary GM or Player screen.
+                Environment images will display prominently in the background,
+                with Secondary images displayed in an area over &#40;or without!&#41; the Environment background.
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_player_help.png" className="img-fluid" />
+              </div>
+            </div>
+            <div className="page-text px-4 row no-gutters">
+              <p>
+                <br/><hr/><br/>
+                Gamemasters additionally see all the images available in this campaign.
+                Simply click one to add display it to all the Players in your Session.
+                You can also remove images from the display, or clear all the Secondary images with one click.
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_gm_help.png" className="img-fluid" />
               </div>
             </div>
           </div>
         );
         break;
     }
+    const nextButtonIcon = `fas ${this.state.page === this.state.lastPage ? 'fa-redo-alt' : 'fa-angle-double-right'}`;
     return (
       <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
         <div className="modal-dialog-scrollable h-100 w-50">
@@ -100,8 +156,8 @@ class HelpModal extends React.Component {
             </div>
             <div className="modal-footer bg-dark">
               <div className="row w-100 justify-content-around">
-                <button className="btn btn-outline-light w-25" onClick={this.turnPage.bind(this, -1)}><i className="fas fa-angle-double-left"></i></button>
-                <button className="btn btn-outline-light w-25" onClick={this.turnPage.bind(this, 1)}><i className="fas fa-angle-double-right"></i></button>
+                <button className="btn btn-outline-light w-25" disabled={this.state.page <= 1} onClick={this.turnPage.bind(this, -1)}><i className="fas fa-angle-double-left"></i></button>
+                <button className="btn btn-outline-light w-25" onClick={this.turnPage.bind(this, 1)}><i className={nextButtonIcon}></i></button>
               </div>
             </div>
           </div>
