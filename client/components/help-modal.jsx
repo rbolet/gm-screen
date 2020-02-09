@@ -125,8 +125,8 @@ class HelpModal extends React.Component {
               </div>
             </div>
             <div className="page-text px-4 row no-gutters">
+              <div><hr/></div>
               <p>
-                <br/><hr/><br/>
                 Gamemasters additionally see all the images available in this campaign.
                 Simply click one to add display it to all the Players in your Session.
                 You can also remove images from the display, or clear all the Secondary images with one click.

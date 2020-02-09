@@ -14,8 +14,8 @@ class Header extends React.Component {
 
     return (
       <div className="app-header bg-dark col-12 row no-gutters justify-content-end">
-        <div className="col-2">
-          <div onClick={this.props.returnToMenu} className="btn btn-secondary align-self-start">Main Menu</div>
+        <div className="col-2 d-flex">
+          <div onClick={this.props.returnToMenu} className="btn btn-secondary align-self-center ml-1">Main Menu</div>
         </div>
         <div className="col-2 text-light d-flex align-self-center justify-self-center">
           {this.props.config.user.userName}&nbsp;&nbsp;
@@ -23,6 +23,7 @@ class Header extends React.Component {
         </div>
         <div className={'col-3 text-light d-flex align-items-center justify-content-center'}>{this.props.config.gameSession.campaignName}</div>
         <div className="col-5 text-light d-flex align-items-center justify-content-center">{this.props.message}</div>
+        <div></div>
       </div>
     );
   }
