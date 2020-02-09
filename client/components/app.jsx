@@ -6,7 +6,6 @@ import CampaignConfig from './campaign-config';
 import GMView from './gm-vew';
 import io from 'socket.io-client';
 import PlayerView from './player-view';
-import TitleScreen from './title-screen';
 import HelpModal from './help-modal';
 
 class App extends React.Component {
@@ -14,7 +13,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      view: ['title', 'default'],
+      view: ['menu', 'title'],
       showHelpModal: false,
       message: '',
       config: {
@@ -351,13 +350,10 @@ class App extends React.Component {
   render() {
     let CurrentView;
     switch (this.state.view[0]) {
-      case 'title':
-        CurrentView = <TitleScreen
-          toggleHelpModal={this.toggleHelpModal}
-          start={this.start}/>;
-        break;
       case 'menu':
         CurrentView = <MenuView
+          toggleHelpModal={this.toggleHelpModal}
+          start={this.start}
           config={this.state.config}
           view={this.state.view}
           loginUser={this.loginUser}

@@ -1,6 +1,7 @@
 import React from 'react';
 import UserLogin from './user-login';
 import UserChooseCampaign from './user-choose-campaign';
+import TitleScreen from './title-screen';
 
 class MenuView extends React.Component {
 
@@ -8,6 +9,11 @@ class MenuView extends React.Component {
     let MenuScreen = null;
     const config = this.props.config;
     switch (this.props.view[1]) {
+      case 'title':
+        MenuScreen = <TitleScreen
+          toggleHelpModal={this.props.toggleHelpModal}
+          start={this.props.start} />;
+        break;
       case 'login':
         MenuScreen = <UserLogin
           config={config}
@@ -38,8 +44,11 @@ function UserChooseRole(props) {
       </div>
       <div className="h-50 d-flex w-100">
         <div className="buttons w-100 d-flex flex-column justify-content-start">
-          <button onClick={() => { props.chooseRole('gm'); }} className="btn btn-secondary my-4">Game Master</button>
-          <button onClick={() => { props.chooseRole('player'); }} className="btn btn-secondary mb-4">Player</button>
+          <button onClick={() => { props.chooseRole('gm'); }} className="btn btn-secondary my-4">
+              Game Master&nbsp;&nbsp;<span><i className="fas fa-hat-wizard text-danger"/></span>
+          </button>
+          <button onClick={() => { props.chooseRole('player'); }} className="btn btn-secondary mb-4">
+            Player&nbsp;&nbsp;<span><i className="fas fa-dice text-warning"/></span></button>
         </div>
       </div>
     </div>
