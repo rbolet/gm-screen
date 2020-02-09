@@ -12,7 +12,7 @@ class HelpModal extends React.Component {
   }
 
   turnPage(change) {
-    const lastPage = 2;
+    const lastPage = 3;
     let page = this.state.page + change;
     if (page < 1) page = lastPage;
     if (page > lastPage) page = 1;
@@ -40,10 +40,10 @@ class HelpModal extends React.Component {
           <div className="page">
             <div className="page-text px-4 row no-gutters">
               <p>
-                Simply log in with your existing username and password: <span><i className="fas fa-sign-in-alt text-success"></i></span><br/>
-                or create a new one: <span><i className="fas fa-user-plus text-secondary"></i></span>
-                <br /><br />Then, choose your Role: are you the Gamemaster<span ><i className="fas fa-hat-wizard text-danger"></i>&nbsp;</span>
-                who will be choosing which visual information to share, or a Player <span ><i className="fas fa-dice text-warning"></i>&nbsp;</span>
+                Simply log in with your existing username and password,&nbsp;&nbsp;<span><i className="fas fa-sign-in-alt text-success"></i></span>&nbsp;&nbsp;
+                or create a new one&nbsp;&nbsp;<span><i className="fas fa-user-plus text-secondary"></i></span>&nbsp;&nbsp;.
+                <br /><br />Then, choose your Role: are you the Gamemaster  <span ><i className="fas fa-hat-wizard text-danger"></i></span>&nbsp;&nbsp;
+                who will be choosing which visual information to share, or a Player<span >&nbsp;&nbsp;<i className="fas fa-dice text-warning"></i></span>&nbsp;&nbsp;
                 receiving the information?
               </p>
             </div>
@@ -53,6 +53,33 @@ class HelpModal extends React.Component {
               </div>
               <div className="p-2 d-inline col">
                 <img src="./assets/gmscreen_chooserole_help.png" alt="user login example" className="img-fluid"/>
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      case 3:
+        CurrentPage = (
+          <div className="page">
+            <div className="page-text px-4 row no-gutters">
+              <p>
+                Roleplaying games are played in Campaigns.
+                If you are a Gamemaster, the Campaigns you have created will appear here.
+                You can create a new Campaign,&nbsp;&nbsp;<span><i className="fas fa-plus-circle text-secondary"></i></span>&nbsp;&nbsp;
+                configure an existing Campaign to upload to the library of images you can share,&nbsp;&nbsp;<span><i className="fas fa-file-upload text-secondary"></i></span>&nbsp;&nbsp;
+                or skip straight to resuming your Campaign, picking up your Session where you last left off.&nbsp;&nbsp;<span><i className="fas fa-play text-success"></i></span><br/><br/>
+                If you are a Player, only Campaigns with currently launched Sessions appear here;
+                simply choose the Campaign your GM has directed you to join.&nbsp;&nbsp;<span><i className="fas fa-play text-success"></i></span>&nbsp;&nbsp;
+                If it doesn&apos;t appear on the Campaign list yet, you can refresh the list at any time.&nbsp;&nbsp;<span><i className="fas fa-redo-alt text-secondary"></i></span>
+
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_gmchoosecampaign_help.png" alt="user login example" className="img-fluid" />
+              </div>
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_playerchoosecampaign_help.png" alt="user login example" className="img-fluid" />
               </div>
             </div>
           </div>
