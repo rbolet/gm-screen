@@ -83,7 +83,7 @@ button{
 }
 
 .image-grid-body{
-  height: 340px;
+  height: 80%;
   background-color: white;
   overflow-y: scroll;
 }
