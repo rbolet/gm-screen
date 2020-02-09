@@ -37,8 +37,8 @@ class HelpModal extends React.Component {
           <p>
             Simply log in with your existing username and password: <span><i className="fas fa-sign-in-alt text-success"></i></span><br/>
             or create a new one: <span><i className="fas fa-user-plus text-secondary"></i></span>
-            <br /><br />Then, choose your Role: are you the Gamemaster<span className="text-danger"><i className="fas fa-hat-wizard"></i>&nbsp;</span>
-            who will be choosing which visual information to share, or a Player <span className="text-warning"><i className="fas fa-dice"></i>&nbsp;</span>
+            <br /><br />Then, choose your Role: are you the Gamemaster<span ><i className="fas fa-hat-wizard text-danger"></i>&nbsp;</span>
+            who will be choosing which visual information to share, or a Player <span ><i className="fas fa-dice text-warning"></i>&nbsp;</span>
             receiving the information?
           </p>
         );
