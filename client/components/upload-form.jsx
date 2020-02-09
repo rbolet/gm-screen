@@ -15,12 +15,16 @@ class UploadForm extends React.Component {
   }
 
   render() {
+
+    const filePathLabel = this.state.filePathDisplay ? this.state.filePathDisplay : 'Choose a file';
+
     return (
       <div className="upload-form-container h-100 w-100">
         <form onSubmit={this.props.onUploadSubmit} id="upload-file" className="upload-form row no-gutters h-100 w-100">
           <div className="row no-gutters form-group px-2 col-12">
             <div className="col-3 row no-gutters file-browse p-2 align-items-center">
-              <input required type="file" className="custom-file-input" id="hidden-file-input" name="image-upload" onChange={this.onChange} />
+              <label id="filepath-label" className="custom-file-label text-truncate p-1 hidden-file-input" htmlFor="image-upload">{filePathLabel}</label>
+              <input required type="file" className="custom-file-input hidden-file-input" name="image-upload" onChange={this.onChange} />
               <button className="btn btn-secondary position-absolute" id="browse-button">Choose File</button>
             </div>
             <div className="col-9 row no-gutters p-2 align-items-center">

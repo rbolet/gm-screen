@@ -41,6 +41,7 @@ class App extends React.Component {
     this.newUser = this.newUser.bind(this);
     this.loginUser = this.loginUser.bind(this);
     this.chooseRole = this.chooseRole.bind(this);
+    this.newCampaign = this.newCampaign.bind(this);
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
@@ -142,6 +143,20 @@ class App extends React.Component {
     this.setState({ config, view: ['menu', 'chooseCampaign'] });
   }
 
+  newCampaign(campaignName) {
+    const newCampaignBody = JSON.stringify({ user: this.state.config.user, campaignName });
+    fetch('/newCampaign', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: newCampaignBody
+    })
+      .then(res => res.json())
+      .then(campaign => { this.setCampaign(campaign); })
+      .catch(err => console.error(err));
+  }
+
   setCampaign(campaign, skip) {
     const currentCampaign = JSON.stringify({ campaign });
     fetch('/campaignAssets', {
@@ -179,10 +194,15 @@ class App extends React.Component {
     fetch('/upload', { method: 'POST', 'content-type': 'multipart/form-data', body: formData })
       .then(res => res.json())
       .then(result => {
-        const config = produce(this.state.config, draft => {
-          draft.gameSession.campaignAssets.push(result);
-        });
-        this.setState({ config });
+        const gameSession = this.state.config.gameSession;
+        const campaign = {
+          campaignId: gameSession.campaignId,
+          campaignName: gameSession.campaignName,
+          campaignGM: gameSession.campaignGM
+        };
+
+        this.setState({ message: `uploaded ${result.image.alias}` });
+        this.setCampaign(campaign);
       })
       .catch(err => { console.error(err); });
 
@@ -325,6 +345,7 @@ class App extends React.Component {
           loginUser={this.loginUser}
           newUser={this.newUser}
           chooseRole={this.chooseRole}
+          newCampaign={this.newCampaign}
           setCampaign={this.setCampaign}
           joinSession={this.joinSession}/>;
         break;
