@@ -10,6 +10,36 @@ img {
 button{
   vertical-align: center;
 }
+
+.title{
+  font-family: 'Rakkas';
+  font-size: 8rem;
+  color: white;
+}
+
+.start{
+  font-size: 4rem;
+}
+
+.info{
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.modal-blur{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 10;
+}
+
+#help-modal{
+  color: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .backdrop-blur{
   backdrop-filter: blur(8px);
 }
@@ -20,14 +50,14 @@ button{
   height: 93vh;
   background-image: linear-gradient(to bottom, #000807, rgb(214, 214, 214));
   background-size: 200% 200%;
-  animation: gradientShift 10s ease infinite;
+  animation: gradientShift 8s ease infinite;
 
 }
 
 @keyframes gradientShift{
-    0% {background-position: 40% 0%}
-    50% {background-position: 40% 25%}
-    100% {background-position: 40% 0%}
+    0% {background-position: 00% 0%}
+    50% {background-position: 0% 20%}
+    100% {background-position: 0% 0%}
 
 }
 
@@ -115,7 +145,7 @@ button{
   align-items: center;
 }
 
-.placeholder *{
+.placeholder * {
   font-family: 'Rakkas';
   font-size: 10rem;
   text-align: center;
