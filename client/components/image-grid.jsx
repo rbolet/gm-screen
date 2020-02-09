@@ -72,7 +72,7 @@ function GridImages(props) {
   });
 
   return (
-    <div className="w-100 image-grid-body d-flex flex-wrap justify-content-around mb-1 rounded">
+    <div className="w-100 image-grid-body mb-1 rounded">
       {imageElements}
     </div>);
 }

@@ -98,6 +98,17 @@ app.post('/gmCampaigns', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/newCampaign', (req, res, next) => {
+  db.query(`INSERT INTO campaigns(campaignGM, campaignName) VALUES(${req.body.user.userId}, "${req.body.campaignName}");`)
+    .then(insertRes => {
+      return db.query(`SELECT * FROM campaigns WHERE campaignId = ${insertRes[0].insertId}`);
+    })
+    .then(([newCampaign]) => {
+      res.json(newCampaign[0]);
+    })
+    .catch(err => next(err));
+});
+
 // GET list of active Campaigns
 app.get('/activeGameSessions', (req, res, next) => {
   const activeCampaigns = [];
@@ -116,7 +127,7 @@ app.get('/activeGameSessions', (req, res, next) => {
 
 });
 
-// GET images from given session
+// POST images from given session
 app.post('/campaignAssets', (req, res, next) => {
   db.query(`SELECT * FROM images
               JOIN campaignImages ON images.imageId = campaignImages.imageId
@@ -270,10 +281,13 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
   db.query(insertImageSQL)
     .then(result => {
       responseObject = {
-        imageId: result[0].insertId,
-        filename: req.file.filename,
-        alias: req.body.alias,
-        category: req.body.category
+        image: {
+          imageId: result[0].insertId,
+          filename: req.file.filename,
+          alias: req.body.alias,
+          category: req.body.category
+        },
+        campaignId: req.body.campaignId
       };
       const insertCampaignImageSQL = `INSERT INTO
                                       campaignImages (campaignId, imageId)
