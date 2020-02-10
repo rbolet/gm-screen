@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 // const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
+const fs = require('fs');
 const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
 // make public folder files available, such as index.html
@@ -238,24 +239,22 @@ app.post('/clearAllTokens', (req, res, next) => {
     });
 });
 
-async function buildSession(sessionId) {
-  let tokens = [];
-  return new Promise(resolve => {
-    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
-      .then(([rows]) => {
-        tokens = rows;
-        return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
-      })
-      .then(([result]) => {
-        return {
-          sessionId: result[0].sessionId,
-          environmentImageFileName: result[0].environmentImageFileName,
-          tokens
-        };
-      })
-      .then(done => resolve(done));
-  });
-}
+app.post('/deleteCampaign', (req, res, next) => {
+  let imageIdsString = null;
+  db.query(`SELECT imageId FROM campaignImages WHERE campaignId = ${req.body.campaignId}`)
+    .then(([rows]) => {
+      const imageIdArray = [];
+      for (const result of rows) {
+        imageIdArray.push(result.imageId);
+      }
+      imageIdsString = imageIdArray.join();
+      return db.query(`DELETE FROM campaigns WHERE campaignId = ${req.body.campaignId}`);
+    })
+    .then(rowsAffected => {
+      deleteImagesById(imageIdsString);
+      res.json({ message: `deleting ${req.body.campaignName} ...` });
+    });
+});
 
 // upload middleware config
 const storage = multer.diskStorage({
@@ -303,6 +302,40 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
     })
     .catch(error => { next(error); });
 });
+
+function deleteImagesById(imageIdsString) {
+  db.query(`SELECT * FROM images WHERE imageId IN (${imageIdsString});`)
+    .then(([rows]) => {
+      for (const image of rows) {
+        fs.unlink(path.join(staticPath, 'images', image.fileName), err => {
+          if (err) throw err;
+        });
+      }
+      return db.query(`DELETE FROM images WHERE imageId IN (${imageIdsString})`);
+    })
+    .then(rowsAffected => {
+    })
+    .catch(err => { throw err; });
+}
+
+function buildSession(sessionId) {
+  let tokens = [];
+  return new Promise(resolve => {
+    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
+      .then(([rows]) => {
+        tokens = rows;
+        return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
+      })
+      .then(([result]) => {
+        return {
+          sessionId: result[0].sessionId,
+          environmentImageFileName: result[0].environmentImageFileName,
+          tokens
+        };
+      })
+      .then(done => resolve(done));
+  });
+}
 
 // Socket io set up and incoming event handling
 const userSockets = {};
