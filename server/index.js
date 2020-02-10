@@ -239,6 +239,23 @@ app.post('/clearAllTokens', (req, res, next) => {
     });
 });
 
+app.post('/deleteCampaign', (req, res, next) => {
+  let imageIdsString = null;
+  db.query(`SELECT imageId FROM campaignImages WHERE campaignId = ${req.body.campaignId}`)
+    .then(([rows]) => {
+      const imageIdArray = [];
+      for (const result of rows) {
+        imageIdArray.push(result.imageId);
+      }
+      imageIdsString = imageIdArray.join();
+      return db.query(`DELETE FROM campaigns WHERE campaignId = ${req.body.campaignId}`);
+    })
+    .then(rowsAffected => {
+      deleteImagesById(imageIdsString);
+      res.json({ message: `deleting ${req.body.campaignName} ...` });
+    });
+});
+
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -286,18 +303,22 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-// app.post('/testfs', (req, res, next) => {
-//   db.query(`SELECT fileName FROM images WHERE imageId = ${req.body.imageId}`)
-//     .then(([rows]) => {
-//       const fileName = path.join(staticPath, 'images', rows[0].fileName);
-//       fs.unlink(fileName, err => {
-//         res.json(fileName);
-//         if (err) throw err;
-//       });
-//     });
-// });
+function deleteImagesById(imageIdsString) {
+  db.query(`SELECT * FROM images WHERE imageId IN (${imageIdsString});`)
+    .then(([rows]) => {
+      for (const image of rows) {
+        fs.unlink(path.join(staticPath, 'images', image.fileName), err => {
+          if (err) throw err;
+        });
+      }
+      return db.query(`DELETE FROM images WHERE imageId IN (${imageIdsString})`);
+    })
+    .then(rowsAffected => {
+    })
+    .catch(err => { throw err; });
+}
 
-async function buildSession(sessionId) {
+function buildSession(sessionId) {
   let tokens = [];
   return new Promise(resolve => {
     db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
