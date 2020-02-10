@@ -59,7 +59,7 @@ class UserLogin extends React.Component {
         loginMessage = 'Please enter your username and password';
     }
     return (
-      <div className="user-login d-flex flex-column justify-content-center col-3 bg-dark rounded">
+      <div className="user-login d-flex flex-column justify-content-center col-4 bg-dark rounded">
         <div className="w-100 h-25 text-light text-center p-2 d-flex align-items-center justify-content-center menu-box-header">
           <div id="login-response" className="pt-1">{loginMessage}</div>
         </div>

@@ -400,7 +400,7 @@ class App extends React.Component {
     return (
       <div className="app row no-gutters h-100 d-relative">
         {this.state.showHelpModal && <HelpModal toggleHelpModal={this.toggleHelpModal}/>}
-        <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu}/>
+        <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu} toggleHelpModal={this.toggleHelpModal}/>
         <div className="app-body row no-gutters">
           {CurrentView}
         </div>
