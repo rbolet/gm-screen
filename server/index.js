@@ -243,16 +243,18 @@ app.post('/deleteCampaign', (req, res, next) => {
   let imageIdsString = null;
   db.query(`SELECT imageId FROM campaignImages WHERE campaignId = ${req.body.campaignId}`)
     .then(([rows]) => {
-      const imageIdArray = [];
-      for (const result of rows) {
-        imageIdArray.push(result.imageId);
+      if (rows.length > 0) {
+        const imageIdArray = [];
+        for (const result of rows) {
+          imageIdArray.push(result.imageId);
+        }
+        imageIdsString = imageIdArray.join();
       }
-      imageIdsString = imageIdArray.join();
+      res.json({ message: `deleting ${req.body.campaignName} ...` });
       return db.query(`DELETE FROM campaigns WHERE campaignId = ${req.body.campaignId}`);
     })
     .then(rowsAffected => {
-      deleteImagesById(imageIdsString);
-      res.json({ message: `deleting ${req.body.campaignName} ...` });
+      if (imageIdsString) deleteImagesById(imageIdsString);
     });
 });
 
