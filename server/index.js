@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 // const session = require('express-session');
 const db = require('./_config');
 const io = require('socket.io')(http);
+const fs = require('fs');
 const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
 // make public folder files available, such as index.html
@@ -238,25 +239,6 @@ app.post('/clearAllTokens', (req, res, next) => {
     });
 });
 
-async function buildSession(sessionId) {
-  let tokens = [];
-  return new Promise(resolve => {
-    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
-      .then(([rows]) => {
-        tokens = rows;
-        return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
-      })
-      .then(([result]) => {
-        return {
-          sessionId: result[0].sessionId,
-          environmentImageFileName: result[0].environmentImageFileName,
-          tokens
-        };
-      })
-      .then(done => resolve(done));
-  });
-}
-
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -303,6 +285,36 @@ app.post('/upload', upload.single('image-upload'), (req, res, next) => {
     })
     .catch(error => { next(error); });
 });
+
+// app.post('/testfs', (req, res, next) => {
+//   db.query(`SELECT fileName FROM images WHERE imageId = ${req.body.imageId}`)
+//     .then(([rows]) => {
+//       const fileName = path.join(staticPath, 'images', rows[0].fileName);
+//       fs.unlink(fileName, err => {
+//         res.json(fileName);
+//         if (err) throw err;
+//       });
+//     });
+// });
+
+async function buildSession(sessionId) {
+  let tokens = [];
+  return new Promise(resolve => {
+    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
+      .then(([rows]) => {
+        tokens = rows;
+        return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
+      })
+      .then(([result]) => {
+        return {
+          sessionId: result[0].sessionId,
+          environmentImageFileName: result[0].environmentImageFileName,
+          tokens
+        };
+      })
+      .then(done => resolve(done));
+  });
+}
 
 // Socket io set up and incoming event handling
 const userSockets = {};
