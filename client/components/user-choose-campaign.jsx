@@ -12,12 +12,20 @@ class UserChooseCampaign extends React.Component {
     this.highlightRow = this.highlightRow.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+    this.onDeleteCampaign = this.onDeleteCampaign.bind(this);
 
   }
 
   highlightRow(campaign) {
     event.target.classList.toggle('selected');
     this.setState({ selectedCampaign: campaign });
+  }
+
+  onDeleteCampaign(campaign) {
+    const deletePromise = new Promise(resolve => {
+      resolve(this.props.deleteCampaign(campaign));
+    });
+    deletePromise.then(this.refreshList());
   }
 
   toggleModal() {
@@ -73,7 +81,7 @@ class UserChooseCampaign extends React.Component {
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
               highlightRow={this.highlightRow}
-              deleteCampaign={this.props.deleteCampaign}/>
+              onDeleteCampaign={this.props.onDeleteCampaign}/>
           </table>
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
@@ -103,7 +111,7 @@ function CampaignList(props) {
           onClick={props.highlightRow.bind(this, campaign)}>
           <td className="p-2 col">{campaign.campaignName}</td>
           <td className="d-flex justify-content-end col p-0 m-0">
-            <button className="btn btn-danger" onClick={props.deleteCampaign.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
+            <button className="btn btn-danger" onClick={props.onDeleteCampaign.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
         </tr>
       );
     });

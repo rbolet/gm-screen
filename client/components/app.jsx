@@ -187,7 +187,19 @@ class App extends React.Component {
   }
 
   deleteCampaign(campaign) {
-    alert(campaign);
+    const campaignIdToDelete = JSON.stringify({ campaignId: campaign.campaignId });
+    fetch('/deleteCampaign', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: campaignIdToDelete
+    })
+      .then(jsonRes => jsonRes.json())
+      .then(message => {
+
+      });
+
   }
 
   setCampaign(campaign, skip) {
