@@ -38,7 +38,7 @@ class MenuView extends React.Component {
 function UserChooseRole(props) {
 
   return (
-    <div className="user-choose-role d-flex flex-column justify-content-center col-3 bg-dark rounded">
+    <div className="user-choose-role d-flex flex-column justify-content-center col-4 bg-dark rounded">
       <div className="menu-box-header d-flex align-items-center justify-content-center p-2 h-25">
         <h5 className="text-light text-center mb-3">Choose Your Role</h5>
       </div>

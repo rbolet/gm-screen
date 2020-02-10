@@ -63,7 +63,7 @@ class UserChooseCampaign extends React.Component {
     }
 
     return (
-      <div className="user-choose-campaign d-flex flex-column justify-content-center col-3 bg-dark rounded">
+      <div className="user-choose-campaign d-flex flex-column justify-content-center col-4 bg-dark rounded">
         {this.state.showModal && <NewCampaignModal toggleModal={this.toggleModal} newCampaign={this.props.newCampaign}/>}
         <div className="menu-box-header h-25 d-flex align-items-center justify-content-center">
           {Headline}
