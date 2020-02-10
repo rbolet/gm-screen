@@ -70,7 +70,10 @@ class UserChooseCampaign extends React.Component {
         </div>
         <div className="bg-light text-dark h-50 mb-3 rounded" id="menu-campaign-list">
           <table className="m-0 w-100" id="campaign-list">
-            <CampaignList campaignList={this.state.campaignList} onClick={this.highlightRow} className="px-2 pt-2 list-display" />
+            <CampaignList className="px-2 pt-2 list-display"
+              campaignList={this.state.campaignList}
+              highlightRow={this.highlightRow}
+              deleteCampaign={this.props.deleteCampaign}/>
           </table>
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
@@ -96,10 +99,11 @@ function CampaignList(props) {
       return (
         <tr
           key={campaign.campaignId}
-          className={'list-display w-100'}
-          onClick={props.onClick.bind(this, campaign)}>
-          <td className="p-2">{campaign.campaignName}</td>
-          <td><button className="btn btn-danger"><i className="far fa-trash-alt text-white"></i></button></td>
+          className={'list-display w-100 border-bottom row-no-gutters'}
+          onClick={props.highlightRow.bind(this, campaign)}>
+          <td className="p-2 col">{campaign.campaignName}</td>
+          <td className="d-flex justify-content-end col p-0 m-0">
+            <button className="btn btn-danger" onClick={props.deleteCampaign.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
         </tr>
       );
     });

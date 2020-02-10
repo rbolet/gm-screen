@@ -46,6 +46,7 @@ class App extends React.Component {
     this.loginUser = this.loginUser.bind(this);
     this.chooseRole = this.chooseRole.bind(this);
     this.newCampaign = this.newCampaign.bind(this);
+    this.deleteCampaign = this.deleteCampaign.bind(this);
     this.setCampaign = this.setCampaign.bind(this);
     this.onUploadSubmit = this.onUploadSubmit.bind(this);
     this.launchSession = this.launchSession.bind(this);
@@ -183,6 +184,10 @@ class App extends React.Component {
       .then(res => res.json())
       .then(campaign => { this.setCampaign(campaign); })
       .catch(err => console.error(err));
+  }
+
+  deleteCampaign(campaign) {
+    alert(campaign);
   }
 
   setCampaign(campaign, skip) {
@@ -376,6 +381,7 @@ class App extends React.Component {
           newUser={this.newUser}
           chooseRole={this.chooseRole}
           newCampaign={this.newCampaign}
+          deleteCampaign={this.deleteCampaign}
           setCampaign={this.setCampaign}
           joinSession={this.joinSession}/>;
         break;
