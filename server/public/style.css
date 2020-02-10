@@ -128,13 +128,12 @@ button{
 
 .selected-tab{
   color: white;
-  background-color: #343a40;
+  background-color: #868e96;
 }
 
 .selected{
   color: white;
-  background-color: #932b2b;
-  opacity: .5;
+  background-color: #868e96;
 }
 
 .environment-image{

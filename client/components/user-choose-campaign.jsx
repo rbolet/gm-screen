@@ -10,7 +10,7 @@ class UserChooseCampaign extends React.Component {
       showConfirmDeleteModal: false
     };
 
-    this.highlightRow = this.highlightRow.bind(this);
+    this.setSelectedCampaign = this.setSelectedCampaign.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.toggleNewCampaignModal = this.toggleNewCampaignModal.bind(this);
     this.toggleConfirmDeleteModal = this.toggleConfirmDeleteModal.bind(this);
@@ -18,8 +18,7 @@ class UserChooseCampaign extends React.Component {
 
   }
 
-  highlightRow(campaign) {
-    event.target.classList.toggle('selected');
+  setSelectedCampaign(campaign) {
     this.setState({ selectedCampaign: campaign });
   }
 
@@ -102,7 +101,7 @@ class UserChooseCampaign extends React.Component {
           <table className="m-0 w-100" id="campaign-list">
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
-              highlightRow={this.highlightRow}
+              setSelectedCampaign={this.setSelectedCampaign}
               toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}/>
           </table>
         </div>
@@ -121,23 +120,39 @@ class UserChooseCampaign extends React.Component {
   }
 }
 
-function CampaignList(props) {
-  if (!props.campaignList) {
-    return null;
-  } else {
-    const CampaignRows = props.campaignList.map(campaign => {
-      return (
-        <tr
-          key={campaign.campaignId}
-          className={'list-display w-100 border-bottom row-no-gutters'}
-          onClick={props.highlightRow.bind(this, campaign)}>
-          <td className="p-2 col">{campaign.campaignName}</td>
-          <td className="d-flex justify-content-end col p-0 m-0">
-            <button className="btn btn-danger" onClick={props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
-        </tr>
-      );
-    });
-    return <tbody>{CampaignRows}</tbody>;
+class CampaignList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.highlightRow = this.highlightRow.bind(this);
+  }
+
+  highlightRow(campaign) {
+    const tableRows = document.getElementById('campaign-table-body').children;
+    for (let rowIndex = 0; rowIndex < tableRows.length; rowIndex++) {
+      tableRows[rowIndex].classList.remove('selected');
+    }
+    event.target.parentElement.classList.add('selected');
+    this.props.setSelectedCampaign(campaign);
+  }
+
+  render() {
+    if (!this.props.campaignList) {
+      return null;
+    } else {
+      const CampaignRows = this.props.campaignList.map(campaign => {
+        return (
+          <tr
+            key={campaign.campaignId}
+            className={'list-display w-100 border-bottom row-no-gutters'}
+            onClick={this.highlightRow.bind(this, campaign)}>
+            <td className="p-2 col">{campaign.campaignName}</td>
+            <td className="d-flex justify-content-end col p-0 m-0">
+              <button className="btn btn-danger" onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
+          </tr>
+        );
+      });
+      return <tbody id="campaign-table-body">{CampaignRows}</tbody>;
+    }
   }
 }
 
