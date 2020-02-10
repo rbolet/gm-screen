@@ -81,7 +81,7 @@ class UserChooseCampaign extends React.Component {
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
               highlightRow={this.highlightRow}
-              onDeleteCampaign={this.props.onDeleteCampaign}/>
+              onDeleteCampaign={this.onDeleteCampaign}/>
           </table>
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
