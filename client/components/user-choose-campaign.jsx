@@ -99,6 +99,7 @@ function CampaignList(props) {
           className={'list-display w-100'}
           onClick={props.onClick.bind(this, campaign)}>
           <td className="p-2">{campaign.campaignName}</td>
+          <td><button className="btn btn-danger"><i className="far fa-trash-alt text-white"></i></button></td>
         </tr>
       );
     });
