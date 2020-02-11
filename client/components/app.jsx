@@ -118,7 +118,7 @@ class App extends React.Component {
           const config = produce(this.state.config, draft => {
             draft.user.auth = 'ok';
             draft.user.userId = jsonRes.userId;
-            draft.userName = login.userName;
+            draft.user.userName = login.userName;
           });
           this.setState({ config, view: ['menu', 'chooseRole'] });
         }

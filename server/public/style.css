@@ -120,21 +120,24 @@ button{
   height: 100%;
 }
 
+.image-grid-header{
+  height: 10%;
+}
+
 .image-grid-body{
-  height: 80%;
+  height: 90%;
   background-color: white;
   overflow-y: scroll;
 }
 
 .selected-tab{
   color: white;
-  background-color: #343a40;
+  background-color: #868e96;
 }
 
 .selected{
   color: white;
-  background-color: #932b2b;
-  opacity: .5;
+  background-color: #868e96;
 }
 
 .environment-image{
@@ -201,16 +204,4 @@ button{
   position: absolute;
   top: 5px;
   right: 5px;
-}
-
-.file-browse{
-  position: relative;
-}
-
-.hidden-file-input {
-  opacity: 0;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
 }

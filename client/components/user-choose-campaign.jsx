@@ -10,7 +10,7 @@ class UserChooseCampaign extends React.Component {
       showConfirmDeleteModal: false
     };
 
-    this.highlightRow = this.highlightRow.bind(this);
+    this.setSelectedCampaign = this.setSelectedCampaign.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.toggleNewCampaignModal = this.toggleNewCampaignModal.bind(this);
     this.toggleConfirmDeleteModal = this.toggleConfirmDeleteModal.bind(this);
@@ -18,8 +18,7 @@ class UserChooseCampaign extends React.Component {
 
   }
 
-  highlightRow(campaign) {
-    event.target.classList.toggle('selected');
+  setSelectedCampaign(campaign) {
     this.setState({ selectedCampaign: campaign });
   }
 
@@ -102,18 +101,28 @@ class UserChooseCampaign extends React.Component {
           <table className="m-0 w-100" id="campaign-list">
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
-              highlightRow={this.highlightRow}
+              setSelectedCampaign={this.setSelectedCampaign}
               toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}/>
           </table>
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
           <div className="d-flex justify-content-between w-100 px-2">
             <button type="button" className="btn btn-outline-light w-25"
-              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}>
+              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}
+              disabled={!this.state.selectedCampaign && this.props.config.user.userRole === 'gm'}>
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
             </button>
-            {this.props.config.user.userRole === 'gm' && <button type="button" className="btn btn-secondary w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-file-upload"></i></button>}
-            <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}><i className="fas fa-play"></i></button>
+            {this.props.config.user.userRole === 'gm' &&
+            <button type="button" className="btn btn-secondary w-25"
+              disabled={!this.state.selectedCampaign}
+              onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}>
+              <i className="fas fa-file-upload"/>
+            </button>}
+            <button type="button" className="btn btn-success w-25"
+              disabled={!this.state.selectedCampaign}
+              onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}>
+              <i className="fas fa-play"/>
+            </button>
           </div>
         </div>
       </div>
@@ -121,23 +130,39 @@ class UserChooseCampaign extends React.Component {
   }
 }
 
-function CampaignList(props) {
-  if (!props.campaignList) {
-    return null;
-  } else {
-    const CampaignRows = props.campaignList.map(campaign => {
-      return (
-        <tr
-          key={campaign.campaignId}
-          className={'list-display w-100 border-bottom row-no-gutters'}
-          onClick={props.highlightRow.bind(this, campaign)}>
-          <td className="p-2 col">{campaign.campaignName}</td>
-          <td className="d-flex justify-content-end col p-0 m-0">
-            <button className="btn btn-danger" onClick={props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
-        </tr>
-      );
-    });
-    return <tbody>{CampaignRows}</tbody>;
+class CampaignList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.highlightRow = this.highlightRow.bind(this);
+  }
+
+  highlightRow(campaign) {
+    const tableRows = document.getElementById('campaign-table-body').children;
+    for (let rowIndex = 0; rowIndex < tableRows.length; rowIndex++) {
+      tableRows[rowIndex].classList.remove('selected');
+    }
+    event.target.parentElement.classList.add('selected');
+    this.props.setSelectedCampaign(campaign);
+  }
+
+  render() {
+    if (!this.props.campaignList) {
+      return null;
+    } else {
+      const CampaignRows = this.props.campaignList.map(campaign => {
+        return (
+          <tr
+            key={campaign.campaignId}
+            className={'list-display w-100 border-bottom row-no-gutters'}
+            onClick={this.highlightRow.bind(this, campaign)}>
+            <td className="p-2 col">{campaign.campaignName}</td>
+            <td className="d-flex justify-content-end col p-0 m-0">
+              <button className="btn btn-danger" onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
+          </tr>
+        );
+      });
+      return <tbody id="campaign-table-body">{CampaignRows}</tbody>;
+    }
   }
 }
 

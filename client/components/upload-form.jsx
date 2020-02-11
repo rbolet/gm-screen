@@ -20,21 +20,23 @@ class UploadForm extends React.Component {
 
     return (
       <div className="upload-form-container h-100 w-100">
-        <form onSubmit={this.props.onUploadSubmit} id="upload-file" className="upload-form row no-gutters h-100 w-100">
-          <div className="row no-gutters form-group px-2 col-12">
-            <div className="col-3 row no-gutters file-browse p-2 align-items-center">
-              <label id="filepath-label" className="custom-file-label text-truncate p-1 hidden-file-input" htmlFor="image-upload">{filePathLabel}</label>
-              <input required type="file" className="custom-file-input hidden-file-input" name="image-upload" onChange={this.onChange} />
-              <button className="btn btn-secondary position-absolute" id="browse-button">Choose File</button>
-            </div>
-            <div className="col-9 row no-gutters p-2 align-items-center">
-              <label className="text-white mr-2 col-form-label" htmlFor="alias">Image Name</label>
-              <input required className="col form-control" id="alias" name="alias" placeholder="Your name for this image" />
+        <form onSubmit={this.props.onUploadSubmit} id="upload-file" className="upload-form row no-gutters h-100 w-100 border border-secondary rounded">
+          <div className="row no-gutters form-group p-2 m-0 col-12 align-items-center">
+            <div className="col row no-gutters file-browse align-items-center justify-content-around">
+              <div className="col-9">
+                <label id="filepath-label" className="custom-file-label text-truncate m-0 w-100" htmlFor="image-upload">{filePathLabel}</label>
+                <input required type="file" className="custom-file-input w-100" name="image-upload" onChange={this.onChange} />
+              </div>
+              <button type="submit" className="upload-form-submit col-2 btn btn-outline-success"><i className="fas fa-file-upload"></i></button>
             </div>
           </div>
-          <div className="row no-gutters form-group px-2 col-12 align-items-center justify-content-around">
-            <div className="col-9 row form-group align-items-center">
-              <label htmlFor="category" className="text-white col-form-label">Category</label>
+          <div className="row no-gutters form-group m-0 px-2 col-12 align-items-center justify-content-around">
+            <div className="col row no-gutters p-2 align-items-center">
+              <label className="text-white col-form-label mr-2" htmlFor="alias">Alias</label>
+              <input required className="col form-control pl-2" id="alias" name="alias" placeholder="Your name for this image" />
+            </div>
+            <div className="col row no-gutters m-0 form-group align-items-center">
+              <label htmlFor="category" className="text-white col-form-label mr-2">Category</label>
               <div className="col">
                 <select required name="category" id="category" className="form-control">
                   <option></option>
@@ -43,7 +45,6 @@ class UploadForm extends React.Component {
                 </select>
               </div>
             </div>
-            <input type="submit" value="Upload" className="btn btn-outline-light col-3 form-group" />
           </div>
           <input type="hidden" name="campaignId" value={this.props.campaignId}/>
         </form>

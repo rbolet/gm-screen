@@ -22,7 +22,7 @@ class CampaignConfig extends React.Component {
     return (
       <div className="campaign-config row no-gutters h-100 w-100 align-items-center">
         <div className="col-6 row no-gutters campaign-images p-1">
-          <div className="square bg-dark rounded">
+          <div className="square bg-dark rounded pb-2">
             <div className="col-12 h-75 row no-gutters pt-1">
               <ImageGrid onGridClick={this.onGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
             </div>
