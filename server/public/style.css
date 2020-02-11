@@ -120,8 +120,12 @@ button{
   height: 100%;
 }
 
+.image-grid-header{
+  height: 10%;
+}
+
 .image-grid-body{
-  height: 80%;
+  height: 90%;
   background-color: white;
   overflow-y: scroll;
 }
@@ -200,16 +204,4 @@ button{
   position: absolute;
   top: 5px;
   right: 5px;
-}
-
-.file-browse{
-  position: relative;
-}
-
-.hidden-file-input {
-  opacity: 0;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
 }

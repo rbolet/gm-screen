@@ -18,7 +18,7 @@ class ImageGrid extends React.Component {
 
     return (
       <div className="image-grid w-100 color-light-grey">
-        <div className="grid-header px-3">
+        <div className="image-grid-header px-3">
           <GridHeaderButtons
             campaignAssets={this.props.campaignAssets}
             selectedTab={this.state.selectedTab}
