@@ -107,9 +107,8 @@ class UserChooseCampaign extends React.Component {
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
           <div className="d-flex justify-content-between w-100 px-2">
-            <button type="button" className="btn btn-outline-light w-25"
-              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}
-              disabled={!this.state.selectedCampaign && this.props.config.user.userRole === 'gm'}>
+            <button type="button" className="btn btn-outline-success w-25"
+              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}>
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
             </button>
             {this.props.config.user.userRole === 'gm' &&
