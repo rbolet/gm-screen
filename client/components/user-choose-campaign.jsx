@@ -108,11 +108,21 @@ class UserChooseCampaign extends React.Component {
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
           <div className="d-flex justify-content-between w-100 px-2">
             <button type="button" className="btn btn-outline-light w-25"
-              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}>
+              onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}
+              disabled={!this.state.selectedCampaign && this.props.config.user.userRole === 'gm'}>
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
             </button>
-            {this.props.config.user.userRole === 'gm' && <button type="button" className="btn btn-secondary w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}><i className="fas fa-file-upload"></i></button>}
-            <button type="button" className="btn btn-success w-25" onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}><i className="fas fa-play"></i></button>
+            {this.props.config.user.userRole === 'gm' &&
+            <button type="button" className="btn btn-secondary w-25"
+              disabled={!this.state.selectedCampaign}
+              onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}>
+              <i className="fas fa-file-upload"/>
+            </button>}
+            <button type="button" className="btn btn-success w-25"
+              disabled={!this.state.selectedCampaign}
+              onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}>
+              <i className="fas fa-play"/>
+            </button>
           </div>
         </div>
       </div>
