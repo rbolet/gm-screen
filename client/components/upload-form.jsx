@@ -29,7 +29,7 @@ class UploadForm extends React.Component {
             </div>
             <div className="col-9 row no-gutters p-2 align-items-center">
               <label className="text-white mr-2 col-form-label" htmlFor="alias">Image Name</label>
-              <input required className="col form-control" id="alias" name="alias" placeholder="Your name for this image" />
+              <input required className="col form-control p-2" id="alias" name="alias" placeholder="Your name for this image" />
             </div>
           </div>
           <div className="row no-gutters form-group px-2 col-12 align-items-center justify-content-around">
