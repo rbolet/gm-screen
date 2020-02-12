@@ -207,3 +207,29 @@ button{
   top: 5px;
   right: 5px;
 }
+
+#sorry{
+  display: none;
+}
+
+@media screen and (max-width: 1020px){
+
+
+  #sorry{
+    display: block;
+    position: fixed;
+    overflow: hidden;
+    z-index: 2000;
+    backdrop-filter: blur(100px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    color: black;
+    padding: 2rem;
+    font-family: 'Rakkas';
+    font-size: 4rem;
+    text-align: center;
+
+  }
+}
