@@ -101,6 +101,7 @@ class UserChooseCampaign extends React.Component {
           <table className="m-0 w-100" id="campaign-list">
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
+              userRole={this.props.config.user.userRole}
               setSelectedCampaign={this.setSelectedCampaign}
               toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}/>
           </table>
@@ -156,7 +157,13 @@ class CampaignList extends React.Component {
             onClick={this.highlightRow.bind(this, campaign)}>
             <td className="p-2 col">{campaign.campaignName}</td>
             <td className="d-flex justify-content-end col p-0 m-0">
-              <button className="btn btn-danger" onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
+              {this.props.userRole === 'gm' &&
+                <button
+                  className="btn btn-danger"
+                  onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}>
+                  <i className="far fa-trash-alt text-white"/>
+                </button>}
+            </td>
           </tr>
         );
       });
