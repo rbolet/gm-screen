@@ -199,7 +199,7 @@ class NewCampaignModal extends React.Component {
             <input type="text" onChange={this.onChange} className="new-campaign-input form-control" />
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-success w-25" onClick={this.props.newCampaign.bind(this, this.state.campaignName)}><i className="fas fa-plus-circle" /></button>
+            <button type="button" disabled={!this.state.campaignName}className="btn btn-success w-25" onClick={this.props.newCampaign.bind(this, this.state.campaignName)}><i className="fas fa-plus-circle" /></button>
           </div>
         </div>
       </div>
