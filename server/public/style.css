@@ -207,3 +207,38 @@ button{
   top: 5px;
   right: 5px;
 }
+
+#sorry{
+  display: none;
+}
+
+@media screen and (max-width: 1020px){
+
+
+  #sorry{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 2000;
+    backdrop-filter: blur(100px);
+  }
+
+  .sorry-modal{
+    display: inline-block;
+    backdrop-filter: opacity(.4);
+    color: black;
+    padding: 2rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .sorry-modal .title{
+    font-size: 4rem;
+  }
+}
