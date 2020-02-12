@@ -27,7 +27,10 @@ class UserChooseCampaign extends React.Component {
       resolve(this.props.deleteCampaign(this.state.selectedCampaign));
     });
     deletePromise.then(() => {
-      this.toggleConfirmDeleteModal();
+      this.setState({
+        selectedCampaign: null,
+        showConfirmDeleteModal: false
+      });
       this.refreshList();
     });
   }
@@ -37,14 +40,13 @@ class UserChooseCampaign extends React.Component {
   }
 
   toggleConfirmDeleteModal(campaign) {
-    if (campaign) {
-      this.setState({
-        selectedCampaign: campaign,
-        showConfirmDeleteModal: !this.state.showConfirmDeleteModal
-      });
-    } else {
-      this.setState({ showConfirmDeleteModal: !this.state.showConfirmDeleteModal });
-    }
+    if (!campaign) campaign = null;
+
+    this.setState({
+      selectedCampaign: campaign,
+      showConfirmDeleteModal: !this.state.showConfirmDeleteModal
+    });
+
   }
 
   refreshList() {
@@ -218,11 +220,17 @@ function ConfirmDeleteModal(props) {
           </div>
         </div>
         <div className="modal-body">
-          <p>You&apos;re about to delete your Campaign &quot;<span>{props.selectedCampaign.campaignName}</span>&quot; and all its associated images</p>
+          {props.selectedCampaign &&
+          <p>You&apos;re about to delete your Campaign &quot;<span>{props.selectedCampaign.campaignName}</span>&quot;
+             and all its associated images
+          </p>}
         </div>
         <div className="modal-footer row no-gutters p-2">
           <p className="p-2 col m-0 text-right">Are you sure?</p>
-          <button type="button" className="btn btn-danger" onClick={props.deleteCampaign}>
+          <button type="button" className="btn btn-danger"
+            onClick={() => {
+              props.deleteCampaign(props.campaign);
+            }}>
             <i className="far fa-trash-alt text-white" />
           </button>
         </div>
