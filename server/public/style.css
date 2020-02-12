@@ -207,3 +207,63 @@ button{
   top: 5px;
   right: 5px;
 }
+
+#sorry, #rotate {
+  display: none;
+}
+@media screen and (max-width: 1020px){
+
+
+  #sorry{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 2000;
+    backdrop-filter: blur(100px);
+  }
+
+  .sorry-modal{
+    display: inline-block;
+    backdrop-filter: opacity(.4);
+    color: black;
+    padding: 2rem;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .sorry-modal .title{
+    display: inline;
+    font-size: 4rem;
+  }
+
+  @media screen and (min-height: 1024px) {
+    .sorry-modal > p, .sorry-modal .title {
+      display: none;
+    }
+
+    #rotate {
+      display: block;
+      height: 512px;
+      width: 512px;
+      margin: auto;
+      transform: rotate(45deg);
+      animation-name: rotate90;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      /* animation-direction: alternate; */
+      animation-timing-function: ease-out;
+    }
+
+    @keyframes rotate90 {
+      0%    {transform: rotate(45deg);}
+      50%   {transform: rotate(-45deg);}
+      100%  {transform: rotate(-45deg);}
+    }
+  }
+}
