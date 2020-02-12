@@ -208,10 +208,9 @@ button{
   right: 5px;
 }
 
-#sorry{
+#sorry, #rotate {
   display: none;
 }
-
 @media screen and (max-width: 1020px){
 
 
@@ -239,6 +238,32 @@ button{
   }
 
   .sorry-modal .title{
+    display: inline;
     font-size: 4rem;
+  }
+
+  @media screen and (min-height: 1024px) {
+    .sorry-modal > p, .sorry-modal .title {
+      display: none;
+    }
+
+    #rotate {
+      display: block;
+      height: 512px;
+      width: 512px;
+      margin: auto;
+      transform: rotate(45deg);
+      animation-name: rotate90;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+      /* animation-direction: alternate; */
+      animation-timing-function: ease-out;
+    }
+
+    @keyframes rotate90 {
+      0%    {transform: rotate(45deg);}
+      50%   {transform: rotate(-45deg);}
+      100%  {transform: rotate(-45deg);}
+    }
   }
 }
