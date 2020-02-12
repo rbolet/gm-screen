@@ -192,7 +192,7 @@ class NewCampaignModal extends React.Component {
           <div className="modal-header position-relative">
             <h5 className="modal-title text-center">Add New Campaign</h5>
             <div className="close d-flex">
-              <i className="fa fa-times" onClick={this.props.toggleModal} />
+              <i className="fa fa-times" onClick={this.props.toggleNewCampaignModal} />
             </div>
           </div>
           <div className="modal-body">
