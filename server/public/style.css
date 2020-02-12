@@ -201,6 +201,8 @@ button{
 }
 
 .close{
+  color: #dc3545;
+  cursor: pointer;
   position: absolute;
   top: 5px;
   right: 5px;

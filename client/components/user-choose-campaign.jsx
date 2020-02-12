@@ -27,7 +27,10 @@ class UserChooseCampaign extends React.Component {
       resolve(this.props.deleteCampaign(this.state.selectedCampaign));
     });
     deletePromise.then(() => {
-      this.toggleConfirmDeleteModal();
+      this.setState({
+        selectedCampaign: null,
+        showConfirmDeleteModal: false
+      });
       this.refreshList();
     });
   }
@@ -37,14 +40,13 @@ class UserChooseCampaign extends React.Component {
   }
 
   toggleConfirmDeleteModal(campaign) {
-    if (campaign) {
-      this.setState({
-        selectedCampaign: campaign,
-        showConfirmDeleteModal: !this.state.showConfirmDeleteModal
-      });
-    } else {
-      this.setState({ showConfirmDeleteModal: !this.state.showConfirmDeleteModal });
-    }
+    if (!campaign) campaign = null;
+
+    this.setState({
+      selectedCampaign: campaign,
+      showConfirmDeleteModal: !this.state.showConfirmDeleteModal
+    });
+
   }
 
   refreshList() {
@@ -101,6 +103,7 @@ class UserChooseCampaign extends React.Component {
           <table className="m-0 w-100" id="campaign-list">
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
+              userRole={this.props.config.user.userRole}
               setSelectedCampaign={this.setSelectedCampaign}
               toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}/>
           </table>
@@ -156,7 +159,13 @@ class CampaignList extends React.Component {
             onClick={this.highlightRow.bind(this, campaign)}>
             <td className="p-2 col">{campaign.campaignName}</td>
             <td className="d-flex justify-content-end col p-0 m-0">
-              <button className="btn btn-danger" onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}><i className="far fa-trash-alt text-white"/></button></td>
+              {this.props.userRole === 'gm' &&
+                <button
+                  className="btn btn-danger"
+                  onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}>
+                  <i className="far fa-trash-alt text-white"/>
+                </button>}
+            </td>
           </tr>
         );
       });
@@ -185,14 +194,14 @@ class NewCampaignModal extends React.Component {
           <div className="modal-header position-relative">
             <h5 className="modal-title text-center">Add New Campaign</h5>
             <div className="close d-flex">
-              <i className="fa fa-times" onClick={this.props.toggleModal} />
+              <i className="fa fa-times" onClick={this.props.toggleNewCampaignModal} />
             </div>
           </div>
           <div className="modal-body">
             <input type="text" onChange={this.onChange} className="new-campaign-input form-control" />
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-success w-25" onClick={this.props.newCampaign.bind(this, this.state.campaignName)}><i className="fas fa-plus-circle" /></button>
+            <button type="button" disabled={!this.state.campaignName}className="btn btn-success w-25" onClick={this.props.newCampaign.bind(this, this.state.campaignName)}><i className="fas fa-plus-circle" /></button>
           </div>
         </div>
       </div>
@@ -211,11 +220,17 @@ function ConfirmDeleteModal(props) {
           </div>
         </div>
         <div className="modal-body">
-          <p>You&apos;re about to delete your Campaign &quot;<span>{props.selectedCampaign.campaignName}</span>&quot; and all its associated images</p>
+          {props.selectedCampaign &&
+          <p>You&apos;re about to delete your Campaign &quot;<span>{props.selectedCampaign.campaignName}</span>&quot;
+             and all its associated images
+          </p>}
         </div>
         <div className="modal-footer row no-gutters p-2">
           <p className="p-2 col m-0 text-right">Are you sure?</p>
-          <button type="button" className="btn btn-danger" onClick={props.deleteCampaign}>
+          <button type="button" className="btn btn-danger"
+            onClick={() => {
+              props.deleteCampaign(props.campaign);
+            }}>
             <i className="far fa-trash-alt text-white" />
           </button>
         </div>
