@@ -163,7 +163,7 @@ class CampaignList extends React.Component {
                 <button
                   className="btn btn-danger"
                   onClick={this.props.toggleConfirmDeleteModal.bind(this, campaign)}>
-                  <i className="far fa-trash-alt text-white"/>
+                  <i className="far fa-trash-alt"/>
                 </button>}
             </td>
           </tr>
