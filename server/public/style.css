@@ -35,17 +35,20 @@ button{
   z-index: 10;
 }
 
-.help-modal{
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+#help-modal{
+  position: relative;
+  z-index: 2000;
 }
 
 .help-modal-header{
-  height: 1.2rem;
+  min-height: 2rem;
   width: 100%;
 }
 
 .help-modal-body{
   height: 85%;
+  max-height: 80vh;
+  overflow-y: scroll;
 }
 
 .backdrop-blur{

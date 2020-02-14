@@ -191,16 +191,18 @@ class NewCampaignModal extends React.Component {
     return (
       <div className="new-campaign-modal backdrop-blur">
         <div className="modal-content w-25 bg-dark text-light">
-          <div className="modal-header position-relative">
-            <h5 className="modal-title text-center">Add New Campaign</h5>
-            <div className="close d-flex">
-              <i className="fa fa-times" onClick={this.props.toggleNewCampaignModal} />
+          <div className="modal-header position-relative p-1 align-items-center">
+            <h5 className="text-center mb-0 ml-1">Add New Campaign</h5>
+            <div className="close-button d-flex">
+              <button className="btn btn-danger justify-self-end align-self-start" onClick={this.props.toggleNewCampaignModal}>
+                <i className="fa fa-times" />
+              </button>
             </div>
           </div>
           <div className="modal-body">
             <input type="text" onChange={this.onChange} className="new-campaign-input form-control" />
           </div>
-          <div className="modal-footer">
+          <div className="modal-footer p-1">
             <button type="button" disabled={!this.state.campaignName}className="btn btn-success w-25" onClick={this.props.newCampaign.bind(this, this.state.campaignName)}><i className="fas fa-plus-circle" /></button>
           </div>
         </div>
@@ -213,10 +215,13 @@ function ConfirmDeleteModal(props) {
   return (
     <div className="new-campaign-modal backdrop-blur">
       <div className="modal-content w-25 bg-dark text-light">
-        <div className="modal-header position-relative bg-danger">
-          <h5 className="modal-title text-center text-white">Confirm Delete</h5>
-          <div className="close d-flex text-white">
-            <i className="fa fa-times" onClick={props.toggleConfirmDeleteModal} />
+        <div className="modal-header position-relative bg-danger p-1 align-items-center">
+          <h5 className="modal-title text-center text-white mb-0 ml-1">Confirm Delete</h5>
+          <div className="close-button d-flex justify-self-end">
+            <button className="btn btn-light" onClick={props.toggleConfirmDeleteModal}>
+              <i className="fa fa-times text-danger" />
+            </button>
+
           </div>
         </div>
         <div className="modal-body">
