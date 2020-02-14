@@ -144,21 +144,19 @@ class HelpModal extends React.Component {
     const nextButtonIcon = `fas ${this.state.page === this.state.lastPage ? 'fa-redo-alt' : 'fa-angle-double-right'}`;
     return (
       <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
-        <div className="modal-dialog-scrollable h-100 w-50">
-          <div className="bg-light rounded-lg modal-content help-modal p-0" >
-            <div className="modal-header border-bottom-0 help-modal-header">
-              <div className="close">
-                <i className="fa fa-times" onClick={this.props.toggleHelpModal} />
-              </div>
+        <div id="help-modal" className="w-50 card">
+          <div className="help-modal-header">
+            <div className="close">
+              <i className="fa fa-times" onClick={this.props.toggleHelpModal} />
             </div>
-            <div className="modal-body help-modal-body px-4 pt-0">
-              {CurrentPage}
-            </div>
-            <div className="modal-footer bg-dark">
-              <div className="row w-100 justify-content-around">
-                <button className="btn btn-outline-light w-25" disabled={this.state.page <= 1} onClick={this.turnPage.bind(this, -1)}><i className="fas fa-angle-double-left"></i></button>
-                <button className="btn btn-outline-light w-25" onClick={this.turnPage.bind(this, 1)}><i className={nextButtonIcon}></i></button>
-              </div>
+          </div>
+          <div className="card-body help-modal-body px-4 pt-0">
+            {CurrentPage}
+          </div>
+          <div className="card-footer bg-dark">
+            <div className="row w-100 justify-content-around">
+              <button className="btn btn-outline-light w-25" disabled={this.state.page <= 1} onClick={this.turnPage.bind(this, -1)}><i className="fas fa-angle-double-left"></i></button>
+              <button className="btn btn-outline-light w-25" onClick={this.turnPage.bind(this, 1)}><i className={nextButtonIcon}></i></button>
             </div>
           </div>
         </div>
