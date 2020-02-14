@@ -148,7 +148,7 @@ class CampaignList extends React.Component {
   }
 
   render() {
-
+    if (!this.props.campaignList) return <div>We are having trouble reaching the server</div>;
     if (this.props.campaignList.length) {
       const CampaignRows = this.props.campaignList.map(campaign => {
         return (
@@ -180,6 +180,15 @@ class CampaignList extends React.Component {
         <div className="d-flex justify-content-center align-items-center h-100">
           <div className="img-thumbnail text-muted">
             Start <span><i className="fas fa-plus-circle text-success" /></span> a new Campaign
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="d-flex justify-content-center align-items-center h-100">
+          <div className="img-thumbnail text-muted text-center">
+            There are no active Campaign sessions to join.
+            Click <span><i className="fas fa-redo-alt text-success" /></span> to check again
           </div>
         </div>
       );

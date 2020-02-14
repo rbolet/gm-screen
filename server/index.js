@@ -113,9 +113,7 @@ app.post('/newCampaign', (req, res, next) => {
 // GET list of active Campaigns
 app.get('/activeGameSessions', (req, res, next) => {
   const activeCampaigns = [];
-  if (!activeGameSessions.length) {
-    res.status(200).json(null);
-  } else {
+  if (activeGameSessions.length) {
     for (const gameSession of activeGameSessions) {
       const campaign = {
         campaignId: gameSession.campaignId,
@@ -123,8 +121,8 @@ app.get('/activeGameSessions', (req, res, next) => {
       };
       activeCampaigns.push(campaign);
     }
-    res.status(200).json(activeCampaigns);
   }
+  res.status(200).json(activeCampaigns);
 
 });
 
