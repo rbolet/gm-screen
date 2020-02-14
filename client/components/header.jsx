@@ -15,7 +15,7 @@ class Header extends React.Component {
     return (
       <div className="app-header bg-dark col-12 row no-gutters justify-content-end">
         <div className="col-2 d-flex">
-          <button className="btn btn-secondary align-self-center ml-4"
+          <button className="btn btn-secondary align-self-center ml-2"
             onClick={this.props.returnToMenu}
             disabled={this.props.config.user.auth !== 'ok'} >
             {/* <i className="fas fa-home"/> */}

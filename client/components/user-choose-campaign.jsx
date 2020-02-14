@@ -100,13 +100,13 @@ class UserChooseCampaign extends React.Component {
           {Headline}
         </div>
         <div className="bg-light text-dark h-50 mb-3 rounded" id="menu-campaign-list">
-          <table className="m-0 w-100" id="campaign-list">
+          <div className="h-100">
             <CampaignList className="px-2 pt-2 list-display"
               campaignList={this.state.campaignList}
               userRole={this.props.config.user.userRole}
               setSelectedCampaign={this.setSelectedCampaign}
               toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}/>
-          </table>
+          </div>
         </div>
         <div className="menu-box-footer d-flex align-items-center h-25 w-100">
           <div className="d-flex justify-content-between w-100 px-2">
@@ -148,9 +148,8 @@ class CampaignList extends React.Component {
   }
 
   render() {
-    if (!this.props.campaignList) {
-      return null;
-    } else {
+
+    if (this.props.campaignList.length) {
       const CampaignRows = this.props.campaignList.map(campaign => {
         return (
           <tr
@@ -169,7 +168,21 @@ class CampaignList extends React.Component {
           </tr>
         );
       });
-      return <tbody id="campaign-table-body">{CampaignRows}</tbody>;
+      return (
+        <table className="m-0 w-100" id="campaign-list">
+          <tbody id="campaign-table-body">
+            {CampaignRows}
+          </tbody>
+        </table>
+      );
+    } else if (this.props.userRole === 'gm') {
+      return (
+        <div className="d-flex justify-content-center align-items-center h-100">
+          <div className="img-thumbnail text-muted">
+            Start <span><i className="fas fa-plus-circle text-success" /></span> a new Campaign
+          </div>
+        </div>
+      );
     }
   }
 }
