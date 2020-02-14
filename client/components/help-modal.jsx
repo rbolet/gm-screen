@@ -27,7 +27,8 @@ class HelpModal extends React.Component {
         CurrentPage = (
           <div className="page px-4">
             <p>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GM-Screen is an application to supplement the storytelling and enhance the immersion of traditional paper-and-dice role playing games,
+              GM-Screen is not a game. It is an application to supplement the storytelling and enhance
+              the immersion of traditional paper-and-dice role playing games,
               allowing Game Masters to share images in real time with the rest of the player group.
               Since GM-Screen does not use any game mechanics, it is useable with any system, game,
               or any situation imaginable where visual aids can add to a group&apos;s shared experience.
@@ -145,9 +146,11 @@ class HelpModal extends React.Component {
     return (
       <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
         <div id="help-modal" className="w-50 card">
-          <div className="help-modal-header">
-            <div className="close">
-              <i className="fa fa-times" onClick={this.props.toggleHelpModal} />
+          <div className="help-modal-header d-flex justify-content-end">
+            <div className="close-button">
+              <button className="btn btn-danger" onClick={this.props.toggleHelpModal}>
+                <i className="fa fa-times" />
+              </button>
             </div>
           </div>
           <div className="card-body help-modal-body px-4 pt-0">

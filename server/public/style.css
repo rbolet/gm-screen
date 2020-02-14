@@ -41,7 +41,7 @@ button{
 }
 
 .help-modal-header{
-  height: 2rem;
+  min-height: 2rem;
   width: 100%;
 }
 
