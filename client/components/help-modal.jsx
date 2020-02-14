@@ -32,8 +32,12 @@ class HelpModal extends React.Component {
               allowing Game Masters to share images in real time with the rest of the player group.
               Since GM-Screen does not use any game mechanics, it is useable with any system, game,
               or any situation imaginable where visual aids can add to a group&apos;s shared experience.
-              Using the app is simple …
             </p>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_overview_help.png" className="img-fluid" />
+              </div>
+            </div>
           </div>
         );
         break;

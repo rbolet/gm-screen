@@ -24,7 +24,10 @@ class CampaignConfig extends React.Component {
         <div className="col-6 row no-gutters campaign-images p-1">
           <div className="square bg-dark rounded pb-2">
             <div className="col-12 h-75 row no-gutters pt-1">
-              <ImageGrid onGridClick={this.onGridClick} campaignAssets={this.props.config.gameSession.campaignAssets}/>
+              <ImageGrid
+                onGridClick={this.onGridClick}
+                campaignAssets={this.props.config.gameSession.campaignAssets}
+                campaignName = {this.props.config.gameSession.campaignName}/>
             </div>
             <div className="col-12 h-25 row no-gutters">
               <UploadForm campaignId={this.props.config.gameSession.campaignId} onUploadSubmit={this.props.onUploadSubmit}/>

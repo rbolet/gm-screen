@@ -29,7 +29,8 @@ class ImageGrid extends React.Component {
         <GridImages
           images={this.props.campaignAssets}
           selectedTab={this.state.selectedTab}
-          onClick={this.props.onGridClick}/>
+          onClick={this.props.onGridClick}
+          campaignName={this.props.campaignName}/>
       </div>
 
     );
@@ -59,21 +60,33 @@ function GridHeaderButtons(props) {
 
 function GridImages(props) {
 
-  const imageElements = props.images.map(image => {
-    if (image.category === props.selectedTab) {
-      return (
-        <img
-          key={image.imageId}
-          src={`./images/${image.fileName}`}
-          className="grid-image m-1"
-          onClick={props.onClick.bind(this, image)}/>
-      );
-    }
-  });
+  let GridContent = null;
+
+  if (props.images.length) {
+    GridContent = props.images.map(image => {
+      if (image.category === props.selectedTab) {
+        return (
+          <img
+            key={image.imageId}
+            src={`./images/${image.fileName}`}
+            className="grid-image m-1"
+            onClick={props.onClick.bind(this, image)}/>
+        );
+      }
+    });
+  } else {
+    GridContent = (
+      <div className="d-flex justify-content-center align-items-center h-100">
+        <div className="img-thumbnail text-muted">
+          {`No images have been added to ${props.campaignName}`}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-100 image-grid-body mb-1 rounded">
-      {imageElements}
+      {GridContent}
     </div>);
 }
 
