@@ -20,12 +20,35 @@ class HelpModal extends React.Component {
     this.setState({ page });
   }
 
+  componentDidMount() {
+    let context = 0;
+    switch (this.props.view[0]) {
+      case 'menu':
+        switch (this.props.view[1]) {
+          case 'title': context = 1; break;
+          case 'login':
+          case 'chooseRole':
+            context = 2; break;
+          case 'chooseCampaign': context = 3; break;
+          default: context = 1; break;
+        }
+        break;
+      case 'campaignConfig': context = 4; break;
+      case 'gmView':
+      case 'playerView':
+        context = 5; break;
+      default: context = 1;
+    }
+    this.setState({ page: context });
+  }
+
   render() {
     let CurrentPage;
     switch (this.state.page) {
       case 1:
         CurrentPage = (
           <div className="page px-4">
+            <h3 className="rakkas text-center w-100">Welcome to GM Screen</h3>
             <p>
               GM-Screen is not a game. It is an application to supplement the storytelling and enhance
               the immersion of traditional paper-and-dice role playing games,
@@ -46,7 +69,7 @@ class HelpModal extends React.Component {
           <div className="page">
             <div className="page-text px-4 row no-gutters">
               <p>
-                Simply log in with your existing username and password,&nbsp;&nbsp;<span><i className="fas fa-sign-in-alt text-success"></i></span>&nbsp;&nbsp;
+                Log in with your existing username and password,&nbsp;&nbsp;<span><i className="fas fa-sign-in-alt text-success"></i></span>&nbsp;&nbsp;
                 or create a new one&nbsp;&nbsp;<span><i className="fas fa-user-plus text-secondary"></i></span>&nbsp;&nbsp;.
                 <br /><br />Then, choose your Role: are you the Gamemaster  <span ><i className="fas fa-hat-wizard text-danger"></i></span>&nbsp;&nbsp;
                 who will be choosing which visual information to share, or a Player<span >&nbsp;&nbsp;<i className="fas fa-dice text-warning"></i></span>&nbsp;&nbsp;

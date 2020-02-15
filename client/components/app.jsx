@@ -380,6 +380,16 @@ class App extends React.Component {
     });
   }
 
+  componentDidMount() {
+    fetch('/welcome', { method: 'GET' })
+      .then(res => res.json())
+      .then(result => {
+        if (result.visits <= 1) {
+          this.toggleHelpModal();
+        }
+      });
+  }
+
   render() {
     let CurrentView;
     switch (this.state.view[0]) {
@@ -417,8 +427,11 @@ class App extends React.Component {
     }
     return (
       <div className="app row no-gutters h-100 d-relative">
-        {this.state.showHelpModal && <HelpModal toggleHelpModal={this.toggleHelpModal}/>}
-        <Header config={this.state.config} message={this.state.message} returnToMenu={this.returntoMenu} toggleHelpModal={this.toggleHelpModal}/>
+        {this.state.showHelpModal && <HelpModal toggleHelpModal={this.toggleHelpModal} view={this.state.view}/>}
+        <Header config={this.state.config}
+          message={this.state.message}
+          returnToMenu={this.returntoMenu}
+          toggleHelpModal={this.toggleHelpModal}/>
         <div className="app-body row no-gutters">
           {CurrentView}
         </div>
