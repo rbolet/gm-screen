@@ -27,7 +27,10 @@ class UploadForm extends React.Component {
                 <label id="filepath-label" className="custom-file-label text-truncate m-0 w-100" htmlFor="image-upload">{filePathLabel}</label>
                 <input required type="file" className="custom-file-input w-100" name="image-upload" onChange={this.onChange} />
               </div>
-              <button type="submit" className="upload-form-submit col-2 btn btn-outline-success"><i className="fas fa-file-upload"></i></button>
+              <button type="submit" className="upload-form-submit col-2 btn btn-outline-success">
+                <i className="fas fa-file-upload"></i>
+                <p className="button-text m-0">Upload</p>
+              </button>
             </div>
           </div>
           <div className="row no-gutters form-group m-0 px-2 col-12 align-items-center justify-content-around">
