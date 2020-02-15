@@ -59,7 +59,10 @@ function UserChooseRole(props) {
         </div>
         <div className="d-flex h-25 w-100 align-items-center">
           <div className="menu-box-footer w-100 d-flex justify-content-start px-2 pb-5">
-            <button className="btn btn-danger text-white w-25" onClick={() => { }}><i className="fas fa-flip-horizontal fa-sign-out-alt"></i></button>
+            <button className="btn btn-danger text-white w-25" onClick={() => { }}>
+              <i className="fas fa-flip-horizontal fa-sign-out-alt"></i>
+              <p className="button-text m-0">Log Out</p>
+            </button>
           </div>
         </div>
       </form>

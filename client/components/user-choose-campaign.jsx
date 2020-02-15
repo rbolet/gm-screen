@@ -113,17 +113,20 @@ class UserChooseCampaign extends React.Component {
             <button type="button" className="btn btn-outline-success w-25"
               onClick={this.props.config.user.userRole === 'gm' ? this.toggleNewCampaignModal : this.refreshList}>
               <i className={`fas ${this.props.config.user.userRole === 'gm' ? 'fa-plus-circle' : 'fa-redo-alt'}`} />
+              <p className="button-text m-0">{this.props.config.user.userRole === 'gm' ? 'New' : 'Refresh'}</p>
             </button>
             {this.props.config.user.userRole === 'gm' &&
             <button type="button" className="btn btn-secondary w-25"
               disabled={!this.state.selectedCampaign}
               onClick={() => { this.props.setCampaign(this.state.selectedCampaign); }}>
               <i className="fas fa-file-upload"/>
+              <p className="button-text m-0">Configure</p>
             </button>}
             <button type="button" className="btn btn-success w-25"
               disabled={!this.state.selectedCampaign}
               onClick={() => { this.props.setCampaign(this.state.selectedCampaign, true); }}>
               <i className="fas fa-play"/>
+              <p className="button-text m-0">{this.props.config.user.userRole === 'gm' ? 'Launch' : 'Join'}</p>
             </button>
           </div>
         </div>

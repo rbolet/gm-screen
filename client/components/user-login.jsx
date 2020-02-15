@@ -74,8 +74,14 @@ class UserLogin extends React.Component {
           </div>
           <div className="d-flex h-25 w-100 align-items-center">
             <div className="menu-box-footer w-100 d-flex justify-content-between px-2">
-              <button type="submit" className="btn btn-outline-light w-25" onClick={() => { this.userLogin(true); }}><i className="fas fa-user-plus"></i></button>
-              <button type="submit" className="btn btn-success text-light w-25" onClick={() => { this.userLogin(false); }}><i className="fas fa-sign-in-alt"></i></button>
+              <button type="submit" className="btn btn-outline-light w-25" onClick={() => { this.userLogin(true); }}>
+                <i className="fas fa-user-plus"/>
+                <p className="button-text m-0">New User</p>
+              </button>
+              <button type="submit" className="btn btn-success text-light w-25" onClick={() => { this.userLogin(false); }}>
+                <i className="fas fa-sign-in-alt"/>
+                <p className="button-text m-0">Log In</p>
+              </button>
             </div>
           </div>
         </form>
