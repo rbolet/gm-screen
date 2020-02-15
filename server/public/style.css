@@ -279,3 +279,12 @@ button{
     }
   }
 }
+
+.header-message{
+  opacity: 1;
+}
+
+.header-message.fade{
+  opacity: .01;
+  transition: opacity 2000ms ease-in;
+}
