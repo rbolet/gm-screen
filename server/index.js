@@ -5,29 +5,39 @@ const http = require('http').createServer(app);
 const multer = require('multer');
 const uuid = require('uuid/v4');
 const bodyParser = require('body-parser');
-// const session = require('express-session');
-const db = require('./_config');
 const io = require('socket.io')(http);
 const fs = require('fs');
+
+const db = require('./_config');
+const sessions = require('./sessions');
+
 const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
 // make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
 const staticMiddleware = express.static(staticPath);
+app.use(sessions);
 app.use(staticMiddleware);
 app.use(bodyParser.json());
-// app.use(session({
-//   secret: 'itsasecrettoeveryone',
-//   resave: true,
-//   saveUninitialized: true
-// }));
 
 function testForSQLInjection(input) {
   const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
   return regexPattern.test(input);
 }
 
-app.post('/newUser', function (req, res, next) {
+app.get('/welcome', (req, res, next) => {
+  if (!req.session.welcomed) {
+    req.session.regenerate(err => {
+      if (err) return next(err);
+      req.session.welcomed = true;
+      res.json({ wasWelcomed: false });
+    });
+  } else {
+    res.json({ wasWelcomed: true });
+  }
+});
+
+app.post('/newUser', (req, res, next) => {
   const userName = req.body.userName;
   const password = req.body.password;
 
@@ -58,8 +68,7 @@ app.post('/newUser', function (req, res, next) {
           db.execute(insertQuery, [userName, password])
             .then(([rows]) => {
               res.status(200).json({ userId: rows.insertId });
-            })
-            .catch(err => next(err));
+            });
         }
       })
       .catch(err => next(err));

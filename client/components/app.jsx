@@ -380,6 +380,17 @@ class App extends React.Component {
     });
   }
 
+  componentDidMount() {
+    fetch('/welcome', { method: 'GET' })
+      .then(jsonResult => jsonResult.json())
+      .then(result => {
+        if (!result.wasWelcomed) {
+          this.toggleHelpModal();
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     let CurrentView;
     switch (this.state.view[0]) {
