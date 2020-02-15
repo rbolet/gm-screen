@@ -11,12 +11,10 @@ const io = require('socket.io')(http);
 const fs = require('fs');
 const justNow = parseInt((Date.now() * 0.001).toFixed(0));
 
-// make public folder files available, such as index.html
 const staticPath = path.join(__dirname, 'public');
-const staticMiddleware = express.static(staticPath);
 app.use(sessions);
-app.use(staticMiddleware);
 app.use(bodyParser.json());
+app.use(express.static(staticPath));
 
 function testForSQLInjection(input) {
   const regexPattern = new RegExp(/('(''|[^'])* ')|(\);)|(--)|(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|VERSION|ORDER|UNION( +ALL){0,1})/);
@@ -25,10 +23,13 @@ function testForSQLInjection(input) {
 
 app.get('/welcome', (req, res, next) => {
   if (!req.session.visits) {
-    req.session.visits = 1;
-    res.json({ visits: req.session.visits });
+    req.session.regenerate(err => {
+      if (err) return next(err);
+      req.session.visits = 1;
+      res.json({ visits: req.session.visits });
+    });
   } else {
-    req.session.visits = parseInt(req.session.visits) + 1;
+    req.session.visits++;
     res.json({ visits: req.session.visits });
   }
 });

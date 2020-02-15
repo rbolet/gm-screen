@@ -5,8 +5,6 @@ const sessionFileStore = require('session-file-store');
 const FileStore = sessionFileStore(session);
 
 const store = new FileStore({
-  ttl: 28800,
-  retries: 0,
   path: path.join(__dirname, 'sessions/')
 });
 
