@@ -341,7 +341,7 @@ function deleteImagesById(imageIdsString) {
 function buildSession(sessionId) {
   let tokens = [];
   return new Promise(resolve => {
-    db.query(`SELECT tokens.tokenId, tokens.imageFileName FROM tokens WHERE sessionId = ${sessionId}`)
+    db.query(`SELECT * FROM tokens WHERE sessionId = ${sessionId}`)
       .then(([rows]) => {
         tokens = rows;
         return db.query(`SELECT * FROM sessions WHERE sessionId = ${sessionId}`);
