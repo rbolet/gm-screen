@@ -214,6 +214,13 @@ app.post('/addToken', (req, res, next) => {
     });
 });
 
+app.post('/tokenDetails', (req, res, next) => {
+  const tokenId = req.body.tokenId;
+  db.query(`SELECT * FROM tokens WHERE tokenId = ${tokenId};`)
+    .then(([rows]) => res.json(rows))
+    .catch(err => next(err));
+});
+
 app.post('/removeToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
