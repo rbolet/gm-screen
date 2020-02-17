@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function TokenDetailsModal(props) {
+  // assuming props.token = image (a new token) for now.
 
   return (
     <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
@@ -19,17 +20,17 @@ function TokenDetailsModal(props) {
           <div className="w-100 h-100 container">
             <div className="row">
               <div className="thumbnail h-100 col-6">
-                <img className="img-thumbnail mh-100" src="./images/0c00a350-dfbb-4d8f-98af-e0815bbdaefb..png" />
+                <img className="img-thumbnail mh-100" src={`./images/${props.token.fileName}`} />
               </div>
               <div className="col-6 border rounded p-3 bg-dark text-white">
                 <Form>
                   <Form.Group controlId="tokenName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" />
+                    <Form.Control type="text" value={props.token.alias}/>
                   </Form.Group>
                   <Form.Group controlId="tokenDescription">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows="6" />
+                    <Form.Control as="textarea" rows="6" value={null}/>
                   </Form.Group>
                 </Form>
               </div>
@@ -44,7 +45,7 @@ function TokenDetailsModal(props) {
             <Button variant="outline-secondary">Player 3</Button>
             <Button variant="outline-secondary">Player 4</Button>
           </ButtonGroup> */}
-          <Button variant="success">Send</Button>
+          <Button variant="success" onClick={() => { props.addToken(props.token); props.clearModal(); }}>Send</Button>
         </div>
       </div>
     </div>

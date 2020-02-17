@@ -302,7 +302,18 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       },
       body: requestBody
-    });
+    })
+      .then(jsonResult => jsonResult.json())
+      .then(insertId => {
+      })
+      .catch(err => { console.error(err); });
+  }
+
+  getTokenDetails(tokenId) {
+    fetch(`/tokenDetails/${tokenId}`, { method: 'GET' })
+      .then(result => result.json())
+      .then(token => {})
+      .catch(error => console.error(error));
   }
 
   removeToken(token) {

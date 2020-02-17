@@ -203,23 +203,29 @@ app.post('/updateEnvironment', (req, res, next) => {
 app.post('/addToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
-  res.json({ message: 'pushing new token ...' });
-  db.query(`INSERT INTO tokens (sessionId, imageFileName) VALUES(${reqSessionId}, "${req.body.image.fileName}")`)
+
+  db.query(`INSERT INTO tokens (sessionId, imageFileName, tokenName) VALUES(${reqSessionId}, "${req.body.image.fileName}", "${req.body.image.alias}")`)
     .then(insertRes => {
+      res.json({ tokenId: insertRes[0].insertId });
       return buildSession(reqSessionId);
     })
     .then(session => {
       gameSession.session = session;
       pushNewSessionState(gameSession);
-    });
+    })
+    .catch(error => { next(error); });
 });
 
-app.post('/tokenDetails', (req, res, next) => {
-  const tokenId = req.body.tokenId;
+app.get('/tokenDetails/:tokenId', (req, res, next) => {
+  const tokenId = req.params.tokenId;
   db.query(`SELECT * FROM tokens WHERE tokenId = ${tokenId};`)
-    .then(([rows]) => res.json(rows))
+    .then(([rows]) => { res.json(rows[0]); })
     .catch(err => next(err));
 });
+
+// app.post('/tokenDetails', (req, res, next)=>{
+
+// });
 
 app.post('/removeToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
