@@ -1,4 +1,5 @@
 import React from 'react';
+import LaunchSession from './launch-session';
 
 function AssetDetails(props) {
   let FeaturedAsset = null;
@@ -16,12 +17,7 @@ function AssetDetails(props) {
       <div className="row no-gutters h-75 detail-image rounded bg-light p-3 d-flex justify-content-center align-items-center">
         {FeaturedAsset}
       </div>
-      <div className=" h-25 detail-footer justify-content-center align-items-center row">
-        <button type="button" onClick={props.connectSocket} className="btn btn-lg btn-success justify-self-end w-25">
-          <i className="fas fa-play"/>
-          <p className="button-text m-0">Launch Session</p>
-        </button>
-      </div>
+      <LaunchSession connectSocket={props.connectSocket}/>
     </div>
   );
 }
