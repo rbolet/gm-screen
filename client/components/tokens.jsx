@@ -29,7 +29,8 @@ function Tokens(props) {
       <div
         key={token.tokenId}
         style={{ backgroundImage: `url(./images/${token.imageFileName})` }}
-        className="token mx-2">
+        className="token mx-2"
+        onClick={() => console.log(token)}>
         {CloseButton}
       </div>
     );

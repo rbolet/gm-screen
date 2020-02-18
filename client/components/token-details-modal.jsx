@@ -11,7 +11,7 @@ function TokenDetailsModal(props) {
       <div id="token-details-modal" className="w-50 card">
         <div className="token-details-header d-flex justify-content-end bg-dark">
           <div className="close-button">
-            <button className="btn btn-danger">
+            <button className="btn btn-danger" onClick={props.clearModal}>
               <i className="fa fa-times"></i>
             </button>
           </div>
