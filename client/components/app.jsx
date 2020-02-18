@@ -290,10 +290,10 @@ class App extends React.Component {
     });
   }
 
-  addToken(image) {
+  addToken(token) {
     const requestBody = JSON.stringify({
       gameSession: this.state.config.gameSession,
-      image: image
+      token: token
     });
 
     fetch('/addToken', {
@@ -423,6 +423,7 @@ class App extends React.Component {
         break;
       case 'gmView':
         CurrentView = <GMView
+
           config={this.state.config}
           updateEnvironmentImage={this.updateEnvironmentImage}
           clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}

@@ -204,7 +204,11 @@ app.post('/addToken', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
 
-  db.query(`INSERT INTO tokens (sessionId, imageFileName, tokenName) VALUES(${reqSessionId}, "${req.body.image.fileName}", "${req.body.image.alias}")`)
+  const insertQuery = `INSERT INTO
+    tokens (sessionId, imageFileName, tokenName)
+    VALUES(${reqSessionId}, "${req.body.token.imageFileName}", "${req.body.token.tokenName}")`;
+
+  db.query(insertQuery)
     .then(insertRes => {
       res.json({ tokenId: insertRes[0].insertId });
       return buildSession(reqSessionId);

@@ -5,6 +5,17 @@ import Button from 'react-bootstrap/Button';
 
 function TokenDetailsModal(props) {
   // assuming props.token = image (a new token) for now.
+  let thisToken = {};
+  if (!props.token.tokenId) {
+    thisToken = {
+      tokenId: 'new',
+      imageFileName: props.token.fileName,
+      tokenName: props.token.alias,
+      tokenDetails: ''
+    };
+  } else {
+    thisToken = props.token;
+  }
 
   return (
     <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
@@ -20,17 +31,17 @@ function TokenDetailsModal(props) {
           <div className="w-100 h-100 container">
             <div className="row">
               <div className="thumbnail h-100 col-6">
-                <img className="img-thumbnail mh-100" src={`./images/${props.token.fileName}`} />
+                <img className="img-thumbnail mh-100" src={`./images/${thisToken.imageFileName}`} />
               </div>
               <div className="col-6 border rounded p-3 bg-dark text-white">
                 <Form>
                   <Form.Group controlId="tokenName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" value={props.token.alias}/>
+                    <Form.Control type="text" value={thisToken.tokenName}/>
                   </Form.Group>
                   <Form.Group controlId="tokenDescription">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows="6" value={null}/>
+                    <Form.Control as="textarea" rows="6" value={thisToken.tokenDetails}/>
                   </Form.Group>
                 </Form>
               </div>
@@ -45,7 +56,7 @@ function TokenDetailsModal(props) {
             <Button variant="outline-secondary">Player 3</Button>
             <Button variant="outline-secondary">Player 4</Button>
           </ButtonGroup> */}
-          <Button variant="success" onClick={() => { props.addToken(props.token); props.clearModal(); }}>Send</Button>
+          <Button variant="success" onClick={() => { props.addToken(thisToken); props.clearModal(); }}>Send</Button>
         </div>
       </div>
     </div>
