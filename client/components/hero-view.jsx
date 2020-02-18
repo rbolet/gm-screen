@@ -20,7 +20,11 @@ function HeroView(props) {
   return (
     <div className="hero-view w-100 h-100 d-flex justify-content-center">
       {HeroView}
-      <TokensDisplay tokens={props.session.tokens} removeToken={props.removeToken} clearAllTokens={props.clearAllTokens} />
+      <TokensDisplay
+        tokens={props.session.tokens}
+        removeToken={props.removeToken}
+        tokenDetails={props.tokenDetails}
+        clearAllTokens={props.clearAllTokens} />
     </div>
   );
 }

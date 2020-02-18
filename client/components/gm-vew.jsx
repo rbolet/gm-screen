@@ -13,6 +13,7 @@ class GMView extends React.Component {
     };
 
     this.onGMGridClick = this.onGMGridClick.bind(this);
+    this.onTokenClick = this.onTokenClick.bind(this);
   }
 
   onGMGridClick(image) {
@@ -26,6 +27,13 @@ class GMView extends React.Component {
           clickedImage: image
         });
     }
+  }
+
+  onTokenClick(token) {
+    this.setState({
+      showDetailModal: true,
+      clickedImage: token
+    });
   }
 
   render() {
@@ -42,6 +50,7 @@ class GMView extends React.Component {
             session={this.props.config.gameSession.session}
             isGM={true}
             clearEnvironmentImage={this.props.clearEnvironmentImage}
+            tokenDetails={this.onTokenClick}
             removeToken={this.props.removeToken}
             clearAllTokens={this.props.clearAllTokens}/>
         </div>
