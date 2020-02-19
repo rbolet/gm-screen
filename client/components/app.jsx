@@ -290,19 +290,27 @@ class App extends React.Component {
     });
   }
 
-  addToken(image) {
+  addToken(token) {
+    let method = 'POST';
+    if (token.tokenId !== 'new') {
+      method = 'PATCH';
+    }
     const requestBody = JSON.stringify({
       gameSession: this.state.config.gameSession,
-      image: image
+      token: token
     });
 
-    fetch('/addToken', {
-      method: 'POST',
+    fetch('/token', {
+      method,
       headers: {
         'Content-Type': 'application/json'
       },
       body: requestBody
-    });
+    })
+      .then(jsonResult => jsonResult.json())
+      .then(insertId => {
+      })
+      .catch(err => { console.error(err); });
   }
 
   removeToken(token) {
@@ -311,8 +319,8 @@ class App extends React.Component {
       token
     });
 
-    fetch('/removeToken', {
-      method: 'POST',
+    fetch('/token', {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -412,6 +420,7 @@ class App extends React.Component {
         break;
       case 'gmView':
         CurrentView = <GMView
+
           config={this.state.config}
           updateEnvironmentImage={this.updateEnvironmentImage}
           clearEnvironmentImage={() => { this.updateEnvironmentImage(''); }}

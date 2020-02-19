@@ -9,7 +9,9 @@ function TokensDisplay(props) {
   }
   return (
     <div className={`tokens-container backdrop-blur${props.tokens.length > 0 ? '' : ' d-none'}`}>
-      <Tokens tokens={props.tokens} removeToken={props.removeToken}/>
+      <Tokens tokens={props.tokens}
+        removeToken={props.removeToken}
+        tokenDetails={props.tokenDetails}/>
       {CloseButton}
     </div>
   );
@@ -29,7 +31,8 @@ function Tokens(props) {
       <div
         key={token.tokenId}
         style={{ backgroundImage: `url(./images/${token.imageFileName})` }}
-        className="token mx-2">
+        className="token mx-2"
+        onClick={() => { props.tokenDetails(token); }}>
         {CloseButton}
       </div>
     );
