@@ -14,6 +14,7 @@ class GMView extends React.Component {
 
     this.onGMGridClick = this.onGMGridClick.bind(this);
     this.onTokenClick = this.onTokenClick.bind(this);
+    this.clearModal = this.clearModal.bind(this);
   }
 
   onGMGridClick(image) {
@@ -36,6 +37,13 @@ class GMView extends React.Component {
     });
   }
 
+  clearModal() {
+    this.setState({
+      showDetailModal: false,
+      clickedImage: null
+    });
+  }
+
   render() {
 
     return (
@@ -44,7 +52,7 @@ class GMView extends React.Component {
           { this.state.showDetailModal &&
         <TokenDetailsModal
           token={this.state.clickedImage}
-          clearModal={() => { this.setState({ showDetailModal: false, clickedImage: null }); }}
+          clearModal={this.clearModal}
           addToken={this.props.addToken}/>}
           <HeroView
             session={this.props.config.gameSession.session}

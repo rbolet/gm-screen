@@ -10,10 +10,10 @@ class Header extends React.Component {
 
   render() {
 
-    if (this.props.message) {
-      document.querySelector('.header-message').classList.remove('fade');
-      this.fadeOutMessage();
-    }
+    // if (this.props.message) {
+    //   document.querySelector('.header-message').classList.remove('fade');
+    //   this.fadeOutMessage();
+    // }
 
     let RoleIcon = null;
     switch (this.props.config.user.userRole) {

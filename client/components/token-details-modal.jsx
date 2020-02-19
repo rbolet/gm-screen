@@ -1,5 +1,4 @@
-import { useState, useEffect, React } from 'react';
-
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 // import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
@@ -17,14 +16,17 @@ function TokenDetailsModal(props) {
   } else {
     thisToken = props.token;
   }
-
   const [tokenName, setTokenName] = useState(thisToken.tokenName);
   const [tokenDetails, setTokenDetails] = useState(thisToken.tokenDetails);
 
-  useEffect(() => {
-    thisToken = { ...tokenName, tokenDetails };
-  });
-
+  function rebuildToken(thisToken) {
+    return {
+      tokenId: thisToken.tokenId,
+      imageFileName: thisToken.imageFileName,
+      tokenName,
+      tokenDetails
+    };
+  }
   return (
     <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
       <div id="token-details-modal" className="w-50 card">
@@ -68,7 +70,7 @@ function TokenDetailsModal(props) {
             <Button variant="outline-secondary">Player 3</Button>
             <Button variant="outline-secondary">Player 4</Button>
           </ButtonGroup> */}
-          <Button variant="success" onClick={() => { props.addToken(thisToken); props.clearModal(); }}>Send</Button>
+          <Button variant="success" onClick={() => { props.addToken(rebuildToken(thisToken)); props.clearModal(); }}>Send</Button>
         </div>
       </div>
     </div>
