@@ -291,13 +291,17 @@ class App extends React.Component {
   }
 
   addToken(token) {
+    let method = 'POST';
+    if (token.tokenId !== 'new') {
+      method = 'PATCH';
+    }
     const requestBody = JSON.stringify({
       gameSession: this.state.config.gameSession,
       token: token
     });
 
-    fetch('/addToken', {
-      method: 'POST',
+    fetch('/token', {
+      method,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -309,21 +313,14 @@ class App extends React.Component {
       .catch(err => { console.error(err); });
   }
 
-  getTokenDetails(tokenId) {
-    fetch(`/tokenDetails/${tokenId}`, { method: 'GET' })
-      .then(result => result.json())
-      .then(token => {})
-      .catch(error => console.error(error));
-  }
-
   removeToken(token) {
     const requestBody = JSON.stringify({
       gameSession: this.state.config.gameSession,
       token
     });
 
-    fetch('/removeToken', {
-      method: 'POST',
+    fetch('/token', {
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },

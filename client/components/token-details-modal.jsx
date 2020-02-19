@@ -1,10 +1,11 @@
-import React from 'react';
+import { useState, useEffect, React } from 'react';
+
 import Form from 'react-bootstrap/Form';
 // import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 function TokenDetailsModal(props) {
-  // assuming props.token = image (a new token) for now.
+
   let thisToken = {};
   if (!props.token.tokenId) {
     thisToken = {
@@ -16,6 +17,13 @@ function TokenDetailsModal(props) {
   } else {
     thisToken = props.token;
   }
+
+  const [tokenName, setTokenName] = useState(thisToken.tokenName);
+  const [tokenDetails, setTokenDetails] = useState(thisToken.tokenDetails);
+
+  useEffect(() => {
+    thisToken = { ...tokenName, tokenDetails };
+  });
 
   return (
     <div className="modal backdrop-blur p-5 d-flex justify-content-center align-items-center">
@@ -37,11 +45,15 @@ function TokenDetailsModal(props) {
                 <Form>
                   <Form.Group controlId="tokenName">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" value={thisToken.tokenName}/>
+                    <Form.Control type="text"
+                      value={tokenName}
+                      onChange={event => setTokenName(event.target.value)}/>
                   </Form.Group>
-                  <Form.Group controlId="tokenDescription">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows="6" value={thisToken.tokenDetails}/>
+                  <Form.Group controlId="tokenDetails">
+                    <Form.Label>Details</Form.Label>
+                    <Form.Control as="textarea" rows="6"
+                      value={tokenDetails}
+                      onChange={event => setTokenDetails(event.target.value)}/>
                   </Form.Group>
                 </Form>
               </div>

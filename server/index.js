@@ -200,7 +200,7 @@ app.post('/updateEnvironment', (req, res, next) => {
     .catch(err => next(err));
 });
 
-app.post('/addToken', (req, res, next) => {
+app.post('/token', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
 
@@ -220,18 +220,35 @@ app.post('/addToken', (req, res, next) => {
     .catch(error => { next(error); });
 });
 
-app.get('/tokenDetails/:tokenId', (req, res, next) => {
+app.patch('/token', (req, res, next) => {
+  const gameSession = req.body.gameSession;
+  const reqSessionId = req.body.gameSession.session.sessionId;
+  const token = req.body.token;
+  const updateQuery = `UPDATE tokens
+    SET tokenName = "${token.tokenName}", tokenDetails = "${token.tokenDetails}"
+    WHERE tokenId = ${token.tokenId};`;
+
+  db.query(updateQuery)
+    .then(rowsAffected => {
+      res.json({ message: 'Updating token ...' });
+      return buildSession(reqSessionId);
+    })
+    .then(session => {
+      gameSession.session = session;
+      pushNewSessionState(gameSession);
+    })
+    .catch(error => { next(error); });
+
+});
+
+app.get('/token/:tokenId', (req, res, next) => {
   const tokenId = req.params.tokenId;
   db.query(`SELECT * FROM tokens WHERE tokenId = ${tokenId};`)
     .then(([rows]) => { res.json(rows[0]); })
     .catch(err => next(err));
 });
 
-// app.post('/tokenDetails', (req, res, next)=>{
-
-// });
-
-app.post('/removeToken', (req, res, next) => {
+app.delete('/token', (req, res, next) => {
   const gameSession = req.body.gameSession;
   const reqSessionId = req.body.gameSession.session.sessionId;
   const token = req.body.token;
