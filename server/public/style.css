@@ -129,15 +129,11 @@ button{
 }
 
 .image-grid{
-  height: 100%;
-}
-
-.image-grid-header{
-  height: 10%;
+  height: 99%;
 }
 
 .image-grid-body{
-  height: 90%;
+  min-height: 90%;
   background-color: white;
   overflow-y: scroll;
 }

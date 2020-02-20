@@ -53,7 +53,8 @@ class GMView extends React.Component {
         <TokenDetailsModal
           token={this.state.clickedImage}
           clearModal={this.clearModal}
-          addToken={this.props.addToken}/>}
+          addToken={this.props.addToken}
+          isGM={true}/>}
           <HeroView
             session={this.props.config.gameSession.session}
             isGM={true}
