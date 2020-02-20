@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-// import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
 function TokenDetailsModal(props) {
@@ -48,12 +47,14 @@ function TokenDetailsModal(props) {
                   <Form.Group controlId="tokenName">
                     <Form.Label>Name</Form.Label>
                     <Form.Control type="text"
+                      readOnly={!props.isGM}
                       value={tokenName}
                       onChange={event => setTokenName(event.target.value)}/>
                   </Form.Group>
                   <Form.Group controlId="tokenDetails">
                     <Form.Label>Details</Form.Label>
                     <Form.Control as="textarea" rows="6"
+                      readOnly={!props.isGM}
                       value={tokenDetails}
                       onChange={event => setTokenDetails(event.target.value)}/>
                   </Form.Group>
@@ -63,14 +64,10 @@ function TokenDetailsModal(props) {
           </div>
         </div>
         <div className="card-footer bg-dark d-flex justify-content-around">
-          {/* <ButtonGroup aria-label="Players">
-            <Button active variant="outline-secondary">All</Button>
-            <Button variant="outline-secondary">Player 1</Button>
-            <Button variant="outline-secondary">Player 2</Button>
-            <Button variant="outline-secondary">Player 3</Button>
-            <Button variant="outline-secondary">Player 4</Button>
-          </ButtonGroup> */}
-          <Button variant="success" onClick={() => { props.addToken(rebuildToken(thisToken)); props.clearModal(); }}>Send</Button>
+          {props.addToken && <Button
+            variant="success"
+            onClick={() => { props.addToken(rebuildToken(thisToken)); props.clearModal(); }}
+          >Update</Button>}
         </div>
       </div>
     </div>

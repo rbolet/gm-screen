@@ -129,15 +129,11 @@ button{
 }
 
 .image-grid{
-  height: 100%;
-}
-
-.image-grid-header{
-  height: 10%;
+  height: 99%;
 }
 
 .image-grid-body{
-  height: 90%;
+  min-height: 90%;
   background-color: white;
   overflow-y: scroll;
 }
@@ -210,6 +206,18 @@ button{
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.token-name-footer{
+  height: 1.5rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  overflow: hidden;
+  background-color: white;
+  border: 2px solid black;
+  display: flex;
+  justify-content: center;
 }
 
 .close{
