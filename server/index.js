@@ -205,8 +205,8 @@ app.post('/token', (req, res, next) => {
   const reqSessionId = req.body.gameSession.session.sessionId;
 
   const insertQuery = `INSERT INTO
-    tokens (sessionId, imageFileName, tokenName)
-    VALUES(${reqSessionId}, "${req.body.token.imageFileName}", "${req.body.token.tokenName}")`;
+    tokens (sessionId, imageFileName, tokenName, tokenDetails)
+    VALUES(${reqSessionId}, "${req.body.token.imageFileName}", "${req.body.token.tokenName}", "${req.body.token.tokenDetails}")`;
 
   db.query(insertQuery)
     .then(insertRes => {

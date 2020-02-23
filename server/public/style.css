@@ -208,7 +208,14 @@ button{
   background-position: center;
 }
 
+.token:hover{
+  transition: all .5s;
+  transform: scale(1.5);
+  bottom: 50px;
+}
+
 .token-name-footer{
+  cursor: pointer;
   height: 1.5rem;
   width: 100%;
   position: absolute;
