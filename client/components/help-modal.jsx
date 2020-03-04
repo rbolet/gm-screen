@@ -5,7 +5,7 @@ class HelpModal extends React.Component {
     super(props);
     this.state = {
       page: 1,
-      lastPage: 5
+      lastPage: 6
     };
 
     this.turnPage = this.turnPage.bind(this);
@@ -144,7 +144,7 @@ class HelpModal extends React.Component {
               <p>
                 Finally, you will arrive at your primary GM or Player screen.
                 Environment images will display prominently in the background,
-                with Secondary images displayed in an area over &#40;or without!&#41; the Environment background.
+                with &quot;Tokens&quot; displayed in an area over &#40;or without!&#41; the Environment background.
               </p>
             </div>
             <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
@@ -155,14 +155,44 @@ class HelpModal extends React.Component {
             <div className="page-text px-4 row no-gutters">
               <div><hr/></div>
               <p>
-                Gamemasters additionally see all the images available in this campaign.
-                Simply click one to add display it to all the Players in your Session.
-                You can also remove images from the display, or clear all the Secondary images with one click.
+               Each Token has its own name and details, which can be viewed by clicking on the Token&apos;s name area.
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_token_player_help.png" className="img-fluid" />
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      case 6:
+        CurrentPage = (
+          <div className="page">
+            <div className="page-text px-4 row no-gutters">
+              <p>
+                The GM view reflects what the players see, with the addition of the images you added
+                to the Campaign being again visible on the right. Simply click an Environment image to add display it to all the Players in your Session.
+                The Environment can also be removed at any time.
               </p>
             </div>
             <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
               <div className="p-2 d-inline col">
                 <img src="./assets/gmscreen_gm_help.png" className="img-fluid" />
+              </div>
+            </div>
+            <div className="page-text px-4 row no-gutters">
+              <div><hr /></div>
+              <p>
+                When a Secondary image is selected it becomes a Token-- each Token can be given a different name and details,
+                allowing you to use the same image to represent multiple individuals. After a Token is added to the display
+                its name and details can be altered at any time by clicking on the Token&apos;s name area, and it will dynamically
+                update on your Players&apos; displays. Tokens can be removed individually or all of them can be cleared at once with one click.
+              </p>
+            </div>
+            <div className="page-illustrations row no-gutters justify-content-center align-items-center flex-row">
+              <div className="p-2 d-inline col">
+                <img src="./assets/gmscreen_token_help.png" className="img-fluid" />
               </div>
             </div>
           </div>
