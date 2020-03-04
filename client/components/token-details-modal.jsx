@@ -67,7 +67,10 @@ function TokenDetailsModal(props) {
           {props.addToken && <Button
             variant="success"
             onClick={() => { props.addToken(rebuildToken(thisToken)); props.clearModal(); }}
-          >Update</Button>}
+          >
+            <i className="far fa-edit"/>
+            <p className="button-text m-0">Update Details</p>
+          </Button>}
         </div>
       </div>
     </div>
