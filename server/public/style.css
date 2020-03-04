@@ -200,12 +200,14 @@ button{
 
 .token{
   position: relative;
+  bottom: 0px;
   height: 100%;
   width: 15%;
   font-size: .75rem;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+  transition: all .25s;
 }
 
 .token:hover{

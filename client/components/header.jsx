@@ -44,7 +44,7 @@ class Header extends React.Component {
           <p className="m-0 header-message">{this.props.message}</p>
         </div>
         <div className="col-1 d-flex align-items-center justify-content-end">
-          <span onClick={this.props.toggleHelpModal}><i className="far fa-question-circle text-white px-2"></i></span>
+          <span onClick={this.props.toggleHelpModal}><i className="info far fa-question-circle text-white px-2"></i></span>
         </div>
       </div>
     );
