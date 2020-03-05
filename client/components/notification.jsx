@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-function Notification() {
+function Notification(props) {
   const [show, setShow] = useState(false);
+  const [message, setMessage] = useState('test message');
+
+  if (props.message) {
+    setMessage(props.message);
+  }
 
   return (
     <div className="row">
@@ -11,7 +16,7 @@ function Notification() {
           <Toast.Header>
             <strong className="mr-auto">Notification</strong>
           </Toast.Header>
-          <Toast.Body>Update Message</Toast.Body>
+          <Toast.Body>{message}</Toast.Body>
         </Toast>
       </div>
     </div>
