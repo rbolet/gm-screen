@@ -7,6 +7,7 @@ import GMView from './gm-vew';
 import io from 'socket.io-client';
 import PlayerView from './player-view';
 import HelpModal from './help-modal';
+import Notification from './notification';
 
 class App extends React.Component {
   constructor(props) {
@@ -442,6 +443,7 @@ class App extends React.Component {
           returnToMenu={this.returntoMenu}
           toggleHelpModal={this.toggleHelpModal}/>
         <div className="app-body row no-gutters">
+          <Notification message={this.state.message}/>
           {CurrentView}
         </div>
       </div>
