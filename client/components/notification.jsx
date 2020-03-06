@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-function Notification() {
+function Notification(props) {
   const [show, setShow] = useState(false);
+  const [message, setMessage] = useState(props.message);
+  useEffect(() => {
+    setMessage(props.message);
+    setShow(true);
+  }, [props.message]);
 
   return (
-    <div className="row">
+    <div className="row notification-toast">
       <div className="col">
         <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
           <Toast.Header>
             <strong className="mr-auto">Notification</strong>
           </Toast.Header>
-          <Toast.Body>Update Message</Toast.Body>
+          <Toast.Body>{message}</Toast.Body>
         </Toast>
       </div>
     </div>
