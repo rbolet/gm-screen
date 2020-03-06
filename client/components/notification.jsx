@@ -12,7 +12,7 @@ function Notification(props) {
   return (
     <div className="row notification-toast">
       <div className="col">
-        <Toast onClose={() => setShow(false)} show={show} delay={3000} autohide>
+        <Toast className={'bg-dark text-light'}onClose={() => setShow(false)} show={show} delay={3000} autohide>
           <Toast.Header>
             <strong className="mr-auto">Notification</strong>
           </Toast.Header>
