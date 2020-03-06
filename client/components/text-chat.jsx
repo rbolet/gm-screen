@@ -8,7 +8,7 @@ export default function TextChatWindow() {
     <Accordion className="text-chat-window" defaultActiveKey="">
       <Card>
         <Accordion.Collapse eventKey="0">
-          <Card.Body>
+          <Card.Body className="bg-secondary">
             <ul>
               <li>stuff</li>
               <li>things</li>
@@ -17,7 +17,7 @@ export default function TextChatWindow() {
         </Accordion.Collapse>
       </Card>
       <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0">
+        <Accordion.Toggle as={Card.Header} eventKey="0" className="chat-footer bg-dark">
           Click me!
         </Accordion.Toggle>
       </Card>

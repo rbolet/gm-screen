@@ -307,3 +307,13 @@ button{
 .chat-container{
   position: relative;
 }
+
+.text-chat-window{
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+.chat-footer{
+  height: 50px;
+}
