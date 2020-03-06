@@ -14,6 +14,9 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      height: window.innerHeight,
+      width: window.innerWidth,
+      bodyHeight: window.innerHeight - 50,
       view: ['menu', 'title'],
       showHelpModal: false,
       message: '',
@@ -56,6 +59,13 @@ class App extends React.Component {
     this.removeToken = this.removeToken.bind(this);
     this.clearAllTokens = this.clearAllTokens.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+  }
+
+  handleResize() {
+    const { innerWidth: width, innerHeight: height } = window;
+    const bodyHeight = height - 50;
+    this.setState({ width, height, bodyHeight });
   }
 
   start() {
@@ -390,6 +400,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
     fetch('/welcome', { method: 'GET' })
       .then(res => res.json())
       .then(result => {
@@ -400,6 +411,8 @@ class App extends React.Component {
   }
 
   render() {
+    const height = this.state.height; const width = this.state.width; const bodyHeight = this.state.bodyHeight;
+
     let CurrentView;
     switch (this.state.view[0]) {
       case 'menu':
@@ -436,13 +449,13 @@ class App extends React.Component {
         break;
     }
     return (
-      <div className="app row no-gutters h-100 d-relative">
+      <div className="app row no-gutters h-100 d-relative" style={{ height, width }}>
         {this.state.showHelpModal && <HelpModal toggleHelpModal={this.toggleHelpModal} view={this.state.view}/>}
         <Header config={this.state.config}
           message={this.state.message}
           returnToMenu={this.returntoMenu}
           toggleHelpModal={this.toggleHelpModal}/>
-        <div className="app-body row no-gutters">
+        <div className="app-body row no-gutters" style={{ height: bodyHeight, width }}>
           {this.state.message && <Notification message={this.state.message}/>}
           {CurrentView}
         </div>
