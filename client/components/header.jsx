@@ -1,4 +1,5 @@
 import React from 'react';
+import TextChatWindow from './text-chat';
 
 class Header extends React.Component {
 
@@ -29,8 +30,9 @@ class Header extends React.Component {
           {RoleIcon}
         </div>
         <div className={'col-2 text-light d-flex align-items-center justify-content-center'}>{this.props.config.gameSession.campaignName}</div>
-        <div className="col-5 text-light d-flex align-items-center justify-content-center">
+        <div className="col-5 text-light d-inline chat-container">
           {/* <p className="m-0 header-message">{this.props.message}</p> */}
+          <TextChatWindow/>
         </div>
         <div className="col-1 d-flex align-items-center justify-content-end">
           <span onClick={this.props.toggleHelpModal}><i className="info far fa-question-circle text-white px-2"></i></span>

@@ -298,8 +298,22 @@ button{
   position: absolute;
   width: 300px;
   top: 5px;
-  right: 10px;
+  left: 10px;
   z-index: 10;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+}
+
+.chat-container{
+  position: relative;
+}
+
+.text-chat-window{
+  position: absolute;
+  width: 100%;
+  z-index: 10;
+}
+
+.chat-footer{
+  height: 50px;
 }
