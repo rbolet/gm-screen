@@ -10,7 +10,7 @@ function Notification(props) {
   }, [props.message]);
 
   return (
-    <div className="row notification-toast">
+    <div className="row no-gutters notification-toast">
       <div className="col">
         <Toast className={'bg-dark text-light'}onClose={() => setShow(false)} show={show} delay={3000} autohide>
           <Toast.Header>
