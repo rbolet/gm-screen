@@ -443,7 +443,7 @@ class App extends React.Component {
           returnToMenu={this.returntoMenu}
           toggleHelpModal={this.toggleHelpModal}/>
         <div className="app-body row no-gutters">
-          <Notification message={this.state.message}/>
+          {this.state.message && <Notification message={this.state.message}/>}
           {CurrentView}
         </div>
       </div>

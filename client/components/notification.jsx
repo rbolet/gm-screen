@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Toast from 'react-bootstrap/Toast';
 
 function Notification(props) {
-  const [show, setShow] = useState(true);
-  const [message, setMessage] = useState('test message');
-
-  if (props.message) {
-    setShow(true);
+  const [show, setShow] = useState(false);
+  const [message, setMessage] = useState(props.message);
+  useEffect(() => {
     setMessage(props.message);
-  }
+    setShow(true);
+  }, [props.message]);
 
   return (
     <div className="row notification-toast">
