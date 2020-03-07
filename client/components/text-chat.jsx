@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -14,11 +14,13 @@ function LastMessage() {
 }
 
 function EnterText() {
+  const [formText, setFormText] = useState('');
+
   return (
     <Form inline className="row no-gutters">
-      <FormControl type="text" className="last-message col-11" />
+      <FormControl type="text" className="last-message col-11" value={formText} onChange={event => setFormText(event.target.value)}/>
       <div className="col d-flex justify-content-center">
-        <Button type="submit" variant="success">
+        <Button type="submit" variant="success" onClick={() => { useGetMessages(formText); setFormText(''); }}>
           <i className="far fa-paper-plane"></i>
         </Button>
       </div>
@@ -26,7 +28,32 @@ function EnterText() {
   );
 }
 
-function TextChatWindow() {
+function useGetMessages(newMessage) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (!newMessage) return;
+    const copy = messages.slice();
+    setMessages(copy.push(newMessage));
+  }, []);
+
+  return messages;
+}
+
+function ChatMessages() {
+  const messages = useGetMessages();
+  if (!messages.length) return null;
+
+  const MessageElements = messages.map((message, index) => {
+    return <li key={index}>{message}</li>;
+  });
+
+  return (
+    <ul>{MessageElements}</ul>
+  );
+}
+
+function TextChatWindow(props) {
   const [isOpen, setIsOpen] = useState(false);
   let Footer = null;
   if (!isOpen) {
@@ -40,10 +67,7 @@ function TextChatWindow() {
       <Card>
         <Accordion.Collapse eventKey="0">
           <Card.Body className="bg-secondary">
-            <ul>
-              <li>stuff</li>
-              <li>things</li>
-            </ul>
+            <ChatMessages/>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
