@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -26,7 +26,25 @@ function EnterText() {
   );
 }
 
-function TextChatWindow() {
+function ChatMessages(props) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (!props.message) return;
+    const copy = messages.slice();
+    setMessages(copy.push(props.message));
+  }, []);
+
+  const MessageElements = messages.length ? messages.map((message, index) => {
+    return <li key={index}>{message}</li>;
+  }) : null;
+
+  return (
+    <ul>{MessageElements}</ul>
+  );
+}
+
+function TextChatWindow(props) {
   const [isOpen, setIsOpen] = useState(false);
   let Footer = null;
   if (!isOpen) {
@@ -40,10 +58,7 @@ function TextChatWindow() {
       <Card>
         <Accordion.Collapse eventKey="0">
           <Card.Body className="bg-secondary">
-            <ul>
-              <li>stuff</li>
-              <li>things</li>
-            </ul>
+            <ChatMessages/>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
