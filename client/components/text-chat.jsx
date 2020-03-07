@@ -1,10 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 
-export default function TextChatWindow() {
+function LastMessage() {
+  return (
+    <Form inline className="row no-gutters">
+      <FormControl type="text" className="last-message col-11" readOnly />
+    </Form>
+  );
+}
+
+function EnterText() {
+  return (
+    <Form inline className="row no-gutters">
+      <FormControl type="text" className="last-message col-11" />
+      <div className="col d-flex justify-content-center">
+        <Button type="submit" variant="success">
+          <i className="far fa-paper-plane"></i>
+        </Button>
+      </div>
+    </Form>
+  );
+}
+
+function TextChatWindow() {
+  const [isOpen, setIsOpen] = useState(false);
+  let Footer = null;
+  if (!isOpen) {
+    Footer = <LastMessage/>;
+  } else {
+    Footer = <EnterText/>;
+  }
 
   return (
     <Accordion className="text-chat-window" defaultActiveKey="">
@@ -19,12 +48,13 @@ export default function TextChatWindow() {
         </Accordion.Collapse>
       </Card>
       <Card>
-        <Accordion.Toggle as={Card.Header} eventKey="0" className="chat-footer bg-dark">
-          <Form inline>
-            <FormControl type="text" placeholder="Search" className="" />
-          </Form>
+        <Accordion.Toggle onClick={() => { setIsOpen(!isOpen); }}as={Card.Header}
+          eventKey="0" className="chat-footer bg-dark p-1">
+          {Footer}
         </Accordion.Toggle>
       </Card>
     </Accordion>
   );
+
 }
+export default TextChatWindow;
