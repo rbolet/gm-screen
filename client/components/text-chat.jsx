@@ -14,11 +14,13 @@ function LastMessage() {
 }
 
 function EnterText() {
+  const [formText, setFormText] = useState('');
+
   return (
     <Form inline className="row no-gutters">
-      <FormControl type="text" className="last-message col-11" />
+      <FormControl type="text" className="last-message col-11" value={formText} onChange={event => setFormText(event.target.value)}/>
       <div className="col d-flex justify-content-center">
-        <Button type="submit" variant="success">
+        <Button type="submit" variant="success" onClick={() => { useGetMessages(formText); setFormText(''); }}>
           <i className="far fa-paper-plane"></i>
         </Button>
       </div>
@@ -26,18 +28,25 @@ function EnterText() {
   );
 }
 
-function ChatMessages(props) {
+function useGetMessages(newMessage) {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (!props.message) return;
+    if (!newMessage) return;
     const copy = messages.slice();
-    setMessages(copy.push(props.message));
+    setMessages(copy.push(newMessage));
   }, []);
 
-  const MessageElements = messages.length ? messages.map((message, index) => {
+  return messages;
+}
+
+function ChatMessages() {
+  const messages = useGetMessages();
+  if (!messages.length) return null;
+
+  const MessageElements = messages.map((message, index) => {
     return <li key={index}>{message}</li>;
-  }) : null;
+  });
 
   return (
     <ul>{MessageElements}</ul>
