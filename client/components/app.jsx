@@ -60,6 +60,7 @@ class App extends React.Component {
     this.clearAllTokens = this.clearAllTokens.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.getPlayerList = this.getPlayerList.bind(this);
   }
 
   handleResize() {
@@ -354,6 +355,21 @@ class App extends React.Component {
 
   }
 
+  getPlayerList() {
+    console.log('get players!');
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession
+    });
+
+    fetch('/playersInRoom', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    });
+  }
+
   connectSocket() {
     this.socket = io('/');
     async function socketIdToState(stateConfig, socketId) {
@@ -454,7 +470,8 @@ class App extends React.Component {
         <Header config={this.state.config}
           message={this.state.message}
           returnToMenu={this.returntoMenu}
-          toggleHelpModal={this.toggleHelpModal}/>
+          toggleHelpModal={this.toggleHelpModal}
+          getPlayerList={this.getPlayerList}/>
         <div className="app-body row no-gutters" style={{ height: bodyHeight, width }}>
           {this.state.message && <Notification message={this.state.message}/>}
           {CurrentView}

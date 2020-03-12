@@ -29,9 +29,9 @@ class Header extends React.Component {
           {this.props.config.user.userName}&nbsp;&nbsp;
           {RoleIcon}
         </div>
-        <div className={'col-2 text-light d-flex align-items-center justify-content-center'}>{this.props.config.gameSession.campaignName}</div>
-        <div className="col-5 text-light d-inline chat-container">
-          <PlayerList/>
+        <div className={'col-4 text-light d-flex align-items-center justify-content-center'}></div>
+        <div className="col-3 text-light d-inline player-list-container">
+          <PlayerList config={this.props.config} getPlayerList={this.props.getPlayerList}/>
         </div>
         <div className="col-1 d-flex align-items-center justify-content-end">
           <span onClick={this.props.toggleHelpModal}><i className="info far fa-question-circle text-white px-2"></i></span>

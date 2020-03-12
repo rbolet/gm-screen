@@ -297,6 +297,12 @@ app.post('/deleteCampaign', (req, res, next) => {
     });
 });
 
+app.post('/playersInRoom', (req, res, next) => {
+  console.log('getting players');
+  const playersInRoom = getSocketsInRoom(req.body.gameSession);
+  res.json({ playersInRoom });
+});
+
 // upload middleware config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -426,6 +432,10 @@ function pushNewSessionState(gameSession) {
   io.to(sessionRoom).emit('updateSessionState', gameSession.session);
 }
 
+function getSocketsInRoom(gameSession) {
+  const room = io.sockets.adapter.rooms[`${nameSessionRoom(gameSession)}`];
+  return room;
+}
 // Error Handler
 app.use((error, req, res, next) => {
   console.error(error);
