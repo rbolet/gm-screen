@@ -298,9 +298,8 @@ app.post('/deleteCampaign', (req, res, next) => {
 });
 
 app.post('/playersInRoom', (req, res, next) => {
-  console.log('getting players');
-  const playersInRoom = getSocketsInRoom(req.body.gameSession);
-  res.json({ playersInRoom });
+  const playersInRoom = getUsersInRoom(req.body.gameSession);
+  res.json(playersInRoom);
 });
 
 // upload middleware config
@@ -390,17 +389,17 @@ io.on('connection', socket => {
   userSockets[socket.id] = { socket };
   socket.emit('connected', socket.id);
 
-  socket.on('disconnect', reason => {
-    const disconnectingUser = userSockets[socket.id].user;
-    for (const campaignIndex in activeGameSessions) {
-      if (disconnectingUser.userId === activeGameSessions[campaignIndex].campaignGM) {
-        const sessionRoom = nameSessionRoom(activeGameSessions[campaignIndex]);
-        io.to(sessionRoom).emit('kick', `${disconnectingUser.userName} has ended the session`);
-        activeGameSessions.splice(campaignIndex, 1);
-      }
-    }
-    delete userSockets[socket.id];
-  });
+  // socket.on('disconnect', reason => {
+  //   const disconnectingUser = userSockets[socket.id].user;
+  //   for (const campaignIndex in activeGameSessions) {
+  //     if (disconnectingUser.userId === activeGameSessions[campaignIndex].campaignGM) {
+  //       const sessionRoom = nameSessionRoom(activeGameSessions[campaignIndex]);
+  //       io.to(sessionRoom).emit('kick', `${disconnectingUser.userName} has ended the session`);
+  //       activeGameSessions.splice(campaignIndex, 1);
+  //     }
+  //   }
+  //   delete userSockets[socket.id];
+  // });
 
   socket.on('error', error => {
     console.error('Sockect.io error:', error);
@@ -432,9 +431,14 @@ function pushNewSessionState(gameSession) {
   io.to(sessionRoom).emit('updateSessionState', gameSession.session);
 }
 
-function getSocketsInRoom(gameSession) {
-  const room = io.sockets.adapter.rooms[`${nameSessionRoom(gameSession)}`];
-  return room;
+function getUsersInRoom(gameSession) {
+  const socketList = io.sockets.adapter.rooms[`${nameSessionRoom(gameSession)}`].sockets;
+  const usersInRoom = [];
+  Object.keys(socketList).forEach(socketId => {
+    const user = userSockets[socketId].user;
+    usersInRoom.push(user);
+  });
+  return usersInRoom;
 }
 // Error Handler
 app.use((error, req, res, next) => {

@@ -14,6 +14,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      playerList: [],
       height: window.innerHeight,
       width: window.innerWidth,
       bodyHeight: window.innerHeight - 50,
@@ -356,7 +357,6 @@ class App extends React.Component {
   }
 
   getPlayerList() {
-    console.log('get players!');
     const requestBody = JSON.stringify({
       gameSession: this.state.config.gameSession
     });
@@ -367,7 +367,11 @@ class App extends React.Component {
         'Content-Type': 'application/json'
       },
       body: requestBody
-    });
+    })
+      .then(jsonRes => jsonRes.json())
+      .then(result => {
+        this.setState();
+      });
   }
 
   connectSocket() {
@@ -471,7 +475,8 @@ class App extends React.Component {
           message={this.state.message}
           returnToMenu={this.returntoMenu}
           toggleHelpModal={this.toggleHelpModal}
-          getPlayerList={this.getPlayerList}/>
+          getPlayerList={this.getPlayerList}
+          playerList={this.state.playerList}/>
         <div className="app-body row no-gutters" style={{ height: bodyHeight, width }}>
           {this.state.message && <Notification message={this.state.message}/>}
           {CurrentView}
