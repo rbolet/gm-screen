@@ -31,7 +31,7 @@ class Header extends React.Component {
         </div>
         <div className={'col-4 text-light d-flex align-items-center justify-content-center'}></div>
         <div className="col-3 text-light d-inline player-list-container">
-          <PlayerList config={this.props.config} getPlayerList={this.props.getPlayerList}/>
+          <PlayerList config={this.props.config} getPlayerList={this.props.getPlayerList} playerList={this.props.playerList}/>
         </div>
         <div className="col-1 d-flex align-items-center justify-content-end">
           <span onClick={this.props.toggleHelpModal}><i className="info far fa-question-circle text-white px-2"></i></span>

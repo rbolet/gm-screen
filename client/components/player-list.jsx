@@ -2,19 +2,22 @@ import React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 
-// function getPlayers() {
-
-// }
-
 export default function PlayerList(props) {
-  // const [Players, setPlayers] = useState(null);
-  // const gameSession = props.config.gameSession;
-  // const room = gameSession.sessionId ? `${gameSession.campaignName} (${gameSession.campaignId})` : null;
-  // useEffect(() => {
-  //   if (room) {
-  //     setPlayers(getPlayers());
-  //   }
-  // }, []);
+  const [playerList, setPlayerList] = React.useState([]);
+  console.log(playerList);
+
+  let Players = null;
+  React.useEffect(() => {
+    if (props.usersInRoom) { setPlayerList(props.usersInRoom); }
+  }, [props.usersInRoom]);
+
+  if (playerList.length) {
+    Players = playerList.map(user => {
+      return (
+        <li key={user.userId}>{user.userName}</li>
+      );
+    });
+  }
 
   return (
     <Accordion defaultActiveKey="" className="player-list">
@@ -26,6 +29,7 @@ export default function PlayerList(props) {
           {/* <div className="bg-secondary px-1">{Players}</div> */}
           <div>
             <button onClick={props.getPlayerList}>Players</button>
+            <ul>{Players}</ul>
           </div>
         </Accordion.Collapse>
       </Card>
