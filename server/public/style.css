@@ -317,3 +317,9 @@ button{
 .chat-footer{
   height: 50px;
 }
+
+#guest-dropdown{
+  font-size: .75rem;
+  font-weight: lighter;
+  height: 100%;
+}

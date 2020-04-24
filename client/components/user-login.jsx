@@ -19,10 +19,15 @@ class UserLogin extends React.Component {
     this.setState({ [name]: value });
   }
 
-  userLogin(isNew) {
+  userLogin(isNew, isGuest, guestRole) {
     const login = this.state;
     if (isNew) {
       this.props.newUser(login);
+    } else if (isGuest) {
+      this.props.loginUser({
+        userName: 'Guest',
+        password: 'guest'
+      });
     } else {
       this.props.loginUser(login);
     }
@@ -58,6 +63,14 @@ class UserLogin extends React.Component {
       default :
         loginMessage = 'Please enter your username and password';
     }
+
+    const GuestButton = (
+      <button className="btn btn-info text-light w-25" onClick={() => { this.userLogin(false, true); }}>
+        <i className="fas fa-user-astronaut" />
+        <p className="button-text m-0">Log In as Guest</p>
+      </button>
+    );
+
     return (
       <div className="user-login d-flex flex-column justify-content-center col-4 bg-dark rounded">
         <div className="w-100 h-25 text-light text-center p-2 d-flex align-items-center justify-content-center menu-box-header">
@@ -78,6 +91,7 @@ class UserLogin extends React.Component {
                 <i className="fas fa-user-plus"/>
                 <p className="button-text m-0">New User</p>
               </button>
+              {GuestButton}
               <button type="submit" className="btn btn-success text-light w-25" onClick={() => { this.userLogin(false); }}>
                 <i className="fas fa-sign-in-alt"/>
                 <p className="button-text m-0">Log In</p>
