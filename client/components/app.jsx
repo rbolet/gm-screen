@@ -14,6 +14,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      playerList: [],
       height: window.innerHeight,
       width: window.innerWidth,
       bodyHeight: window.innerHeight - 50,
@@ -60,6 +61,7 @@ class App extends React.Component {
     this.clearAllTokens = this.clearAllTokens.bind(this);
     this.connectSocket = this.connectSocket.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.getPlayerList = this.getPlayerList.bind(this);
   }
 
   handleResize() {
@@ -354,6 +356,24 @@ class App extends React.Component {
 
   }
 
+  getPlayerList() {
+    const requestBody = JSON.stringify({
+      gameSession: this.state.config.gameSession
+    });
+
+    fetch('/playersInRoom', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody
+    })
+      .then(jsonRes => jsonRes.json())
+      .then(result => {
+        this.setState();
+      });
+  }
+
   connectSocket() {
     this.socket = io('/');
     async function socketIdToState(stateConfig, socketId) {
@@ -454,7 +474,9 @@ class App extends React.Component {
         <Header config={this.state.config}
           message={this.state.message}
           returnToMenu={this.returntoMenu}
-          toggleHelpModal={this.toggleHelpModal}/>
+          toggleHelpModal={this.toggleHelpModal}
+          getPlayerList={this.getPlayerList}
+          playerList={this.state.playerList}/>
         <div className="app-body row no-gutters" style={{ height: bodyHeight, width }}>
           {this.state.message && <Notification message={this.state.message}/>}
           {CurrentView}

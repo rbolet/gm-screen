@@ -304,11 +304,11 @@ button{
   justify-content: flex-start;
 }
 
-.chat-container{
+.chat-container, .player-list-container{
   position: relative;
 }
 
-.text-chat-window{
+.text-chat-window, .player-list{
   position: absolute;
   width: 100%;
   z-index: 10;
